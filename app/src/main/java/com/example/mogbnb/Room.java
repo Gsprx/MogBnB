@@ -5,13 +5,13 @@ public class Room {
     private int noOfPersons;
     private final int availableDays;
     private String area;
-    private float stars;
+    private double stars;
     private int noOfReviews;
 
     //Path to url of the image
     private String roomImage;
 
-    public Room(String roomName, int noOfPersons, int availableDays, String area, float stars, int noOfReviews, String roomImage) {
+    public Room(String roomName, int noOfPersons, int availableDays, String area, double stars, int noOfReviews, String roomImage) {
         this.roomName = roomName;
         this.noOfPersons = noOfPersons;
         this.availableDays = availableDays;
@@ -23,9 +23,9 @@ public class Room {
 
     /**
      * Used to add a new review to a specific room
-     * @param stars the integer number of stars for the review
+     * @param stars the double number of stars for the review
      */
-    public void addReview(int stars){
+    public void addReview(double stars){
         this.noOfReviews++;
         this.stars = (this.stars + stars)/2;
     }
@@ -74,7 +74,7 @@ public class Room {
         return area;
     }
 
-    public float getStars() {
+    public double getStars() {
         return stars;
     }
 
