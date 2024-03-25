@@ -7,11 +7,12 @@ public class Room {
     private String area;
     private double stars;
     private int noOfReviews;
+    private float pricePerDay;
 
     //Path to url of the image
     private String roomImage;
 
-    public Room(String roomName, int noOfPersons, int availableDays, String area, double stars, int noOfReviews, String roomImage) {
+    public Room(String roomName, int noOfPersons, int availableDays, String area, double stars, int noOfReviews, String roomImage, float pricePerDay) {
         this.roomName = roomName;
         this.noOfPersons = noOfPersons;
         this.availableDays = availableDays;
@@ -19,6 +20,7 @@ public class Room {
         this.stars = stars;
         this.noOfReviews = noOfReviews;
         this.roomImage = roomImage;
+        this.pricePerDay = pricePerDay;
     }
 
     /**
@@ -33,6 +35,11 @@ public class Room {
     //
     // setter functions
     //
+
+
+    public void setPricePerDay(float pricePerDay) {
+        this.pricePerDay = pricePerDay;
+    }
 
     public void setRoomName(String roomName) {
         this.roomName = roomName;
@@ -57,6 +64,11 @@ public class Room {
     //
     // getter functions
     //
+
+
+    public float getPricePerDay() {
+        return pricePerDay;
+    }
 
     public String getRoomName() {
         return roomName;
