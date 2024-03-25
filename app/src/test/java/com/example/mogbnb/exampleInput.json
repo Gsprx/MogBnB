@@ -1,0 +1,32 @@
+[
+  {
+    "roomName": "Room 1",
+    "noOfPersons": 2,
+    "availableDays": 7,
+    "area": "Downtown",
+    "stars": 4.5,
+    "noOfReviews": 100,
+    "roomImage": "https://example.com/room1.jpg",
+    "pricePerDay": 100.0
+  },
+  {
+    "roomName": "Room 2",
+    "noOfPersons": 3,
+    "availableDays": 5,
+    "area": "Suburb",
+    "stars": 4.0,
+    "noOfReviews": 50,
+    "roomImage": "https://example.com/room2.jpg",
+    "pricePerDay": 80.0
+  },
+  {
+    "roomName": "Room 3",
+    "noOfPersons": 4,
+    "availableDays": 6,
+    "area": "Beachfront",
+    "stars": 4.8,
+    "noOfReviews": 120,
+    "roomImage": "https://example.com/room3.jpg",
+    "pricePerDay": 150.0
+  }
+]

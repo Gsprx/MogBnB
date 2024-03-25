@@ -135,4 +135,19 @@ public class Room {
     public String getRoomImage() {
         return roomImage;
     }
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "roomName='" + roomName + '\'' +
+                ", noOfPersons=" + noOfPersons +
+                ", availableDays=" + availableDays +
+                ", area='" + area + '\'' +
+                ", stars=" + stars +
+                ", noOfReviews=" + noOfReviews +
+                ", pricePerDay=" + pricePerDay +
+                ", roomImage='" + roomImage + '\'' +
+                '}';
+    }
+
 }
