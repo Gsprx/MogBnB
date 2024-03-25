@@ -8,9 +8,7 @@ public class Room {
     private double stars;
     private int noOfReviews;
     private float pricePerDay;
-
-    //Path to url of the image
-    private String roomImage;
+    private String roomImage; //Path to url of the image
 
     public Room(String roomName, int noOfPersons, int availableDays, String area, double stars, int noOfReviews, String roomImage, float pricePerDay) {
         this.roomName = roomName;
