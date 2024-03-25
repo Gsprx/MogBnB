@@ -2,17 +2,18 @@ package com.example.mogbnb;
 
 import androidx.annotation.NonNull;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Filter {
     private final String area;
-    private final Date checkIn;
-    private final Date checkOut;
+    private final LocalDate checkIn;
+    private final LocalDate checkOut;
     private final int noOfPersons;
     private final double price;
     private final double stars;
 
-    public Filter(String area, Date checkIn, Date checkOut, int noOfPersons, double price, double stars) {
+    public Filter(String area, LocalDate checkIn, LocalDate checkOut, int noOfPersons, double price, double stars) {
         this.area = area;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
@@ -25,11 +26,11 @@ public class Filter {
         return area;
     }
 
-    public Date getCheckIn() {
+    public LocalDate getCheckIn() {
         return checkIn;
     }
 
-    public Date getCheckOut() {
+    public LocalDate getCheckOut() {
         return checkOut;
     }
 

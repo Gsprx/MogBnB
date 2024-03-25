@@ -6,6 +6,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.text.DateFormat;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 
 public class FilterTest {
@@ -13,8 +16,8 @@ public class FilterTest {
     Filter nullFilter;
     Filter mixedFilter;
 
-    final Date checkInDate = new Date();
-    final Date checkOutDate = new Date();
+    final LocalDate checkInDate = LocalDate.now();
+    final LocalDate checkOutDate = LocalDate.now();
     @Before
     public void setUp() throws Exception {
         sampleF = new Filter("Tomato Town", checkInDate, checkOutDate, 3, 32.5, 4.5);
