@@ -10,12 +10,12 @@ public class Room {
     private String area;
     private double stars;
     private int noOfReviews;
-    private float pricePerDay;
+    private double pricePerDay;
     private String roomImage; //Path to url of the image
     private boolean[] bookingTable;
     private static LocalDate currentDate;
 
-    public Room(String roomName, int noOfPersons, int availableDays, String area, double stars, int noOfReviews, String roomImage, float pricePerDay) {
+    public Room(String roomName, int noOfPersons, int availableDays, String area, double stars, int noOfReviews, String roomImage, double pricePerDay) {
         this.roomName = roomName;
         this.noOfPersons = noOfPersons;
         this.availableDays = availableDays;
@@ -104,7 +104,7 @@ public class Room {
     //
 
 
-    public float getPricePerDay() {
+    public double getPricePerDay() {
         return pricePerDay;
     }
 
