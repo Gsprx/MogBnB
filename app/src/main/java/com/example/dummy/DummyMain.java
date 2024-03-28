@@ -1,6 +1,6 @@
 package com.example.dummy;
 
-import com.example.mogbnb.JsonConverter;
+import com.example.misc.JsonConverter;
 import java.util.Scanner;
 
 public class DummyMain {

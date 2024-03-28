@@ -1,5 +1,6 @@
-package com.example.mogbnb;
+package com.example.misc;
 
+import com.example.mogbnb.Room;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
