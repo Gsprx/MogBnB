@@ -1,15 +1,15 @@
 package com.example.mogbnb;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Worker {
-    private int id ;
     private List<Room> roomData;
 
     public Worker(){
-        this.id++;
-        this.roomData=roomData;
+        roomData = new ArrayList<>();
     }
+
 
     //Method to handle adding a room
     public void addRoom(Room room){
