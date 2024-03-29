@@ -1,11 +1,12 @@
 package com.example.mogbnb;
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
 import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
 
 
-public class Room {
+public class Room implements Serializable {
 
 
     private String roomName;

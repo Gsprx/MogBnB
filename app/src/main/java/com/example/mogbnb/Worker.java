@@ -18,7 +18,7 @@ public class Worker {
 
     //Method to handle booking a room
     //h booking tha periexei ta booking instances
-    public void bookRoom(Booking booking){
+    public void bookRoom(/*Booking booking*/){
         //Process the booking process
     }
 }

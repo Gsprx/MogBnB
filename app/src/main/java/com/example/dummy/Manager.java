@@ -1,14 +1,22 @@
 package com.example.dummy;
 
+import static com.example.mogbnb.Master.TEMP_ROOM_DAO;
+
+import com.example.misc.Config;
 import com.example.misc.TypeChecking;
+import com.example.mogbnb.MasterFunction;
 import com.example.mogbnb.Room;
 
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Manager {
-
-    public static List<Room> TEMP_ROOM_DAO;
 
     public static void runManager() {
         System.out.println("\n-------------------Welcome Boss-------------------");
@@ -44,13 +52,34 @@ public class Manager {
      * If there are no registered rooms yet, do nothing.
      */
     private static void managerShowRooms() {
-        System.out.println("|Registered rooms|");
-        if (TEMP_ROOM_DAO != null) {
-            for (Room r : TEMP_ROOM_DAO) {
-                System.out.println(r);
+        // waiting input stream -> its going to be a list with all the registered rooms
+        ObjectInputStream in = null;
+        // a code so that the master server knows what function to operate
+        OutputStream out = null;
+        Socket socket = null;
+
+        try {
+            socket = new Socket("localhost", Config.PORT);
+            in = new ObjectInputStream(socket.getInputStream());
+            out = socket.getOutputStream();
+
+            // out the show rooms function
+            out.write(MasterFunction.SHOW_ROOMS.getEncoded());
+            out.flush();
+            List<Room> result = (List<Room>) in.readObject();
+
+            System.out.println("|Registered rooms|");
+            if (result != null) {
+                for (Room r : result) {
+                    System.out.println(r);
+                }
+            } else {
+                System.out.println("Empty list...Real quiet...");
             }
+            System.out.println("---------------------------------------------\n");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        System.out.println("---------------------------------------------\n");
     }
 
     /**

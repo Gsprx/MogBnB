@@ -6,9 +6,6 @@ import java.util.Scanner;
 public class DummyMain {
 
     public static void main(String[] args) {
-        // load the existing rooms from json
-        Manager.TEMP_ROOM_DAO = JsonConverter.deserializeRooms("app/src/test/java/com/example/mogbnb/exampleInput.json");
-
         String acc_typ;
         // get the account type (master or tenant)
         // if the user does not give valid info then ask again
