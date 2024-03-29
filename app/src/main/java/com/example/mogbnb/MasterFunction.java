@@ -7,6 +7,13 @@ public enum MasterFunction {
         public int getEncoded() {
             return 0;
         }
+    },
+
+    ADD_ROOM {
+        @Override
+        public int getEncoded() {
+            return 1;
+        }
     };
 
     public abstract int getEncoded();

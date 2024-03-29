@@ -6,6 +6,7 @@ import com.example.misc.JsonConverter;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
@@ -51,15 +52,25 @@ public class Master {
                 // handle
                 try {
                     ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-                    InputStream in = socket.getInputStream();
+                    ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
-                    int input = in.read();
-                    if (input == MasterFunction.SHOW_ROOMS.getEncoded()) {
-                        out.writeObject(TEMP_ROOM_DAO);
-                        out.flush();
+                    TCPObjectHolder input = (TCPObjectHolder) in.readObject();
+
+                    // case 0: show rooms
+                    if (input.code == MasterFunction.SHOW_ROOMS.getEncoded()) {
+                        out.writeObject(new TCPObjectHolder(MasterFunction.SHOW_ROOMS.getEncoded(), TEMP_ROOM_DAO));
                     }
+                    // case 1: add room
+                    else if (input.code == MasterFunction.ADD_ROOM.getEncoded()) {
+                        Room r = (Room) input.obj;
+                        TEMP_ROOM_DAO.add(r);
+                        out.writeObject(new TCPObjectHolder(MasterFunction.ADD_ROOM.getEncoded(), null));
+                    }
+                    out.flush();
 
                 } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
             }

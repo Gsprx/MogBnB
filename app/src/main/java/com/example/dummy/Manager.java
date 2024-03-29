@@ -2,16 +2,21 @@ package com.example.dummy;
 
 import static com.example.mogbnb.Master.TEMP_ROOM_DAO;
 
+import android.renderscript.ScriptGroup;
+
 import com.example.misc.Config;
 import com.example.misc.TypeChecking;
 import com.example.mogbnb.MasterFunction;
 import com.example.mogbnb.Room;
+import com.example.mogbnb.TCPObjectHolder;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -54,23 +59,23 @@ public class Manager {
     private static void managerShowRooms() {
         // waiting input stream -> its going to be a list with all the registered rooms
         ObjectInputStream in = null;
-        // a code so that the master server knows what function to operate
-        OutputStream out = null;
+        // a complex TCP Holder Object that holds a code for the function that needs to be executed and an object argument
+        ObjectOutputStream out = null;
         Socket socket = null;
 
         try {
             socket = new Socket("localhost", Config.PORT);
             in = new ObjectInputStream(socket.getInputStream());
-            out = socket.getOutputStream();
+            out = new ObjectOutputStream(socket.getOutputStream());
 
             // out the show rooms function
-            out.write(MasterFunction.SHOW_ROOMS.getEncoded());
+            out.writeObject(new TCPObjectHolder(MasterFunction.SHOW_ROOMS.getEncoded(), null));
             out.flush();
-            List<Room> result = (List<Room>) in.readObject();
+            TCPObjectHolder result = (TCPObjectHolder) in.readObject();
 
             System.out.println("|Registered rooms|");
             if (result != null) {
-                for (Room r : result) {
+                for (Room r : (List<Room>) result.obj) {
                     System.out.println(r);
                 }
             } else {
@@ -78,7 +83,7 @@ public class Manager {
             }
             System.out.println("---------------------------------------------\n");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println("Something went wrong fetching the data. Error: " + e + "\n");
         }
     }
 
@@ -86,6 +91,12 @@ public class Manager {
      * Add a new room.
      */
     private static void managerAddRoom() {
+        // waiting input stream -> its going to be a confirmation that the room has been added
+        ObjectInputStream in = null;
+        // a complex TCP Holder Object that holds a code for the function that needs to be executed and an object argument
+        ObjectOutputStream out = null;
+        Socket socket = null;
+
         // room attributes
         String rName;
         int noOfPeople;
@@ -157,9 +168,25 @@ public class Manager {
 
         if (ans.equals("n")) {System.out.println("Canceling...\n");}
         else {
-            Room r = new Room(rName, noOfPeople, availDays, area, 0, 0, roomImg, price);
-            TEMP_ROOM_DAO.add(r);
-            System.out.println();
+            try {
+                socket = new Socket("localhost", Config.PORT);
+                in = new ObjectInputStream(socket.getInputStream());
+                out = new ObjectOutputStream(socket.getOutputStream());
+
+                Room r = new Room(rName, noOfPeople, availDays, area, 0, 0, roomImg, price);
+
+                // out the add room function
+                out.writeObject(new TCPObjectHolder(MasterFunction.ADD_ROOM.getEncoded(), r));
+                out.flush();
+                TCPObjectHolder result = (TCPObjectHolder) in.readObject();
+
+                System.out.println();
+
+            } catch (IOException e) {
+                System.out.println("Something went wrong. Error: " + e + "\nCanceling...\n");
+            } catch (ClassNotFoundException e) {
+                System.out.println("Something went wrong reading the input file. Error: " + e + "\nCanceling...\n");
+            }
         }
     }
 
