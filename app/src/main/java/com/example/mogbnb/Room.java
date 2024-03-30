@@ -198,7 +198,7 @@ public class Room implements Serializable {
     public String getRoomImage() {
         return roomImage;
     }
-
+    public boolean[] getBookingTable(){return bookingTable;}
     @NonNull
     @Override
     public String toString() {
