@@ -1,5 +1,7 @@
 package com.example.mogbnb;
 
+import com.example.misc.Config;
+
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -23,16 +25,20 @@ public class WorkerThread extends Thread{
 
     /**
      * Used by threads to run their different functions based on mapID
-     * (NOTE) mapIDs: 2 - searchRooms
-     *                3 -
+     * (NOTE) mapIDs: 1 - return all rooms
+     *                3 - searchRooms
+     *                4 -
      */
     public void run(){
         switch (mapID){
-            case 2: {
+            case 1:
+                showRooms();
+                break;
+            case 3: {
                 searchRooms();
                 break;
             }
-            case 3:{
+            case 4:{
                 break;
             }
             default:{
@@ -44,8 +50,14 @@ public class WorkerThread extends Thread{
 
     //  ------------------------      WORK FUNCTIONS      ----------------------------------
 
+    // mapID: 1
+    // expected mapValue is null
+    private void showRooms(){
+        ArrayList<Room> result = new ArrayList<>(rooms);
+        sendResults(result);
+    }
 
-    // mapID: 2
+    // mapID: 3
     // expected mapValue is a Filter object
     private void searchRooms(){
         ArrayList<Room> result = new ArrayList<>();
@@ -63,14 +75,13 @@ public class WorkerThread extends Thread{
     private void sendResults(ArrayList<Room> resultRooms){
         try {
             //socket used to send results to reducer
-            Socket outputSocket = new Socket("localhost", 6000);
+            Socket outputSocket = new Socket("localhost", Config.WORKER_REDUCER_PORT);
 
             //get the output stream to send results
             ObjectOutputStream out = new ObjectOutputStream(outputSocket.getOutputStream());
 
             //flush mapID
             out.writeInt(mapID);
-            out.flush();
             //flush rooms array list
             out.writeObject(resultRooms);
             out.flush();

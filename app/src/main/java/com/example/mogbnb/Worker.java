@@ -1,5 +1,8 @@
 package com.example.mogbnb;
 
+import com.example.dummy.Manager;
+import com.example.misc.Config;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -9,13 +12,15 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Worker extends Thread{
+public class Worker extends Thread {
     private ArrayList<Room> roomData;
     private static int classID;
+    private int id;
 
     public Worker(){
-        roomData = new ArrayList<>();
+        roomData = new ArrayList<>(Master.TEMP_ROOM_DAO);
         classID++;
+        id = classID;
     }
 
     /**
@@ -34,7 +39,7 @@ public class Worker extends Thread{
         ObjectInputStream in;
         try {
             //start a server socket to receive calls from master
-            serverSocket = new ServerSocket(5000 + classID);
+            serverSocket = new ServerSocket(Config.INIT_WORKER_PORT + id);
 
 
             //working loop
@@ -48,10 +53,11 @@ public class Worker extends Thread{
                 //
                 int mapID = in.readInt();
 
-                if(mapID==1){
-                    addRoom((Room)in.readObject());
+                // Function 2: add room
+                if (mapID==MasterFunction.ADD_ROOM.getEncoded()) {
+                    addRoom((Room) in.readObject());
                 }
-                Thread workThread = new WorkerThread(mapID, (Room)in.readObject(), this.roomData);
+                Thread workThread = new WorkerThread(mapID, (Room) in.readObject(), this.roomData);
                 workThread.start();
             }
 

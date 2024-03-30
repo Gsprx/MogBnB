@@ -64,18 +64,22 @@ public class Manager {
         Socket socket = null;
 
         try {
-            socket = new Socket("localhost", Config.PORT);
+            socket = new Socket("localhost", Config.USER_MASTER_PORT);
             in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
 
             // out the show rooms function
-            out.writeObject(new TCPObjectHolder(MasterFunction.SHOW_ROOMS.getEncoded(), null));
+            out.writeInt(MasterFunction.SHOW_ROOMS.getEncoded());
+            out.writeObject(null);
             out.flush();
-            TCPObjectHolder result = (TCPObjectHolder) in.readObject();
+
+            int resultID = in.readInt();
+            System.out.println("[Result-ID: " + resultID + "]");
+            List<Room> resultObj = (List<Room>) in.readObject();
 
             System.out.println("|Registered rooms|");
-            if (result != null) {
-                for (Room r : (List<Room>) result.obj) {
+            if (resultObj != null) {
+                for (Room r : resultObj) {
                     System.out.println(r);
                 }
             } else {
@@ -169,23 +173,24 @@ public class Manager {
         if (ans.equals("n")) {System.out.println("Canceling...\n");}
         else {
             try {
-                socket = new Socket("localhost", Config.PORT);
+                socket = new Socket("localhost", Config.USER_MASTER_PORT);
                 in = new ObjectInputStream(socket.getInputStream());
                 out = new ObjectOutputStream(socket.getOutputStream());
 
                 Room r = new Room(rName, noOfPeople, availDays, area, 0, 0, roomImg, price);
 
                 // out the add room function
-                out.writeObject(new TCPObjectHolder(MasterFunction.ADD_ROOM.getEncoded(), r));
+                out.writeInt(MasterFunction.ADD_ROOM.getEncoded());
+                out.writeObject(r);
                 out.flush();
-                TCPObjectHolder result = (TCPObjectHolder) in.readObject();
+
+                int resultID = in.readInt();
+                System.out.println("[Result-ID: " + resultID + "]");
 
                 System.out.println();
 
             } catch (IOException e) {
                 System.out.println("Something went wrong. Error: " + e + "\nCanceling...\n");
-            } catch (ClassNotFoundException e) {
-                System.out.println("Something went wrong reading the input file. Error: " + e + "\nCanceling...\n");
             }
         }
     }
