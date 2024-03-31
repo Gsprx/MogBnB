@@ -19,6 +19,11 @@ public enum MasterFunction {
         public int getEncoded() {
             return 2;
         }
+    },
+
+    FIND_ROOM_BY_NAME{
+        @Override
+        public int getEncoded(){return 4;}
     };
 
     public abstract int getEncoded();

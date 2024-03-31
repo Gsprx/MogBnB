@@ -26,8 +26,8 @@ public class WorkerThread extends Thread{
     /**
      * Used by threads to run their different functions based on mapID
      * (NOTE) mapIDs: 1 - return all rooms
-     *                3 - searchRooms
-     *                4 -
+     *                3 - search rooms
+     *                4 - return specific room based on room's name
      */
     public void run(){
         switch (mapID){
@@ -39,6 +39,7 @@ public class WorkerThread extends Thread{
                 break;
             }
             case 4:{
+                findRoomByName();
                 break;
             }
             default:{
@@ -61,12 +62,26 @@ public class WorkerThread extends Thread{
     // expected mapValue is a Filter object
     private void searchRooms(){
         ArrayList<Room> result = new ArrayList<>();
+        Filter filter = (Filter)mapValue;
         for (Room room : rooms){
-            if(room.filterAccepted((Filter) mapValue)){
+            if(room.filterAccepted(filter)){
                 result.add(room);
             }
         }
         sendResults(result);
+    }
+
+    //mapID: 4
+    // expected mapValue is a String
+    private void findRoomByName(){
+        ArrayList<Room> result = new ArrayList<>();
+        String queryRoomName = (String) mapValue;
+        for (Room room : rooms){
+            if (room.getRoomName().equalsIgnoreCase(queryRoomName)){
+                result.add(room);
+                sendResults(result);
+            }
+        }
     }
 
     /**
@@ -80,9 +95,9 @@ public class WorkerThread extends Thread{
             //get the output stream to send results
             ObjectOutputStream out = new ObjectOutputStream(outputSocket.getOutputStream());
 
-            //flush mapID
+            //write mapID
             out.writeInt(mapID);
-            //flush rooms array list
+            //write rooms array list
             out.writeObject(resultRooms);
             out.flush();
 
