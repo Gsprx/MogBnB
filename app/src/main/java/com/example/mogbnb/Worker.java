@@ -46,6 +46,7 @@ public class Worker extends Thread {
             while(true){
                 receiverSocket = serverSocket.accept();
 
+                // TODO: EDW LOCKAREI KAI DEN PREPEI (TSEKARE ERGASTHRIA KWDIKA)
                 in = new ObjectInputStream(receiverSocket.getInputStream());
 
                 //
@@ -57,6 +58,7 @@ public class Worker extends Thread {
                 if (mapID==MasterFunction.ADD_ROOM.getEncoded()) {
                     addRoom((Room) in.readObject());
                 }
+
                 Thread workThread = new WorkerThread(mapID, (Room) in.readObject(), this.roomData);
                 workThread.start();
             }

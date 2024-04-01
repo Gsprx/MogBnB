@@ -46,6 +46,7 @@ public class Master extends Thread {
      * Waits for requests and establishes connections.
      */
     public void run() {
+        // TODO: EDW PREPEI NA KAEIS MASTER THREAD
         try {
             // create the server socket
             server = new ServerSocket(Config.USER_MASTER_PORT);

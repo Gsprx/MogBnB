@@ -16,7 +16,7 @@ public class Reducer extends Thread {
     ServerSocket server;
 
     public void run() {
-        // create the server socket
+        // TODO: EDW PREPEI NA KANEIS REDUCER THREAD
         try {
             //output list from the combined inputs of the workers
             ArrayList<Room> outputRoomList;
