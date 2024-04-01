@@ -34,41 +34,21 @@ public class Worker extends Thread {
         //socket used to handle the tcp connection as a server of master
         ServerSocket serverSocket;
 
-
-        //object streams
-        ObjectInputStream in;
         try {
             //start a server socket to receive calls from master
             serverSocket = new ServerSocket(Config.INIT_WORKER_PORT + id);
-
 
             //working loop
             while(true){
                 receiverSocket = serverSocket.accept();
 
-                // TODO: EDW LOCKAREI KAI DEN PREPEI (TSEKARE ERGASTHRIA KWDIKA)
-                in = new ObjectInputStream(receiverSocket.getInputStream());
-
-                //
-                // Reads the mapID to determine whether to use local functions or push the workload to threads
-                //
-                int mapID = in.readInt();
-
-                // Function 2: add room
-                if (mapID==MasterFunction.ADD_ROOM.getEncoded()) {
-                    addRoom((Room) in.readObject());
-                }
-
-                Thread workThread = new WorkerThread(mapID, (Room) in.readObject(), this.roomData);
+                Thread workThread = new WorkerThread(receiverSocket, this.roomData);
                 workThread.start();
             }
 
-        } catch (IOException | ClassNotFoundException | RuntimeException e) {
+        } catch (IOException | RuntimeException e) {
             e.printStackTrace();
         }
     }
-    private void addRoom(Room room){
-        this.roomData.add(room);
-    };
 
 }

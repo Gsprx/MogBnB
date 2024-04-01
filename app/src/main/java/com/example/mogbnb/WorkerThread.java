@@ -3,6 +3,7 @@ package com.example.mogbnb;
 import com.example.misc.Config;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -13,13 +14,13 @@ import java.util.ArrayList;
  * The worker thread is mewing and looksmaxxing even after being called for labor
  */
 public class WorkerThread extends Thread{
-    private final int mapID;
-    private final Object mapValue;
+    private Socket socket = null;
+    private Object mapValue;
+    private int mapID;
     private final ArrayList<Room> rooms;
 
-    public WorkerThread(int mapID, Object mapValue, ArrayList<Room> rooms) {
-        this.mapID = mapID;
-        this.mapValue = mapValue;
+    public WorkerThread(Socket socket, ArrayList<Room> rooms) {
+        this.socket = socket;
         this.rooms = rooms;
     }
 
@@ -30,22 +31,36 @@ public class WorkerThread extends Thread{
      *                4 - return specific room based on room's name
      */
     public void run(){
-        switch (mapID){
-            case 1:
-                showRooms();
-                break;
-            case 3: {
-                searchRooms();
-                break;
+        ObjectInputStream in;
+        try {
+            in = new ObjectInputStream(socket.getInputStream());
+            mapID = in.readInt();
+            mapValue = in.readObject();
+            switch (mapID){
+                case 1: {
+                    showRooms();
+                    break;
+                }
+                case 2:{
+                    addRoom();
+                    break;
+                }
+                case 3: {
+                    searchRooms();
+                    break;
+                }
+                case 4:{
+                    findRoomByName();
+                    break;
+                }
+                default:{
+                    throw new RuntimeException("Error! Invalid MapID");
+                }
             }
-            case 4:{
-                findRoomByName();
-                break;
-            }
-            default:{
-                throw new RuntimeException("Error! Invalid MapID");
-            }
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
+
 
     }
 
@@ -57,6 +72,16 @@ public class WorkerThread extends Thread{
         ArrayList<Room> result = new ArrayList<>(rooms);
         sendResults(result);
     }
+
+
+    // mapID: 2
+    // expected mapValue is a Room Object
+    private void addRoom(){
+        synchronized (rooms) {
+            this.rooms.add((Room) mapValue);
+        }
+    };
+
 
     // mapID: 3
     // expected mapValue is a Filter object
