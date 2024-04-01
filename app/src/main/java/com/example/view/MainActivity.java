@@ -1,8 +1,10 @@
-package com.example.mogbnb;
+package com.example.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.mogbnb.R;
 
 public class MainActivity extends AppCompatActivity {
 
