@@ -27,6 +27,7 @@ public class WorkerThread extends Thread{
     /**
      * Used by threads to run their different functions based on mapID
      * (NOTE) mapIDs: 1 - return all rooms
+     *                2 - add a room
      *                3 - search rooms
      *                4 - return specific room based on room's name
      */
