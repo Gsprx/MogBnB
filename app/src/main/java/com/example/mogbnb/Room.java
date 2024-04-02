@@ -82,6 +82,7 @@ public class Room implements Serializable {
 
     }
 
+
     private boolean checkAvailability(int indexForBooking, int end){
         for (int i = indexForBooking; i< end; i++){
             if (this.bookingTable[i]){
@@ -90,7 +91,6 @@ public class Room implements Serializable {
         }
         return true;
     }
-
 
 
     /**
@@ -120,7 +120,7 @@ public class Room implements Serializable {
     }
 
     /**
-     * Used to add a new review to a specific room
+     * Used to add a new review to a specific room.
      * @param stars the double number of stars for the review
      */
     public void addReview(double stars){
@@ -129,6 +129,19 @@ public class Room implements Serializable {
     }
 
 
+    /**
+     * Used to obtain total days booked for a room.
+     * @return the integer value of days booked for the room.
+     */
+    public int totalDaysBooked(){
+        int count = 0;
+        for (boolean day : bookingTable){
+            if (day){
+                count++;
+            }
+        }
+        return count;
+    }
 
 
 

@@ -17,6 +17,7 @@ public class Reducer extends Thread {
 
     HashMap<String, Integer> mapIDCounter;
     HashMap<String, ArrayList<Room>> mapValueBuffer;
+    HashMap<String, HashMap<String,Integer>> areaBookings;
     private int numOfWorkers;
 
 
@@ -59,7 +60,7 @@ public class Reducer extends Thread {
 
             while (true) {
                 socket = server.accept();
-                Thread t = new ReducerThread(socket, mapIDCounter, numOfWorkers, mapValueBuffer);
+                Thread t = new ReducerThread(socket, mapIDCounter, numOfWorkers, mapValueBuffer, areaBookings);
                 t.start();
             }
         } catch (IOException e) {
