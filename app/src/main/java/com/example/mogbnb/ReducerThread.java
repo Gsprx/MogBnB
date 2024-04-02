@@ -48,7 +48,6 @@ public class ReducerThread extends Thread{
             }
             //when the counter reaches num of workers, the reducer thread can output the result of the workers
             if(mapIDCounter.get(mapID) == numOfWorkers){
-
                 //send the final refined list to the master using the reducer -> master port
                 Socket masterSocket = new Socket("localhost", Config.REDUCER_MASTER_PORT);
                 ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());

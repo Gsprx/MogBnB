@@ -32,6 +32,7 @@ public class Master extends Thread {
 
     /* Socket for handling the connection */
     ServerSocket server;
+    ServerSocket reducerListener;
 
     public Master(int numOfWorkers) {
         this.numOfWorkers = numOfWorkers;
@@ -54,18 +55,29 @@ public class Master extends Thread {
             // create the server socket
             server = new ServerSocket(Config.USER_MASTER_PORT);
 
+            // create the reducer listener server socket
+            reducerListener = new ServerSocket(Config.REDUCER_MASTER_PORT);
+
             // start the workers
             for (Worker w : workers)
                 w.start();
+
             // start the reducer
             Reducer reducer = new Reducer();
             reducer.start();
+            // pass the num of workers to the reducer
+            Socket initToReducer = new Socket("localhost", Config.MASTER_REDUCER_PORT);
+            ObjectOutputStream outNoOfWorkers = new ObjectOutputStream(initToReducer.getOutputStream());
+            outNoOfWorkers.writeInt(numOfWorkers);
+            outNoOfWorkers.flush();
+            outNoOfWorkers.close();
+            initToReducer.close();
 
             while (true) {
                 // accept the connection for user-master
                 socket = server.accept();
 
-                Thread t = new MasterThread(socket);
+                Thread t = new MasterThread(socket, reducerListener);
                 t.start();
             }
         } catch (IOException e) {

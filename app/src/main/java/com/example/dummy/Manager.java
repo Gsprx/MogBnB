@@ -56,8 +56,8 @@ public class Manager {
 
         try {
             socket = new Socket("localhost", Config.USER_MASTER_PORT);
-            in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
 
             // out the show rooms function
             out.writeInt(MasterFunction.SHOW_ROOMS.getEncoded());
@@ -165,8 +165,8 @@ public class Manager {
         else {
             try {
                 socket = new Socket("localhost", Config.USER_MASTER_PORT);
-                in = new ObjectInputStream(socket.getInputStream());
                 out = new ObjectOutputStream(socket.getOutputStream());
+                in = new ObjectInputStream(socket.getInputStream());
 
                 Room r = new Room(rName, noOfPeople, availDays, area, 0, 0, roomImg, price);
 

@@ -39,9 +39,9 @@ public class WorkerThread extends Thread {
      *                find_x_ - return specific room based on room's name
      */
     public void run() {
-        if(mapID.contains("show")){
+        if(mapID.contains("manager_show")){
             showRooms();
-        } else if (mapID.contains("add")) {
+        } else if (mapID.contains("manager_add")) {
             addRoom();
         } else if (mapID.contains("search")) {
             searchRooms();

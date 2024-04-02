@@ -22,24 +22,31 @@ public class Reducer extends Thread {
 
     public Reducer(){
         mapIDCounter = new HashMap<>();
+        mapValueBuffer = new HashMap<>();
     }
+
+    /*
     public static void main(String[] args){
         Reducer reducer = new Reducer();
         reducer.start();
     }
+     */
 
     public void run() {
         // Get number of workers once
         if(numOfWorkers == 0) {
             synchronized ((Integer) numOfWorkers) {
                 try {
-                    Socket initSocket = new Socket("localhost", Config.MASTER_REDUCER_PORT);
+                    ServerSocket initSocketServer = new ServerSocket(Config.MASTER_REDUCER_PORT);
+                    Socket initSocket = initSocketServer.accept();
+
                     ObjectInputStream initInputStream = new ObjectInputStream(initSocket.getInputStream());
 
                     numOfWorkers = initInputStream.readInt();
 
                     initInputStream.close();
                     initSocket.close();
+                    initSocketServer.close();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -47,16 +54,16 @@ public class Reducer extends Thread {
         }
 
         //setup the server and start while true loop
-        while(true) {
-            try {
-                server = new ServerSocket(Config.WORKER_REDUCER_PORT);
+        try {
+            server = new ServerSocket(Config.WORKER_REDUCER_PORT);
+
+            while (true) {
                 socket = server.accept();
                 Thread t = new ReducerThread(socket, mapIDCounter, numOfWorkers, mapValueBuffer);
                 t.start();
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
