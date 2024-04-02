@@ -9,13 +9,13 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ReducerThread extends Thread{
+public class ReducerThread extends Thread {
     private ObjectInputStream in;
     private final int numOfWorkers;
     private HashMap<String, Integer> mapIDCounter;
     private HashMap<String, ArrayList<Room>> mapValueBuffer;
 
-    public ReducerThread(Socket socket, HashMap<String, Integer> mapIDBuffer, int numOfWorkers, HashMap<String, ArrayList<Room>> mapValueBuffer){
+    public ReducerThread(Socket socket, HashMap<String, Integer> mapIDBuffer, int numOfWorkers, HashMap<String, ArrayList<Room>> mapValueBuffer) {
         try {
             this.numOfWorkers = numOfWorkers;
             this.mapIDCounter = mapIDBuffer;
@@ -26,7 +26,7 @@ public class ReducerThread extends Thread{
         }
     }
 
-    public void run(){
+    public void run() {
         try {
             //read map code
             String mapID = (String) in.readObject();
@@ -47,7 +47,7 @@ public class ReducerThread extends Thread{
                 }
             }
             //when the counter reaches num of workers, the reducer thread can output the result of the workers
-            if(mapIDCounter.get(mapID) == numOfWorkers){
+            if(mapIDCounter.get(mapID) == numOfWorkers) {
                 //send the final refined list to the master using the reducer -> master port
                 Socket masterSocket = new Socket("localhost", Config.REDUCER_MASTER_PORT);
                 ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());

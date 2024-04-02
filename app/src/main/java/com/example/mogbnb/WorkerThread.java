@@ -33,17 +33,20 @@ public class WorkerThread extends Thread {
     /**
      * Used by threads to run their different functions based on mapID.
      * <p>
-     * (NOTE) mapIDs: show_x_ - return all rooms
-     *                add_x_ - add a room
-     *                search_x_ - search rooms
+     * (NOTE) mapIDs: manager_show_x_ - return all rooms
+     *                manager_add_x_ - add a room
+     *                manager_show_bookings_x - return all bookings
+     *                manager_area_bookings_x - return bookings per area for a time period
+     *                tenant_search_x_ - search rooms
      *                find_x_ - return specific room based on room's name
      */
+    // TODO: function manager_booking_areas
     public void run() {
         if(mapID.contains("manager_show")){
             showRooms();
         } else if (mapID.contains("manager_add")) {
             addRoom();
-        } else if (mapID.contains("search")) {
+        } else if (mapID.contains("tenant_search")) {
             searchRooms();
         } else if (mapID.contains("find")) {
             findRoomByName();
