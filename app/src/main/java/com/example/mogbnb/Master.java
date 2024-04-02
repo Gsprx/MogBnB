@@ -61,6 +61,10 @@ public class Master extends Thread {
             // start the workers
             for (Worker w : workers)
                 w.start();
+            // start the reducer
+            Reducer reducer = new Reducer();
+            reducer.start();
+
             // load the rooms to the workers
             for (Room r : TEMP_ROOM_DAO) {
                 int workerIndex = (Master.hash(r.getRoomName()) % numOfWorkers) + 1;
@@ -73,9 +77,6 @@ public class Master extends Thread {
                 loadToWorker.close();
             }
 
-            // start the reducer
-            Reducer reducer = new Reducer();
-            reducer.start();
             // pass the num of workers to the reducer
             Socket initToReducer = new Socket("localhost", Config.MASTER_REDUCER_PORT);
             ObjectOutputStream outNoOfWorkers = new ObjectOutputStream(initToReducer.getOutputStream());
@@ -83,6 +84,7 @@ public class Master extends Thread {
             outNoOfWorkers.flush();
             outNoOfWorkers.close();
             initToReducer.close();
+
 
             while (true) {
                 // accept the connection for user-master
