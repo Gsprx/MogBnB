@@ -70,7 +70,15 @@ public class WorkerThread extends Thread {
     // expected mapValue is a Room Object
     private void addRoom(){
         synchronized (rooms) {
-            this.rooms.add((Room) mapValue);
+            Room room = (Room) mapValue;
+            for (Room r : rooms) {
+                if (r.equals(room)) {
+                    System.out.println(workerID + ": ");
+                    System.out.println("Room \"" + r.getRoomName() + "\" already exists");
+                    return;
+                }
+            }
+            this.rooms.add(room);
             System.out.println(workerID + ": ");
             System.out.println((Room) mapValue);
         }

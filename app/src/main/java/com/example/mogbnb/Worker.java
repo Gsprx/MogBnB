@@ -50,9 +50,4 @@ public class Worker extends Thread {
             e.printStackTrace();
         }
     }
-
-    public void addRoom(Room room) {
-        this.roomData.add(room);
-    }
-
 }

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import java.io.Serializable;
 import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
+import java.util.Objects;
 
 
 public class Room implements Serializable {
@@ -143,8 +144,18 @@ public class Room implements Serializable {
         return count;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Room)) return false;
+        Room room = (Room) o;
+        return Objects.equals(roomName, room.roomName);
+    }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(roomName);
+    }
 
     //
     // setter functions

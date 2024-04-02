@@ -83,7 +83,7 @@ public class ReducerThread extends Thread {
             throw new RuntimeException(e);
         }
     }
-    private void areaBookingReduce(String mapID){
+    private void areaBookingReduce(String mapID) {
         try{
             synchronized (mapIDCounter){
                 synchronized (areaBookings){
