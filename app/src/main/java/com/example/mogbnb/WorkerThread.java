@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -50,12 +51,13 @@ public class WorkerThread extends Thread {
             searchRooms();
         } else if (mapID.contains("find")) {
             findRoomByName();
+        } else if (mapID.contains("manager_area_bookings")) {
+            areaBookings();
         }
     }
 
     //  ------------------------      WORK FUNCTIONS      ----------------------------------
 
-    // mapID: 1
     // expected mapValue is null
     private void showRooms(){
         ArrayList<Room> result = new ArrayList<>(rooms);
@@ -63,7 +65,6 @@ public class WorkerThread extends Thread {
     }
 
 
-    // mapID: 2
     // expected mapValue is a Room Object
     private void addRoom(){
         synchronized (rooms) {
@@ -72,7 +73,6 @@ public class WorkerThread extends Thread {
     };
 
 
-    // mapID: 3
     // expected mapValue is a Filter object
     private void searchRooms(){
         ArrayList<Room> result = new ArrayList<>();
@@ -85,7 +85,6 @@ public class WorkerThread extends Thread {
         sendResults(result);
     }
 
-    //mapID: 4
     // expected mapValue is a String
     private void findRoomByName(){
         ArrayList<Room> result = new ArrayList<>();
@@ -98,10 +97,23 @@ public class WorkerThread extends Thread {
         }
     }
 
+    // expected mapValue is a Filter object
+    private void areaBookings(){
+        HashMap<String,Integer> areaResults = new HashMap<>();
+        Filter filter = (Filter) mapValue;
+        for(Room r : rooms){
+            if(r.filterAccepted(filter)) {
+                areaResults.merge(r.getArea(), r.totalDaysBooked(), Integer::sum);
+            }
+        }
+        sendResults(areaResults);
+
+    }
+
     /**
      * Function used to send the output of the work completed to the reducer node.
      */
-    private void sendResults(ArrayList<Room> resultRooms){
+    private void sendResults(Object resultForReducer){
         try {
             //socket used to send results to reducer
             Socket outputSocket = new Socket("localhost", Config.WORKER_REDUCER_PORT);
@@ -112,7 +124,7 @@ public class WorkerThread extends Thread {
             //write mapID
             out.writeObject(mapID);
             //write rooms array list
-            out.writeObject(resultRooms);
+            out.writeObject(resultForReducer);
             out.flush();
 
 
