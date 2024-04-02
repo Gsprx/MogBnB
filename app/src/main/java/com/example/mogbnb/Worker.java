@@ -15,7 +15,7 @@ import java.util.List;
 public class Worker extends Thread {
     private ArrayList<Room> roomData;
     private static int classID;
-    private int id;
+    private final int id;
 
     public Worker(){
         roomData = new ArrayList<>(Master.TEMP_ROOM_DAO);
