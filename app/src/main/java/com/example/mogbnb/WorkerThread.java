@@ -13,56 +13,41 @@ import java.util.ArrayList;
  * Threads used by workers to handle multithreaded workloads
  * The worker thread is mewing and looksmaxxing even after being called for labor
  */
-public class WorkerThread extends Thread{
-    private Socket socket = null;
-    private Object mapValue;
-    private int mapID;
+public class WorkerThread extends Thread {
+    ObjectInputStream in;
+    private final Object mapValue;
+    private final String mapID;
     private final ArrayList<Room> rooms;
 
     public WorkerThread(Socket socket, ArrayList<Room> rooms) {
-        this.socket = socket;
         this.rooms = rooms;
-    }
-
-    /**
-     * Used by threads to run their different functions based on mapID
-     * (NOTE) mapIDs: 1 - return all rooms
-     *                2 - add a room
-     *                3 - search rooms
-     *                4 - return specific room based on room's name
-     */
-    public void run(){
-        ObjectInputStream in;
         try {
             in = new ObjectInputStream(socket.getInputStream());
-            mapID = in.readInt();
+            mapID = (String) in.readObject();
             mapValue = in.readObject();
-            switch (mapID){
-                case 1: {
-                    showRooms();
-                    break;
-                }
-                case 2:{
-                    addRoom();
-                    break;
-                }
-                case 3: {
-                    searchRooms();
-                    break;
-                }
-                case 4:{
-                    findRoomByName();
-                    break;
-                }
-                default:{
-                    throw new RuntimeException("Error! Invalid MapID");
-                }
-            }
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
 
-
+    /**
+     * Used by threads to run their different functions based on mapID.
+     * <p>
+     * (NOTE) mapIDs: show_x_ - return all rooms
+     *                add_x_ - add a room
+     *                search_x_ - search rooms
+     *                find_x_ - return specific room based on room's name
+     */
+    public void run() {
+        if(mapID.contains("show")){
+            showRooms();
+        } else if (mapID.contains("add")) {
+            addRoom();
+        } else if (mapID.contains("search")) {
+            searchRooms();
+        } else if (mapID.contains("find")) {
+            findRoomByName();
+        }
     }
 
     //  ------------------------      WORK FUNCTIONS      ----------------------------------
@@ -122,7 +107,7 @@ public class WorkerThread extends Thread{
             ObjectOutputStream out = new ObjectOutputStream(outputSocket.getOutputStream());
 
             //write mapID
-            out.writeInt(mapID);
+            out.writeObject(mapID);
             //write rooms array list
             out.writeObject(resultRooms);
             out.flush();

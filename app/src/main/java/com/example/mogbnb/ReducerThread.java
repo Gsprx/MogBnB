@@ -11,7 +11,6 @@ import java.util.HashMap;
 
 public class ReducerThread extends Thread{
     private ObjectInputStream in;
-    private ObjectOutputStream out;
     private final int numOfWorkers;
     private HashMap<String, Integer> mapIDCounter;
     private HashMap<String, ArrayList<Room>> mapValueBuffer;
@@ -53,7 +52,7 @@ public class ReducerThread extends Thread{
 
                 //send the final refined list to the master using the reducer -> master port
                 Socket masterSocket = new Socket("localhost", Config.REDUCER_MASTER_PORT);
-                out = new ObjectOutputStream(masterSocket.getOutputStream());
+                ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
                 out.writeObject(mapID);
                 out.writeObject(mapValueBuffer.get(mapID));
                 out.flush();
