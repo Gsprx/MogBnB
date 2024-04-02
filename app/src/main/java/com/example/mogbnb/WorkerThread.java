@@ -18,8 +18,10 @@ public class WorkerThread extends Thread {
     private final Object mapValue;
     private final String mapID;
     private final ArrayList<Room> rooms;
+    private int workerID;
 
-    public WorkerThread(Socket socket, ArrayList<Room> rooms) {
+    public WorkerThread(Socket socket, ArrayList<Room> rooms, int id) {
+        this.workerID = id;
         this.rooms = rooms;
         try {
             in = new ObjectInputStream(socket.getInputStream());
@@ -68,6 +70,8 @@ public class WorkerThread extends Thread {
     private void addRoom(){
         synchronized (rooms) {
             this.rooms.add((Room) mapValue);
+            System.out.println(workerID + ": ");
+            System.out.println((Room) mapValue);
         }
     };
 
