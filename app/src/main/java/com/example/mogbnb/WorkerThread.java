@@ -88,7 +88,7 @@ public class WorkerThread extends Thread{
     // expected mapValue is a Filter object
     private void searchRooms(){
         ArrayList<Room> result = new ArrayList<>();
-        Filter filter = (Filter)mapValue;
+        Filter filter = (Filter) mapValue;
         for (Room room : rooms){
             if(room.filterAccepted(filter)){
                 result.add(room);

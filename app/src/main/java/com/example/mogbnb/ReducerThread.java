@@ -28,12 +28,11 @@ public class ReducerThread extends Thread{
     }
 
     public void run(){
-
         try {
             //read map code
-            String mapID = (String)in.readObject();
+            String mapID = (String) in.readObject();
 
-        //check if mapID exists already in the counter
+            //check if mapID exists already in the counter
             synchronized (mapIDCounter) {
                 synchronized (mapValueBuffer) {
                     //if key exists       : increase the value of the counter related to the specific map ID by 1
@@ -49,7 +48,7 @@ public class ReducerThread extends Thread{
                 }
             }
             //when the counter reaches num of workers, the reducer thread can output the result of the workers
-            if(mapIDCounter.get(mapID)==numOfWorkers){
+            if(mapIDCounter.get(mapID) == numOfWorkers){
 
                 //send the final refined list to the master using the reducer -> master port
                 Socket masterSocket = new Socket("localhost", Config.REDUCER_MASTER_PORT);
