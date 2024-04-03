@@ -20,11 +20,13 @@ import java.util.Scanner;
 public class Tenant {
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static void runTenant() {displayOperationOptions();}
+    public static void runTenant() {
+        Tenant tenant = new Tenant();
+        displayOperationOptions(tenant);}
         /**
          * Displays a menu of operations (see bookings, search for a room, rate a room, exit) and processes user input to perform the selected action.
          */
-        private static void displayOperationOptions(){
+        private static void displayOperationOptions(Tenant tenant){
             while (true) {
                 System.out.println("\nPlease select an operation:");
                 System.out.println("1. See my bookings");
@@ -38,7 +40,7 @@ public class Tenant {
 
                 switch (choice) {
                     case 1:
-                        seeBookings();
+                        seeBookings(tenant);
                         break;
                     case 2:
                         searchRoom();
@@ -57,13 +59,13 @@ public class Tenant {
 
 
 
-    private static void seeBookings() {
+    private static void seeBookings( Tenant tenant) {
         try (Socket socket = new Socket("localhost", Config.USER_MASTER_PORT);
              ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
              ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
             out.writeInt(MasterFunction.SHOW_BOOKINGS.getEncoded());
-            // out.writeObject(null);
+            out.writeObject(tenant);
             out.flush();
 
             List<Room> bookings = (List<Room>) in.readObject();
