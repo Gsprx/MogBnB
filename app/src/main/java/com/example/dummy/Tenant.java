@@ -148,40 +148,53 @@ public class Tenant {
     private static void rateRoom() {
         System.out.println("\nEnter the name of the room you want to rate:");
         String roomName = scanner.nextLine();
-        double rating = 0;
-        boolean validInput = false;
-
-        while (!validInput) {
-            try {
-                System.out.println("Enter your rating (0.0 to 5.0):");
-                rating = Double.parseDouble(scanner.nextLine());
-                if (rating < 0 || rating > 5) {
-                    System.out.println("Rating must be between 0.0 and 5.0.");
-                } else {
-                    validInput = true;
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a valid number.");
-            }
-        }
 
         try (Socket socket = new Socket("localhost", Config.USER_MASTER_PORT);
              ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
              ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
-            // Send the action identifier for rating a room
+
+            out.writeInt(MasterFunction.SEARCH_ROOM.getEncoded());
+            // Send the room name for searching
+            out.writeObject(roomName);
+            out.flush();
+
+            // Receive the room information from the server
+            Room room = (Room) in.readObject();
+            if (room == null) {
+                System.out.println("Room not found.");
+                return;
+            }
+
+            double rating = 0;
+            boolean validInput = false;
+
+            while (!validInput) {
+                try {
+                    System.out.println("Enter your rating (0.0 to 5.0):");
+                    rating = Double.parseDouble(scanner.nextLine());
+                    if (rating < 0 || rating > 5) {
+                        System.out.println("Rating must be between 0.0 and 5.0.");
+                    } else {
+                        validInput = true;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a valid number.");
+                }
+            }
+
+            // Now, send the rating along with room information to the server
             out.writeInt(MasterFunction.RATE_ROOM.getEncoded());
-            // Send the room name and rating encapsulated in a serializable object or as separate data
-            out.writeObject(new Object[]{roomName, rating});
+            out.writeObject(new Object[]{room, rating});
             out.flush();
 
             // Await confirmation from the server
             String response = (String) in.readObject();
             System.out.println(response);
+
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("An error occurred while communicating with the server: " + e.getMessage());
         }
-
     }
 }
 
