@@ -16,9 +16,9 @@ import java.util.HashMap;
  */
 public class WorkerThread extends Thread {
     ObjectInputStream in;
-    private final Object mapValue;
-    private final String mapID;
-    private final ArrayList<Room> rooms;
+    private Object mapValue;
+    private String mapID;
+    private ArrayList<Room> rooms;
     private int workerID;
 
     public WorkerThread(Socket socket, ArrayList<Room> rooms, int id) {
@@ -41,6 +41,7 @@ public class WorkerThread extends Thread {
      *                manager_show_bookings_x - return all bookings
      *                manager_area_bookings_x - return bookings per area for a time period
      *                tenant_search_x_ - search rooms
+     *                tenant_rate_x_ - rate a specific room
      *                find_x_ - return specific room based on room's name
      */
     // TODO: function manager_booking_areas
@@ -55,6 +56,8 @@ public class WorkerThread extends Thread {
             findRoomByName();
         } else if (mapID.contains("manager_area_bookings")) {
             areaBookings();
+        } else if(mapID.contains("tenant_rate")){
+            rateRoom();
         }
     }
 
@@ -119,6 +122,25 @@ public class WorkerThread extends Thread {
             }
         }
         sendResults(areaResults);
+    }
+
+    //expected mapValue is an array [room_name, rating]
+    private void rateRoom() {
+        String roomName = (String) ((Object[]) mapValue)[0];
+        int rating = (int) ((Object[]) mapValue)[1];
+        boolean foundRoom = false;
+        for (Room r : rooms) {
+            if (r.getRoomName().equalsIgnoreCase(roomName)) {
+                synchronized (r) {
+                    r.addReview(rating);
+                    foundRoom = true;
+                }
+            }
+        }
+        //return a verification message back to master
+        if(foundRoom){
+            sendResults(true);
+        }
     }
 
     /**
