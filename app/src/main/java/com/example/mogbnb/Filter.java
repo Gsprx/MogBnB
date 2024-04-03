@@ -4,11 +4,12 @@ import androidx.annotation.NonNull;
 
 import com.example.misc.JsonConverter;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import java.util.Scanner;
 
-public class Filter {
+public class Filter implements Serializable {
 
 
     private final String area;

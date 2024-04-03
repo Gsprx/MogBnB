@@ -24,6 +24,18 @@ public enum MasterFunction {
     FIND_ROOM_BY_NAME{
         @Override
         public int getEncoded(){return 4;}
+    },
+    SEARCH_ROOM{
+        @Override
+        public int getEncoded(){return 5;}
+    },
+    RATE_ROOM{
+        @Override
+        public int getEncoded(){return 6;}
+    },
+    SHOW_BOOKINGS{
+        @Override
+        public int getEncoded(){return 7;}
     };
 
     public abstract int getEncoded();
