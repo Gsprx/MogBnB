@@ -40,49 +40,6 @@ public class DummyMain {
      //   displayOperationOptions();
     //}
 
-    /**
-     * Displays a menu of operations (see bookings, search for a room, rate a room, exit) and processes user input to perform the selected action.
-     */
-    private static void displayOperationOptions() {
-        while (true) {
-            System.out.println("\nPlease select an operation:");
-            System.out.println("1. See my bookings");
-            System.out.println("2. Search for a room");
-            System.out.println("3. Rate a room");
-            System.out.println("4. Exit");
-            System.out.print("Your choice: ");
-
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
-
-            switch (choice) {
-                case 1:
-                    seeBookings();
-                    break;
-                case 2:
-                    searchRoom();
-                    break;
-                case 3:
-                    rateRoom();
-                    break;
-                case 4:
-                    System.out.println("Exiting...");
-                    return;
-                default:
-                    System.out.println("Invalid choice. Please select again.");
-            }
-        }
-    }
-    private static void seeBookings() {
-        for (Room room : rooms) {
-            System.out.println("Room: " + room.getRoomName());
-            for (int i = 0; i < room.getAvailableDays(); i++) {
-                if (room.getBookingTable()[i]) {
-                    System.out.println("Booked on: " + LocalDate.now().plusDays(i));
-                }
-            }
-        }
-    }
 
 
     private static void searchRoom() {
