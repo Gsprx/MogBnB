@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -64,9 +65,9 @@ public class Manager {
             out.writeObject(null);
             out.flush();
 
-            int resultID = in.readInt();
+            String resultID = (String) in.readObject();
             System.out.println("[Result-ID: " + resultID + "]");
-            List<Room> resultObj = (List<Room>) in.readObject();
+            ArrayList<Room> resultObj = (ArrayList<Room>) in.readObject();
 
             System.out.println("|Registered rooms|");
             if (resultObj != null) {
@@ -86,8 +87,6 @@ public class Manager {
      * Add a new room.
      */
     private static void managerAddRoom() {
-        // waiting input stream -> its going to be a confirmation that the room has been added
-        ObjectInputStream in = null;
         // a complex TCP Holder Object that holds a code for the function that needs to be executed and an object argument
         ObjectOutputStream out = null;
         Socket socket = null;
@@ -166,7 +165,6 @@ public class Manager {
             try {
                 socket = new Socket("localhost", Config.USER_MASTER_PORT);
                 out = new ObjectOutputStream(socket.getOutputStream());
-                in = new ObjectInputStream(socket.getInputStream());
 
                 Room r = new Room(rName, noOfPeople, availDays, area, 0, 0, roomImg, price);
 
@@ -174,9 +172,6 @@ public class Manager {
                 out.writeInt(MasterFunction.ADD_ROOM.getEncoded());
                 out.writeObject(r);
                 out.flush();
-
-                int resultID = in.readInt();
-                System.out.println("[Result-ID: " + resultID + "]");
 
                 System.out.println();
 

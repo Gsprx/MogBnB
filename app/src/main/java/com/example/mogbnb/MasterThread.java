@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,14 +42,6 @@ public class MasterThread extends Thread {
                 default:
                     break;
             }
-
-            // case 2: add room
-            if (inputID == MasterFunction.ADD_ROOM.getEncoded()) {
-                Room r = (Room) in.readObject();
-                Master.TEMP_ROOM_DAO.add(r);
-                out.writeInt(MasterFunction.ADD_ROOM.getEncoded());
-                out.writeObject(null);
-            }
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -60,26 +53,43 @@ public class MasterThread extends Thread {
 
     //  ------------------------      WORK FUNCTIONS      ----------------------------------
 
-    // mapID: 1
+    /**
+     * Show rooms | inputID : 1
+     * - Create mapID
+     * - Send request to each worker
+     * - Wait for response from reducer
+     * - Answer to user
+     */
     private void showRooms() {
+        // send mapID to workers
         String mapID;
         synchronized (Master.INPUT_IDs) {
-            mapID = "manager_show" + Master.INPUT_IDs.get(MasterFunction.SHOW_ROOMS.getEncoded());
+            mapID = "manager_show_" + Master.INPUT_IDs.get(MasterFunction.SHOW_ROOMS.getEncoded());
             // increment
             Master.INPUT_IDs.merge(MasterFunction.SHOW_ROOMS.getEncoded(), 1, Integer::sum);
         }
-        
+        // send to each worker
         for (int i = 1; i <= Config.NUM_OF_WORKERS; i++) {
             sendRequest(mapID, null, i);
         }
 
         try {
+            // listen for reply from reducer
             Socket reducerResultSocket = reducerListener.accept();
 
+            // read from reducer
             ObjectInputStream reducer_in = new ObjectInputStream(reducerResultSocket.getInputStream());
-            System.out.println((String) reducer_in.readObject());
+            String mapIdResult = (String) reducer_in.readObject();
             ArrayList<Room> roomsResult = (ArrayList<Room>) reducer_in.readObject();
-            for (Room r : roomsResult) System.out.println(r);
+
+            // write to user
+            out.writeObject(mapIdResult);
+            out.writeObject(roomsResult);
+            out.flush();
+
+            // close
+            reducer_in.close();
+            reducerResultSocket.close();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -88,13 +98,35 @@ public class MasterThread extends Thread {
         }
     }
 
-    // mapID: 2
+    /**
+     * Add room | inputID : 2
+     * - Create mapID
+     * - Hash input value
+     * - Assign the right worker
+     * - Send request to worker
+     */
     private void addRoom(){
+        // send mapID to workers
+        String mapID;
+        synchronized (Master.INPUT_IDs) {
+            mapID = "manager_add_" + Master.INPUT_IDs.get(MasterFunction.ADD_ROOM.getEncoded());
+            // increment
+            Master.INPUT_IDs.merge(MasterFunction.ADD_ROOM.getEncoded(), 1, Integer::sum);
+        }
 
+        // get the worker we need to out to using hash function
+        Room r = (Room) inputValue;
+        int workerIndex = (Master.hash(r.getRoomName()) % Config.NUM_OF_WORKERS) + 1;
+
+        // send to worker
+        sendRequest(mapID, r, workerIndex);
     }
 
     /**
      * Function used to send request of the work needed to be done by the workers.
+     * @param mapID The mapID value
+     * @param mapValue The object passed
+     * @param workerIndex The worker we are passing to
      */
     private void sendRequest(String mapID, Object mapValue, int workerIndex) {
         try {
@@ -113,6 +145,5 @@ public class MasterThread extends Thread {
             throw new RuntimeException(e);
         }
     }
-
 }
 

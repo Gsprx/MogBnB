@@ -18,7 +18,7 @@ public class Worker extends Thread {
     private final int id;
 
     public Worker(){
-        roomData = new ArrayList<>(Master.TEMP_ROOM_DAO);
+        roomData = new ArrayList<>();
         classID++;
         id = classID;
     }
@@ -42,7 +42,7 @@ public class Worker extends Thread {
             while(true){
                 receiverSocket = serverSocket.accept();
 
-                Thread workThread = new WorkerThread(receiverSocket, this.roomData);
+                Thread workThread = new WorkerThread(receiverSocket, this.roomData, this.id);
                 workThread.start();
             }
 
@@ -50,5 +50,4 @@ public class Worker extends Thread {
             e.printStackTrace();
         }
     }
-
 }
