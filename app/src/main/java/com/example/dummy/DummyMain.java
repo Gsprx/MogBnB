@@ -21,7 +21,6 @@ public class DummyMain {
      */
     public static void main(String[] args) {
         String acc_typ;
-        //TODO
 
         // get the account type (master or tenant)
         // if the user does not give valid info then ask again
@@ -36,9 +35,6 @@ public class DummyMain {
         if (acc_typ.equals("m")) Manager.runManager();
         else Tenant.runTenant();
     }
-    //private static void runTenant() {
-     //   displayOperationOptions();
-    //}
 
     /**
      * Displays a menu of operations (see bookings, search for a room, rate a room, exit) and processes user input to perform the selected action.

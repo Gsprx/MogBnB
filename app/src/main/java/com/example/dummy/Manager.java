@@ -51,7 +51,7 @@ public class Manager {
     private static void managerShowRooms() {
         // waiting input stream -> its going to be a list with all the registered rooms
         ObjectInputStream in = null;
-        // a complex TCP Holder Object that holds a code for the function that needs to be executed and an object argument
+        // holds a code for the function that needs to be executed and an object argument
         ObjectOutputStream out = null;
         Socket socket = null;
 
@@ -87,7 +87,7 @@ public class Manager {
      * Add a new room.
      */
     private static void managerAddRoom() {
-        // a complex TCP Holder Object that holds a code for the function that needs to be executed and an object argument
+        // holds a code for the function that needs to be executed and an object argument
         ObjectOutputStream out = null;
         Socket socket = null;
 
@@ -204,7 +204,21 @@ public class Manager {
                 } else if (!option.equals("1") && !option.equals("2"))
                     System.out.println("[-] Option " + option + " not found.");
             } while (!option.equals("1") && !option.equals("2"));
+
+            // option 1: show all bookings
+            if (option.equals("1")) continue;
+            else managerShowBookingsPerArea();
         }
+    }
+
+    private static void managerShowBookingsPerArea() {
+        // waiting input stream -> its going to be a list with all the bookings
+        ObjectInputStream in = null;
+        // holds a code for the function that needs to be executed and an object argument
+        ObjectOutputStream out = null;
+        Socket socket = null;
+
+
     }
 
 }

@@ -5,7 +5,6 @@ package com.example.dummy;
 //XRHSIMOPOIHSE TO USERMASTER PORT
 //h lista dao anti na einai hardcoded px pare to room , sthn ousia twra prepei na anoigw tcp object me ton master kai na dinei to request
 import com.example.misc.Config;
-import com.example.misc.TypeChecking;
 import com.example.mogbnb.MasterFunction;
 import com.example.mogbnb.Room;
 import com.example.mogbnb.Filter;
