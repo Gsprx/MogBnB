@@ -110,7 +110,7 @@ public class WorkerThread extends Thread {
     }
 
     // expected mapValue is a Filter object
-    private void areaBookings(){
+    private void areaBookings() {
         HashMap<String,Integer> areaResults = new HashMap<>();
         Filter filter = (Filter) mapValue;
         for(Room r : rooms){
@@ -119,7 +119,6 @@ public class WorkerThread extends Thread {
             }
         }
         sendResults(areaResults);
-
     }
 
     /**

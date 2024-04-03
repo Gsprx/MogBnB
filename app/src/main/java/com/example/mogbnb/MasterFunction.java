@@ -15,6 +15,13 @@ public enum MasterFunction {
         }
     },
 
+    BOOKINGS_PER_AREA {
+        @Override
+        public int getEncoded() {
+            return 3;
+        }
+    },
+
     FIND_ROOM_BY_NAME{
         @Override
         public int getEncoded(){return 10;}

@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MasterThread extends Thread {
@@ -38,6 +39,9 @@ public class MasterThread extends Thread {
                     break;
                 case 2:
                     addRoom();
+                    break;
+                case 3:
+                    bookingsPerArea();
                     break;
                 default:
                     break;
@@ -120,6 +124,52 @@ public class MasterThread extends Thread {
 
         // send to worker
         sendRequest(mapID, r, workerIndex);
+    }
+
+    /**
+     * Show bookings per area for a given time period | inputID : 3
+     * - Create mapID
+     * - Send request to each worker
+     * - Wait for response from reducer
+     * - Answer to user
+     */
+    private void bookingsPerArea() {
+        // send mapID to workers
+        String mapID;
+        synchronized (Master.INPUT_IDs) {
+            mapID = "manager_area_bookings_" + Master.INPUT_IDs.get(MasterFunction.ADD_ROOM.getEncoded());
+            // increment
+            Master.INPUT_IDs.merge(MasterFunction.ADD_ROOM.getEncoded(), 1, Integer::sum);
+        }
+        // send to each worker
+        for (int i = 1; i <= Config.NUM_OF_WORKERS; i++) {
+            sendRequest(mapID, inputValue, i);
+        }
+
+        try {
+            // listen for reply from reducer
+            Socket reducerResultSocket = reducerListener.accept();
+
+            // read from reducer
+            ObjectInputStream reducer_in = new ObjectInputStream(reducerResultSocket.getInputStream());
+            String mapIdResult = (String) reducer_in.readObject();
+            HashMap<String, Integer> result = (HashMap<String, Integer>) reducer_in.readObject();
+
+            // write to user
+            out.writeObject(mapIdResult);
+            out.writeObject(result);
+            out.flush();
+
+            //close
+            reducer_in.close();
+            reducerResultSocket.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     /**

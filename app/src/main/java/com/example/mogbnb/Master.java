@@ -39,6 +39,7 @@ public class Master extends Thread {
         // add all the inputIds and set them to 0
         INPUT_IDs.put(MasterFunction.SHOW_ROOMS.getEncoded(), 0);
         INPUT_IDs.put(MasterFunction.ADD_ROOM.getEncoded(), 0);
+        INPUT_IDs.put(MasterFunction.BOOKINGS_PER_AREA.getEncoded(), 0);
 
         workers = new ArrayList<>();
         for (int i=0; i<numOfWorkers; i++) {
