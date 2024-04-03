@@ -18,7 +18,7 @@ import java.util.List;
 public class Master extends Thread {
 
     // load the existing rooms from json
-    private final List<Room> TEMP_ROOM_DAO = JsonConverter.deserializeRooms("app/src/test/java/com/example/mogbnb/exampleInput.json");
+    private final List<Room> ROOMS_FROM_JSON = JsonConverter.deserializeRooms("app/src/test/java/com/example/mogbnb/exampleInput.json");
 
     // The master is going to send requests to the workers.
     // It needs to keep track of the requests it sends.
@@ -67,7 +67,7 @@ public class Master extends Thread {
             reducer.start();
 
             // load the rooms to the workers
-            for (Room r : TEMP_ROOM_DAO) {
+            for (Room r : ROOMS_FROM_JSON) {
                 int workerIndex = (Master.hash(r.getRoomName()) % numOfWorkers) + 1;
                 Socket loadToWorker = new Socket("localhost", Config.INIT_WORKER_PORT + workerIndex);
                 ObjectOutputStream loadToWorkerOut = new ObjectOutputStream(loadToWorker.getOutputStream());
@@ -86,7 +86,7 @@ public class Master extends Thread {
             outNoOfWorkers.close();
             initToReducer.close();
 
-
+            // listen for requests from user
             while (true) {
                 // accept the connection for user-master
                 socket = server.accept();

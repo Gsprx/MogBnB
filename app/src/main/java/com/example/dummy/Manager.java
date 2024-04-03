@@ -2,6 +2,7 @@ package com.example.dummy;
 
 import com.example.misc.Config;
 import com.example.misc.TypeChecking;
+import com.example.mogbnb.Filter;
 import com.example.mogbnb.MasterFunction;
 import com.example.mogbnb.Room;
 
@@ -9,8 +10,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.UnknownHostException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Manager {
@@ -78,6 +83,11 @@ public class Manager {
                 System.out.println("Empty list...Real quiet...");
             }
             System.out.println("---------------------------------------------\n");
+
+            out.close();
+            in.close();
+            socket.close();
+
         } catch (Exception e) {
             System.out.println("Something went wrong fetching the data. Error: " + e + "\n");
         }
@@ -175,6 +185,9 @@ public class Manager {
 
                 System.out.println();
 
+                out.close();
+                socket.close();
+
             } catch (IOException e) {
                 System.out.println("Something went wrong. Error: " + e + "\nCanceling...\n");
             }
@@ -218,7 +231,51 @@ public class Manager {
         ObjectOutputStream out = null;
         Socket socket = null;
 
+        System.out.println("\n|Bookings per area|");
+        System.out.print("Start date (YYYY-MM-DD): ");
+        LocalDate start = DummyMain.readDate();
+        System.out.print("End date (YYYY-MM-DD): ");
+        LocalDate end = DummyMain.readDate();
 
+        // create a filter with only start and end date
+        Filter dates = new Filter(null, start, end, -1, -1, -1);
+
+        try {
+            socket = new Socket("localhost", Config.USER_MASTER_PORT);
+
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
+
+            // write the filter
+            out.writeInt(MasterFunction.BOOKINGS_PER_AREA.getEncoded());
+            out.writeObject(dates);
+            out.flush();
+
+            String resultID = (String) in.readObject();
+            System.out.println("[Result-ID: " + resultID + "]");
+            HashMap<String, Integer> areas = (HashMap<String, Integer>) in.readObject();
+
+            // Iterating HashMap
+            if (areas != null) {
+                for (Map.Entry<String, Integer> set : areas.entrySet()) {
+                    System.out.println(set.getKey() + ": " + set.getValue());
+                }
+            } else {
+                System.out.println("Empty list...Real quiet...");
+            }
+            System.out.println();
+
+            out.close();
+            in.close();
+            socket.close();
+
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

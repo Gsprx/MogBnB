@@ -70,15 +70,16 @@ public class DummyMain {
             }
         }
     }
+
     /**
      * Reads a date input from the user, ensuring the format is valid. Allows for blank input to indicate no preference.
-     *
      * @return A LocalDate object if a valid date is entered, or null if no date is specified.
      */
-    private static LocalDate readDate() {
+    public static LocalDate readDate() {
         LocalDate date = null;
         while (true) {
-            String input = scanner.nextLine().trim();
+            Scanner inp = new Scanner(System.in);
+            String input = inp.nextLine().trim();
             if (input.isEmpty()) {
                 // No date entered, return null to indicate no preference
                 return null;
@@ -87,17 +88,16 @@ public class DummyMain {
                     date = LocalDate.parse(input); // Try to parse the input
                     break; // Break the loop if parsing is successful
                 } catch (DateTimeParseException e) {
-
-                    System.out.print("Invalid date format. Please enter a date in YYYY-MM-DD format or leave blank for no preference: ");
+                    System.out.print("[-]Invalid date format. Please enter a date in YYYY-MM-DD format or leave blank for no preference: ");
                 }
             }
         }
         return date;
     }
+
     /**
      * Allows the user to rate a room by its name. Prompts for the room name and the desired rating, then updates the room's information accordingly.
      */
-
     private static void rateRoom() {
         System.out.print("Enter room name to rate: ");
         String roomName = scanner.nextLine();

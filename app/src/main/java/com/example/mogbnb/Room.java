@@ -35,9 +35,8 @@ public class Room implements Serializable {
         for(int i = 0; i<availableDays; i++){
             bookingTable[i] = false;
         }
-        if(currentDate == null){
+        if (currentDate == null)
             currentDate = LocalDate.now();
-        }
     }
 
     /**
@@ -115,8 +114,8 @@ public class Room implements Serializable {
         }
         //filtered days are all available from this point onward
 
-        return (filter.getArea() == null || filter.getArea().equalsIgnoreCase(this.area))&&(filter.getPrice()==0 || filter.getPrice()>=this.pricePerDay)&&(filter.getStars()<=this.stars)
-                &&(filter.getNoOfPersons()==0 || filter.getNoOfPersons()==this.noOfPersons)
+        return (filter.getArea() == null || filter.getArea().equalsIgnoreCase(this.area))&&(filter.getPrice()==-1 || filter.getPrice()>=this.pricePerDay)&&(filter.getStars()<=this.stars)
+                &&(filter.getNoOfPersons()==-1 || filter.getNoOfPersons()==this.noOfPersons)
                 &&(bookingDaysTotal<= availableDays)&&((int) ChronoUnit.DAYS.between(Room.currentDate, checkOutDate)<=availableDays);
     }
 

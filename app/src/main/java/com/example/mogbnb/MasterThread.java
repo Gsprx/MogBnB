@@ -137,9 +137,9 @@ public class MasterThread extends Thread {
         // send mapID to workers
         String mapID;
         synchronized (Master.INPUT_IDs) {
-            mapID = "manager_area_bookings_" + Master.INPUT_IDs.get(MasterFunction.ADD_ROOM.getEncoded());
+            mapID = "manager_area_bookings_" + Master.INPUT_IDs.get(MasterFunction.BOOKINGS_PER_AREA.getEncoded());
             // increment
-            Master.INPUT_IDs.merge(MasterFunction.ADD_ROOM.getEncoded(), 1, Integer::sum);
+            Master.INPUT_IDs.merge(MasterFunction.BOOKINGS_PER_AREA.getEncoded(), 1, Integer::sum);
         }
         // send to each worker
         for (int i = 1; i <= Config.NUM_OF_WORKERS; i++) {
