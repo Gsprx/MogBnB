@@ -8,8 +8,6 @@ import java.util.Objects;
 
 
 public class Room implements Serializable {
-
-
     private String roomName;
     private int noOfPersons;
     private final int availableDays;

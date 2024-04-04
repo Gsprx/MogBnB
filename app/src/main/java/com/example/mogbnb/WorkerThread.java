@@ -41,7 +41,7 @@ public class WorkerThread extends Thread {
      *                manager_show_bookings_x - return all bookings
      *                manager_area_bookings_x - return bookings per area for a time period
      *                tenant_search_x_ - search rooms
-     *                find_x_ - return specific room based on room's name
+     *                manager_find_x_ - return specific room based on room's name
      */
     // TODO: function manager_booking_areas
     public void run() {
@@ -51,7 +51,7 @@ public class WorkerThread extends Thread {
             addRoom();
         } else if (mapID.contains("tenant_search")) {
             searchRooms();
-        } else if (mapID.contains("find")) {
+        } else if (mapID.contains("manager_find")) {
             findRoomByName();
         } else if (mapID.contains("manager_area_bookings")) {
             areaBookings();
@@ -86,11 +86,11 @@ public class WorkerThread extends Thread {
 
 
     // expected mapValue is a Filter object
-    private void searchRooms(){
+    private void searchRooms() {
         ArrayList<Room> result = new ArrayList<>();
-        Filter filter = (Filter) mapValue;
-        for (Room room : rooms){
-            if(room.filterAccepted(filter)){
+        Filter f = (Filter) mapValue;
+        for (Room room : rooms) {
+            if(room.filterAccepted(f)) {
                 result.add(room);
             }
         }
@@ -98,10 +98,10 @@ public class WorkerThread extends Thread {
     }
 
     // expected mapValue is a String
-    private void findRoomByName(){
+    private void findRoomByName() {
         ArrayList<Room> result = new ArrayList<>();
         String queryRoomName = (String) mapValue;
-        for (Room room : rooms){
+        for (Room room : rooms) {
             if (room.getRoomName().equalsIgnoreCase(queryRoomName)){
                 result.add(room);
                 sendResults(result);

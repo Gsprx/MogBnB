@@ -169,7 +169,6 @@ public class MasterThread extends Thread {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     /**

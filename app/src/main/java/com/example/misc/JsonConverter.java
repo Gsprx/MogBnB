@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.List;
 /**
  * Utility class for converting JSON data to Java objects using Gson.
@@ -40,7 +41,7 @@ public class JsonConverter {
         List<Room> rooms = deserializeRooms("app/src/test/java/com/example/mogbnb/exampleInput.json");
         if (rooms != null) {
             for (Room room : rooms) {
-                System.out.println(room.toString());
+                System.out.println(room);
             }
         }
     }

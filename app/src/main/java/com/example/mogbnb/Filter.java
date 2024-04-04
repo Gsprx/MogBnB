@@ -10,8 +10,6 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 public class Filter implements Serializable {
-
-
     private final String area;
     private final LocalDate checkIn;
     private final LocalDate checkOut;

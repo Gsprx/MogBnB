@@ -25,7 +25,7 @@ public class Manager {
         boolean running = true;
         // manager chooses option
         while (running) {
-            System.out.println("1) Show Rooms\n2) Add Room\n3) Bookings\n");
+            System.out.println("1) Show Rooms\n2) Show Room\n3) Add Room\n4) Bookings\n");
             String option;
             // if the user gives invalid info then ask again
             do {
@@ -35,17 +35,29 @@ public class Manager {
                 if (option.equals("exit")) {
                     running = false;
                 }
-                else if (!option.equals("1") && !option.equals("2") && !option.equals("3")) System.out.println("[-] Option " + option + " not found.");
-            } while (!option.equals("1") && !option.equals("2") && !option.equals("3") && !option.equals("exit"));
+                else if (!option.equals("1") && !option.equals("2") && !option.equals("3") && !option.equals("4")) System.out.println("[-] Option " + option + " not found.");
+            } while (!option.equals("1") && !option.equals("2") && !option.equals("3") && !option.equals("4") && !option.equals("exit"));
 
             if (!running) continue;
 
-            // option 1: show all registered rooms
-            if (option.equals("1")) managerShowRooms();
-                // option 2: add a new room (will not write to JSON)
-            else if (option.equals("2")) managerAddRoom();
-                // option 3: manage bookings
-            else managerManageBookings();
+            switch (option) {
+                // option 1: show all registered rooms
+                case "1":
+                    managerShowRooms();
+                    break;
+                // option 2: get room by name
+                case "2":
+                    managerGetRoomByName();
+                    break;
+                // option 3: add a new room (will not write to JSON)
+                case "3":
+                    managerAddRoom();
+                    break;
+                // option 4: manage bookings
+                default:
+                    managerManageBookings();
+                    break;
+            }
         }
     }
 
@@ -91,6 +103,59 @@ public class Manager {
         } catch (Exception e) {
             System.out.println("Something went wrong fetching the data. Error: " + e + "\n");
         }
+    }
+
+    /**
+     * Get a room by its name.
+     */
+    private static void managerGetRoomByName() {
+        // waiting input stream -> its going to be a list with all the registered rooms
+        ObjectInputStream in = null;
+        // holds a code for the function that needs to be executed and an object argument
+        ObjectOutputStream out = null;
+        Socket socket = null;
+
+        // get room name
+        System.out.println("|Get Room by Name|");
+        System.out.print("Name of room: ");
+        Scanner inp = new Scanner(System.in);
+        String input = inp.nextLine();
+
+        try {
+            socket = new Socket("localhost", Config.USER_MASTER_PORT);
+
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
+
+            // write
+            out.writeInt(MasterFunction.FIND_ROOM_BY_NAME.getEncoded());
+            out.writeObject(input);
+            out.flush();
+
+            // wait for input
+            ArrayList<Room> rooms = (ArrayList<Room>) in.readObject();
+
+            if (rooms != null) {
+                for (Room r : rooms) {
+                    System.out.println(r + "\n");
+                }
+            } else {
+                System.out.println("Empty list...Real quiet...");
+            }
+            System.out.println();
+
+            out.close();
+            in.close();
+            socket.close();
+
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     /**
