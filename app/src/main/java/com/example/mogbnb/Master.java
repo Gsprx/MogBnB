@@ -24,6 +24,7 @@ public class Master extends Thread {
     // It needs to keep track of the requests it sends.
     public static final HashMap<Integer, Integer> INPUT_IDs = new HashMap<>();
 
+    protected static int USER_IDS=1;
     int numOfWorkers;
     ArrayList<Worker> workers;
 
@@ -40,7 +41,9 @@ public class Master extends Thread {
         INPUT_IDs.put(MasterFunction.SHOW_ROOMS.getEncoded(), 0);
         INPUT_IDs.put(MasterFunction.ADD_ROOM.getEncoded(), 0);
         INPUT_IDs.put(MasterFunction.BOOKINGS_PER_AREA.getEncoded(), 0);
-
+        INPUT_IDs.put(MasterFunction.SEARCH_ROOM.getEncoded(), 0);
+        INPUT_IDs.put(MasterFunction.SHOW_BOOKINGS.getEncoded(), 0);
+        INPUT_IDs.put(MasterFunction.RATE_ROOM.getEncoded(), 0);
         workers = new ArrayList<>();
         for (int i=0; i<numOfWorkers; i++) {
             workers.add(new Worker());

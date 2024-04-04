@@ -14,8 +14,6 @@ import java.util.Scanner;
 
 public class DummyMain {
     private static final Scanner scanner = new Scanner(System.in);
-    private static List<Room> rooms = JsonConverter.deserializeRooms("app/src/test/java/com/example/mogbnb/exampleInput.json");
-
     /**
      * Main class for managing tenant and manager operations in a room booking application.
      */
@@ -40,38 +38,6 @@ public class DummyMain {
 
 
 
-    private static void searchRoom() {
-        System.out.println("Enter search criteria:");
-
-        System.out.print("Enter area (leave blank for no preference): ");
-        String area = scanner.nextLine();
-
-        System.out.print("Enter check-in date (YYYY-MM-DD, leave blank for no preference): ");
-        LocalDate checkIn = readDate();
-
-        System.out.print("Enter check-out date (YYYY-MM-DD, leave blank for no preference): ");
-        LocalDate checkOut = readDate();
-
-        System.out.print("Number of persons (0 for no preference): ");
-        int noOfPersons = scanner.nextInt();
-
-        System.out.print("Maximum price (0 for no preference): ");
-        double price = scanner.nextDouble();
-
-        System.out.print("Minimum rating (0 for no preference): ");
-        double stars = scanner.nextDouble();
-        scanner.nextLine();
-
-        Filter filter = new Filter(area, checkIn, checkOut, noOfPersons, price, stars);
-
-        // Now apply this filter to each room and display the ones that match
-        System.out.println("Rooms matching your criteria:");
-        for (Room room : rooms) {
-            if (room.filterAccepted(filter)) {
-                System.out.println(room);
-            }
-        }
-    }
 
     /**
      * Reads a date input from the user, ensuring the format is valid. Allows for blank input to indicate no preference.
@@ -96,26 +62,7 @@ public class DummyMain {
         }
         return date;
     }
-
-    /**
-     * Allows the user to rate a room by its name. Prompts for the room name and the desired rating, then updates the room's information accordingly.
-     */
-    private static void rateRoom() {
-        System.out.print("Enter room name to rate: ");
-        String roomName = scanner.nextLine();
-        System.out.print("Enter rating: ");
-        double rating = scanner.nextDouble();
-        scanner.nextLine();
-
-        for (Room room : rooms) {
-            if (room.getRoomName().equalsIgnoreCase(roomName)) {
-                room.addReview(rating);
-                System.out.println("Room rated successfully.");
-                return;
-            }
-        }
-        System.out.println("Room not found.");
-    }
 }
+
 
 

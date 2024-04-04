@@ -1,9 +1,5 @@
 package com.example.dummy;
 
-//
-// TODO: Implement tenant class for dummy app
-//XRHSIMOPOIHSE TO USERMASTER PORT
-//h lista dao anti na einai hardcoded px pare to room , sthn ousia twra prepei na anoigw tcp object me ton master kai na dinei to request
 import com.example.misc.Config;
 import com.example.mogbnb.MasterFunction;
 import com.example.mogbnb.Room;
@@ -12,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -19,13 +16,25 @@ import java.util.Scanner;
 
 public class Tenant {
     private static final Scanner scanner = new Scanner(System.in);
-    private static int id_counter=1;
+
     private int id;
-    Tenant(){
-        id=id_counter;
-        id_counter++;
+    Tenant() {
+        try (Socket socket = new Socket("localhost", Config.USER_MASTER_PORT);
+             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+             ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+
+            out.writeInt(MasterFunction.ASSIGN_USER_ID.getEncoded());
+            out.flush();
+
+            id= in.readInt();
+
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
-    public void runTenant() {
+        public void runTenant() {
 
         displayOperationOptions(this);
 
@@ -162,7 +171,7 @@ public class Tenant {
              ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
 
-            out.writeInt(MasterFunction.SEARCH_ROOM.getEncoded());
+            out.writeInt(MasterFunction.FIND_ROOM_BY_NAME.getEncoded());
             // Send the room name for searching
             out.writeObject(roomName);
             out.flush();

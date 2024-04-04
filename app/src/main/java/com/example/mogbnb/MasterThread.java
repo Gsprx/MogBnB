@@ -52,6 +52,9 @@ public class MasterThread extends Thread {
                 case 7:
                     showBookings();
                     break;
+                case 8:
+                    assign_user_id();
+                    break;
                 default:
                     break;
             }
@@ -297,6 +300,11 @@ public class MasterThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    private void assign_user_id() throws IOException {
+        out.writeInt(Master.USER_IDS);
+        out.flush();
+        Master.USER_IDS++;
     }
 }
 
