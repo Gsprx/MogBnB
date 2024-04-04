@@ -7,6 +7,7 @@ import com.example.mogbnb.Filter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
@@ -14,8 +15,7 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
-public class Tenant {
-    private static final Scanner scanner = new Scanner(System.in);
+public class Tenant implements Serializable {
 
     private int id;
     Tenant() {
@@ -24,10 +24,11 @@ public class Tenant {
              ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
             out.writeInt(MasterFunction.ASSIGN_USER_ID.getEncoded());
+            out.writeObject(null);
+            System.out.println("step 1 add");
             out.flush();
-
             id= in.readInt();
-
+            System.out.println("step 2");
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -44,6 +45,8 @@ public class Tenant {
          * Displays a menu of operations (see bookings, search for a room, rate a room, exit) and processes user input to perform the selected action.
          */
         private static void displayOperationOptions(Tenant tenant){
+            Scanner scanner = new Scanner(System.in);
+
             while (true) {
                 System.out.println("\nPlease select an operation:");
                 System.out.println("1. See my bookings");
@@ -77,6 +80,7 @@ public class Tenant {
 
 
     private static void seeBookings( Tenant tenant) {
+
         try (Socket socket = new Socket("localhost", Config.USER_MASTER_PORT);
              ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
              ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
@@ -97,6 +101,8 @@ public class Tenant {
     }
 
     private static void searchRoom() {
+        Scanner scanner = new Scanner(System.in);
+
         System.out.print("Enter area (leave blank for no preference): ");
         String area = scanner.nextLine();
 
@@ -139,6 +145,8 @@ public class Tenant {
      * @return A LocalDate object if a valid date is entered, or null if no date is specified.
      */
     private static LocalDate readDate() {
+        Scanner scanner = new Scanner(System.in);
+
         LocalDate date = null;
         while (true) {
             String input = scanner.nextLine().trim();
@@ -163,6 +171,8 @@ public class Tenant {
      */
 
     private static void rateRoom() {
+        Scanner scanner = new Scanner(System.in);
+
         System.out.println("\nEnter the name of the room you want to rate:");
         String roomName = scanner.nextLine();
 
