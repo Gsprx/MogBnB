@@ -1,14 +1,10 @@
 package com.example.mogbnb;
 
-import com.example.dummy.Manager;
 import com.example.misc.Config;
 import com.example.misc.JsonConverter;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -41,9 +37,11 @@ public class Master extends Thread {
         INPUT_IDs.put(MasterFunction.SHOW_ROOMS.getEncoded(), 0);
         INPUT_IDs.put(MasterFunction.ADD_ROOM.getEncoded(), 0);
         INPUT_IDs.put(MasterFunction.BOOKINGS_PER_AREA.getEncoded(), 0);
+        INPUT_IDs.put(MasterFunction.FIND_ROOM_BY_NAME.getEncoded(), 0);
         INPUT_IDs.put(MasterFunction.SEARCH_ROOM.getEncoded(), 0);
         INPUT_IDs.put(MasterFunction.SHOW_BOOKINGS.getEncoded(), 0);
         INPUT_IDs.put(MasterFunction.RATE_ROOM.getEncoded(), 0);
+
         workers = new ArrayList<>();
         for (int i=0; i<numOfWorkers; i++) {
             workers.add(new Worker());

@@ -31,12 +31,11 @@ public class DummyMain {
 
         // choose what to run based on account type
         if (acc_typ.equals("m")) Manager.runManager();
-        else {  Tenant tenant= new Tenant();
-                tenant.runTenant();
+        else {
+            Tenant tenant = new Tenant();
+            tenant.runTenant();
         }
     }
-
-
 
 
     /**

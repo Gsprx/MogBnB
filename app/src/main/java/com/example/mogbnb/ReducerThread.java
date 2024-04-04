@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -37,18 +38,38 @@ public class ReducerThread extends Thread {
 
             }else if(mapID.contains("tenant_rate")){
                 messageReduce();
+            }else if (mapID.contains("find")) {
+                returnWorkerResult(mapID);
             }
             else{
                 roomReduce(mapID);
             }
 
-    }catch (ClassNotFoundException | IOException e) {
+    } catch (ClassNotFoundException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void returnWorkerResult(String mapID) {
+        try {
+            ArrayList<Room> room = (ArrayList<Room>) in.readObject();
+            Socket masterSocket = new Socket("localhost", Config.REDUCER_MASTER_PORT);
+            ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
+            out.writeObject(mapID);
+            out.writeObject(room);
+            out.flush();
+
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
     //the main reducing call, output is an array list of rooms sent to the master
-    private void roomReduce(String mapID){
+    private void roomReduce(String mapID) {
         try {
             //check if mapID exists already in the counter
             synchronized (mapIDCounter) {
@@ -139,9 +160,10 @@ public class ReducerThread extends Thread {
     //used to send a simple true or false message back to the master as the reduce result
     private void messageReduce(){
         try {
+            int result = in.readInt();
             Socket masterSocket = new Socket("localhost", Config.REDUCER_MASTER_PORT);
             ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
-            out.writeBoolean(in.readBoolean());
+            out.writeInt(result);
             out.flush();
 
         } catch (IOException e) {

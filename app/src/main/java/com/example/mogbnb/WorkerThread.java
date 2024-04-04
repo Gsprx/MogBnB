@@ -76,14 +76,12 @@ public class WorkerThread extends Thread {
             Room room = (Room) mapValue;
             for (Room r : rooms) {
                 if (r.equals(room)) {
-                    System.out.println(workerID + ": ");
-                    System.out.println("Room \"" + r.getRoomName() + "\" already exists");
+                    System.out.println(workerID + ": " + "Room \"" + r.getRoomName() + "\" already exists");
                     return;
                 }
             }
             this.rooms.add(room);
-            System.out.println(workerID + ": ");
-            System.out.println((Room) mapValue);
+            System.out.println(workerID + ": " + (Room) mapValue);
         }
     };
 
@@ -126,21 +124,24 @@ public class WorkerThread extends Thread {
 
     //expected mapValue is an array [room_name, rating]
     private void rateRoom() {
-        String roomName = (String) ((Object[]) mapValue)[0];
-        int rating = (int) ((Object[]) mapValue)[1];
-        boolean foundRoom = false;
+        HashMap<String, Double> rateInfo = (HashMap<String, Double>) mapValue; // [String roomName, double rating]
+        String roomName = "";
+        double rating = 0.0;
+        for (HashMap.Entry<String, Double> set : rateInfo.entrySet()) {
+            roomName = set.getKey();
+            rating = set.getValue();
+        }
+        int foundRoom = 0;
         for (Room r : rooms) {
             if (r.getRoomName().equalsIgnoreCase(roomName)) {
                 synchronized (r) {
                     r.addReview(rating);
-                    foundRoom = true;
+                    foundRoom = 1;
                 }
             }
         }
         //return a verification message back to master
-        if(foundRoom){
-            sendResults(true);
-        }
+        sendResults(foundRoom);
     }
 
     /**

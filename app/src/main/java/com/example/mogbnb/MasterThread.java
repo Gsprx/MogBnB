@@ -43,6 +43,9 @@ public class MasterThread extends Thread {
                 case 3:
                     bookingsPerArea();
                     break;
+                case 4:
+                    findRoomByName();
+                    break;
                 case 5:
                     searchRoom();
                     break;
@@ -183,6 +186,49 @@ public class MasterThread extends Thread {
         }
     }
 
+    private void findRoomByName() {
+        // send mapID to workers
+        String mapID;
+        synchronized (Master.INPUT_IDs) {
+            mapID = "find_" + Master.INPUT_IDs.get(MasterFunction.FIND_ROOM_BY_NAME.getEncoded());
+            // increment
+            Master.INPUT_IDs.merge(MasterFunction.FIND_ROOM_BY_NAME.getEncoded(), 1, Integer::sum);
+        }
+
+        // get the worker we need to out to using hash function
+        String roomName = (String) inputValue;
+        int workerIndex = (Master.hash(roomName) % Config.NUM_OF_WORKERS) + 1;
+
+        // send to worker
+        sendRequest(mapID, roomName, workerIndex);
+
+        try {
+            // listen for reply from reducer
+            Socket reducerResultSocket = reducerListener.accept();
+
+            // read from reducer
+            ObjectInputStream reducer_in = new ObjectInputStream(reducerResultSocket.getInputStream());
+            String mapIdResult = (String) reducer_in.readObject();
+            ArrayList<Room> result = (ArrayList<Room>) reducer_in.readObject();
+            Room r = null;
+            if (result != null) r = result.get(0);
+
+            // write to user
+            out.writeObject(r);
+            out.flush();
+
+            //close
+            reducer_in.close();
+            reducerResultSocket.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     /**
      * Function used to send request of the work needed to be done by the workers.
      * @param mapID The mapID value
@@ -207,8 +253,8 @@ public class MasterThread extends Thread {
         }
     }
 
-    /**Tenant functionality 5
-     *
+    /**
+     * Tenant functionality 5
      */
     private void searchRoom(){
         // a Filter object with search criteria
@@ -272,14 +318,17 @@ public class MasterThread extends Thread {
 
             reducer_in.close();
             reducerResultSocket.close();
+
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
     private void rateRoom() {
-        Object[] rateInfo = (Object[]) inputValue; // [String roomName, double rating](it was given encapsulated)
-        String roomName = (String) rateInfo[0];
-        double rating = (double) rateInfo[1];
+        HashMap<String, Double> rateInfo = (HashMap<String, Double>) inputValue; // [String roomName, double rating]
+        String roomName = "";
+        for (HashMap.Entry<String, Double> set : rateInfo.entrySet()) {
+            roomName = set.getKey();
+        }
 
         String mapID;
         synchronized (Master.INPUT_IDs) {
@@ -292,10 +341,19 @@ public class MasterThread extends Thread {
 
         sendRequest(mapID, rateInfo, workerIndex);
 
-        //TODO :might need to return confirmation from the workers ????//
         try {
-            out.writeObject("Rating updated successfully.");
+            Socket reducerResultSocket = reducerListener.accept();
+
+            ObjectInputStream reducer_in = new ObjectInputStream(reducerResultSocket.getInputStream());
+            int result = reducer_in.readInt();
+
+            if (result == 1) out.writeObject("Rating updated successfully.");
+            else out.writeObject("An error occured.");
             out.flush();
+
+            reducer_in.close();
+            reducerResultSocket.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

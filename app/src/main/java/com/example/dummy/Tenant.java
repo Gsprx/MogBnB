@@ -11,22 +11,24 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
 public class Tenant {
     private static final Scanner scanner = new Scanner(System.in);
-
     private int id;
-    Tenant() {
+    public Tenant() {
         try (Socket socket = new Socket("localhost", Config.USER_MASTER_PORT);
-             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-             ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
             out.writeInt(MasterFunction.ASSIGN_USER_ID.getEncoded());
+            out.writeObject(null);
             out.flush();
 
-            id= in.readInt();
+            id = in.readInt();
+            System.out.println(id);
 
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
@@ -34,45 +36,43 @@ public class Tenant {
             throw new RuntimeException(e);
         }
     }
-        public void runTenant() {
-
+    public void runTenant() {
         displayOperationOptions(this);
-
-
     }
-        /**
-         * Displays a menu of operations (see bookings, search for a room, rate a room, exit) and processes user input to perform the selected action.
-         */
-        private static void displayOperationOptions(Tenant tenant){
-            while (true) {
-                System.out.println("\nPlease select an operation:");
-                System.out.println("1. See my bookings");
-                System.out.println("2. Search for a room");
-                System.out.println("3. Rate a room");
-                System.out.println("4. Exit");
-                System.out.print("Your choice: ");
 
-                int choice = scanner.nextInt();
-                scanner.nextLine(); // Consume newline
+    /**
+     * Displays a menu of operations (see bookings, search for a room, rate a room, exit) and processes user input to perform the selected action.
+     */
+    private static void displayOperationOptions(Tenant tenant){
+        while (true) {
+            System.out.println("\nPlease select an operation:");
+            System.out.println("1. See my bookings");
+            System.out.println("2. Search for a room");
+            System.out.println("3. Rate a room");
+            System.out.println("4. Exit");
+            System.out.print("Your choice: ");
 
-                switch (choice) {
-                    case 1:
-                        seeBookings(tenant);
-                        break;
-                    case 2:
-                        searchRoom();
-                        break;
-                    case 3:
-                        rateRoom();
-                        break;
-                    case 4:
-                        System.out.println("Exiting...");
-                        return;
-                    default:
-                        System.out.println("Invalid choice. Please select again.");
-                }
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    seeBookings(tenant);
+                    break;
+                case 2:
+                    searchRoom();
+                    break;
+                case 3:
+                    rateRoom();
+                    break;
+                case 4:
+                    System.out.println("Exiting...");
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please select again.");
             }
         }
+    }
 
 
 
@@ -166,18 +166,18 @@ public class Tenant {
         System.out.println("\nEnter the name of the room you want to rate:");
         String roomName = scanner.nextLine();
 
-        try (Socket socket = new Socket("localhost", Config.USER_MASTER_PORT);
-             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-             ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+        try {
+            Socket socket = new Socket("localhost", Config.USER_MASTER_PORT);
+            ObjectOutputStream search_out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream search_in = new ObjectInputStream(socket.getInputStream());
 
-
-            out.writeInt(MasterFunction.FIND_ROOM_BY_NAME.getEncoded());
+            search_out.writeInt(MasterFunction.FIND_ROOM_BY_NAME.getEncoded());
             // Send the room name for searching
-            out.writeObject(roomName);
-            out.flush();
+            search_out.writeObject(roomName);
+            search_out.flush();
 
             // Receive the room information from the server
-            Room room = (Room) in.readObject();
+            Room room = (Room) search_in.readObject();
             if (room == null) {
                 System.out.println("Room not found.");
                 return;
@@ -185,6 +185,14 @@ public class Tenant {
 
             double rating = 0;
             boolean validInput = false;
+
+            search_out.close();
+            search_in.close();
+            socket.close();
+
+            socket = new Socket("localhost", Config.USER_MASTER_PORT);
+            ObjectOutputStream rate_out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream rate_in = new ObjectInputStream(socket.getInputStream());
 
             while (!validInput) {
                 try {
@@ -201,12 +209,14 @@ public class Tenant {
             }
 
             // Now, send the rating along with room information to the server
-            out.writeInt(MasterFunction.RATE_ROOM.getEncoded());
-            out.writeObject(new Object[]{room, rating});
-            out.flush();
+            rate_out.writeInt(MasterFunction.RATE_ROOM.getEncoded());
+            HashMap<String, Double> roomRating = new HashMap<>();
+            roomRating.put(roomName, rating);
+            rate_out.writeObject(roomRating);
+            rate_out.flush();
 
             // Await confirmation from the server
-            String response = (String) in.readObject();
+            String response = (String) rate_in.readObject();
             System.out.println(response);
 
         } catch (IOException | ClassNotFoundException e) {
