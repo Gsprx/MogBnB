@@ -19,10 +19,18 @@ import java.util.Scanner;
 
 public class Tenant {
     private static final Scanner scanner = new Scanner(System.in);
+    private static int id_counter=1;
+    private int id;
+    Tenant(){
+        id=id_counter;
+        id_counter++;
+    }
+    public void runTenant() {
 
-    public static void runTenant() {
-        Tenant tenant = new Tenant();
-        displayOperationOptions(tenant);}
+        displayOperationOptions(this);
+
+
+    }
         /**
          * Displays a menu of operations (see bookings, search for a room, rate a room, exit) and processes user input to perform the selected action.
          */
