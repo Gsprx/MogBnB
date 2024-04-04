@@ -30,6 +30,7 @@ public class MasterThread extends Thread {
     public void run() {
         // handle
         try {
+            System.out.println("hello");
             inputID = in.readInt();
             inputValue = in.readObject();
 
@@ -59,6 +60,7 @@ public class MasterThread extends Thread {
                     assign_user_id();
                     break;
                 default:
+                    System.out.println("Function not identified!!");
                     break;
             }
         } catch (UnknownHostException e) {
@@ -359,6 +361,7 @@ public class MasterThread extends Thread {
         }
     }
     private void assign_user_id() throws IOException {
+        System.out.println("New user id .......");
         out.writeInt(Master.USER_IDS);
         out.flush();
         Master.USER_IDS++;
