@@ -16,14 +16,14 @@ public class Reducer extends Thread {
     ServerSocket server;
 
     HashMap<String, Integer> mapIDCounter;
-    HashMap<String, ArrayList<Room>> mapValueBuffer;
-    HashMap<String, HashMap<String,Integer>> areaBookings;
+    HashMap<String, ArrayList<Room>> roomListBuffer; //used to hold room values from workers until all workers are finished. key = mapID
+    HashMap<String, HashMap<String,Integer>> areaBookingsBuffer; //used to hold hashmaps of area-days_booked tuples until all workers are finished. key = mapID
     private int numOfWorkers;
 
 
     public Reducer(){
         mapIDCounter = new HashMap<>();
-        mapValueBuffer = new HashMap<>();
+        roomListBuffer = new HashMap<>();
     }
 
     /*
@@ -60,7 +60,7 @@ public class Reducer extends Thread {
 
             while (true) {
                 socket = server.accept();
-                Thread t = new ReducerThread(socket, mapIDCounter, numOfWorkers, mapValueBuffer, areaBookings);
+                Thread t = new ReducerThread(socket, mapIDCounter, numOfWorkers, roomListBuffer, areaBookingsBuffer);
                 t.start();
             }
         } catch (IOException e) {

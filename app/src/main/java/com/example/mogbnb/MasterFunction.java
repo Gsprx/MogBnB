@@ -43,7 +43,10 @@ public enum MasterFunction {
     SHOW_BOOKINGS{
         @Override
         public int getEncoded(){return 7;}
+    },
+    ASSIGN_USER_ID{
+        @Override
+        public int getEncoded(){return 8;}
     };
-
     public abstract int getEncoded();
 }

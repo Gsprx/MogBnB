@@ -43,6 +43,18 @@ public class MasterThread extends Thread {
                 case 3:
                     bookingsPerArea();
                     break;
+                case 5:
+                    searchRoom();
+                    break;
+                case 6:
+                    rateRoom();
+                    break;
+                case 7:
+                    showBookings();
+                    break;
+                case 8:
+                    assign_user_id();
+                    break;
                 default:
                     break;
             }
@@ -193,6 +205,105 @@ public class MasterThread extends Thread {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**Tenant functionality 5
+     *
+     */
+    private void searchRoom(){
+        // a Filter object with search criteria
+        Filter searchCriteria = (Filter) inputValue;
+        //
+        String mapID;
+        synchronized (Master.INPUT_IDs) {
+            mapID = "tenant_search_" + Master.INPUT_IDs.get(MasterFunction.SEARCH_ROOM.getEncoded());
+            Master.INPUT_IDs.merge(MasterFunction.SEARCH_ROOM.getEncoded(), 1, Integer::sum);
+        }
+        // send to each worker
+        for (int i = 1; i <= Config.NUM_OF_WORKERS; i++) {
+            sendRequest(mapID, searchCriteria, i);
+        }
+        try {
+            // Listen for a reply from the reducer
+            Socket reducerResultSocket = reducerListener.accept();
+
+            // Read from reducer
+            ObjectInputStream reducer_in = new ObjectInputStream(reducerResultSocket.getInputStream());
+            String mapIdResult = (String) reducer_in.readObject();
+            ArrayList<Room> roomsResult = (ArrayList<Room>) reducer_in.readObject();
+
+            // Write to user
+            out.writeObject(mapIdResult);
+            out.writeObject(roomsResult);
+            out.flush();
+
+            reducer_in.close();
+            reducerResultSocket.close();
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    private void showBookings() {
+
+        String mapID;
+        synchronized (Master.INPUT_IDs) {
+            mapID = "tenant_show_bookings_" + Master.INPUT_IDs.get(MasterFunction.SHOW_BOOKINGS.getEncoded());
+            Master.INPUT_IDs.merge(MasterFunction.SHOW_BOOKINGS.getEncoded(), 1, Integer::sum);
+        }
+
+        // Requests booking information from all worker nodes.
+
+        for (int i = 1; i <= Config.NUM_OF_WORKERS; i++) {
+            sendRequest(mapID, inputValue, i);
+        }
+
+        // Wait for responses from all workers
+        try {
+
+            Socket reducerResultSocket = reducerListener.accept();
+
+            ObjectInputStream reducer_in = new ObjectInputStream(reducerResultSocket.getInputStream());
+            ArrayList<Room> bookingsResult = (ArrayList<Room>) reducer_in.readObject();
+
+            out.writeObject(bookingsResult);
+            out.flush();
+
+            reducer_in.close();
+            reducerResultSocket.close();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private void rateRoom() {
+        Object[] rateInfo = (Object[]) inputValue; // [String roomName, double rating](it was given encapsulated)
+        String roomName = (String) rateInfo[0];
+        double rating = (double) rateInfo[1];
+
+        String mapID;
+        synchronized (Master.INPUT_IDs) {
+            mapID = "tenant_rate_" + Master.INPUT_IDs.get(MasterFunction.RATE_ROOM.getEncoded());
+            Master.INPUT_IDs.merge(MasterFunction.RATE_ROOM.getEncoded(), 1, Integer::sum);
+        }
+
+        // Hash the room name to find the correct worker
+        int workerIndex = (Master.hash(roomName) % Config.NUM_OF_WORKERS) + 1;
+
+        sendRequest(mapID, rateInfo, workerIndex);
+
+        //TODO :might need to return confirmation from the workers ????//
+        try {
+            out.writeObject("Rating updated successfully.");
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void assign_user_id() throws IOException {
+        out.writeInt(Master.USER_IDS);
+        out.flush();
+        Master.USER_IDS++;
     }
 }
 
