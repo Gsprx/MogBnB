@@ -100,21 +100,35 @@ public class Room implements Serializable {
         LocalDate checkOutDate = filter.getCheckOut();
         LocalDate checkInDate = filter.getCheckIn();
 
-        long bookingDaysTotal = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
+        long bookingDaysTotal;
+        int indexOfCheckInDate;
+        // if checkIn and checkOut not null calculate normally
+        if (checkInDate != null && checkOutDate != null) {
+            bookingDaysTotal = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
+            indexOfCheckInDate = (int) ChronoUnit.DAYS.between(Room.currentDate, checkInDate);
+        } else {
+            // else set bookingDays to 0 (so we avoid for loop below)
+            bookingDaysTotal = 0;
+            indexOfCheckInDate = 0;
+            checkOutDate = Room.currentDate;
+        }
 
-        int indexOfCheckInDate = (int) ChronoUnit.DAYS.between(Room.currentDate, checkInDate);
+        // if the booking period requested is bigger than the availability of the room return false
+        if ((int) ChronoUnit.DAYS.between(Room.currentDate, checkOutDate)>availableDays) {
+            return false;
+        }
 
         //check if filtered days are not booked
-        for (int i = 0; i<bookingDaysTotal; i++){
-            if(bookingTable[indexOfCheckInDate + i]){
+        for (int i = 0; i < bookingDaysTotal; i++) {
+            if (bookingTable[indexOfCheckInDate + i]) {
                 return false;
             }
         }
         //filtered days are all available from this point onward
 
-        return (filter.getArea() == null || filter.getArea().equalsIgnoreCase(this.area))&&(filter.getPrice()==-1 || filter.getPrice()>=this.pricePerDay)&&(filter.getStars()<=this.stars)
+        return ((filter.getArea() == null || filter.getArea().equalsIgnoreCase(this.area))&&(filter.getPrice()==-1 || filter.getPrice()>=this.pricePerDay)&&(filter.getStars()==-1 || filter.getStars()<=this.stars)
                 &&(filter.getNoOfPersons()==-1 || filter.getNoOfPersons()==this.noOfPersons)
-                &&(bookingDaysTotal<= availableDays)&&((int) ChronoUnit.DAYS.between(Room.currentDate, checkOutDate)<=availableDays);
+                &&(bookingDaysTotal<= availableDays));
     }
 
     /**

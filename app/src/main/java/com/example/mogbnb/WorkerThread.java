@@ -91,7 +91,7 @@ public class WorkerThread extends Thread {
         ArrayList<Room> result = new ArrayList<>();
         Filter filter = (Filter) mapValue;
         for (Room room : rooms){
-            if(room.filterAccepted(filter)){
+            if (room.filterAccepted(filter)){
                 result.add(room);
             }
         }

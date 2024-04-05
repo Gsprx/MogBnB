@@ -25,7 +25,7 @@ public class Manager {
         boolean running = true;
         // manager chooses option
         while (running) {
-            System.out.println("1) Show Rooms\n2) Show Room\n3) Add Room\n4) Bookings\n");
+            System.out.println("1) Show Rooms\n2) Add Room\n3) Bookings\n");
             String option;
             // if the user gives invalid info then ask again
             do {
@@ -35,8 +35,8 @@ public class Manager {
                 if (option.equals("exit")) {
                     running = false;
                 }
-                else if (!option.equals("1") && !option.equals("2") && !option.equals("3") && !option.equals("4")) System.out.println("[-] Option " + option + " not found.");
-            } while (!option.equals("1") && !option.equals("2") && !option.equals("3") && !option.equals("4") && !option.equals("exit"));
+                else if (!option.equals("1") && !option.equals("2") && !option.equals("3")) System.out.println("[-] Option " + option + " not found.");
+            } while (!option.equals("1") && !option.equals("2") && !option.equals("3") && !option.equals("exit"));
 
             if (!running) continue;
 
@@ -45,15 +45,11 @@ public class Manager {
                 case "1":
                     managerShowRooms();
                     break;
-                // option 2: get room by name
+                // option 2: add a new room (will not write to JSON)
                 case "2":
-                    managerGetRoomByName();
-                    break;
-                // option 3: add a new room (will not write to JSON)
-                case "3":
                     managerAddRoom();
                     break;
-                // option 4: manage bookings
+                // option 3: manage bookings
                 default:
                     managerManageBookings();
                     break;
@@ -343,4 +339,8 @@ public class Manager {
         }
     }
 
+
+    public static void main(String[] args) {
+        Manager.runManager();
+    }
 }
