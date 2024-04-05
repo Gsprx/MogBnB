@@ -35,13 +35,11 @@ public class ReducerThread extends Thread {
             String mapID = (String) in.readObject();
             if (mapID.contains("manager_area_bookings")){
                 areaBookingReduce(mapID);
-
             }else if(mapID.contains("tenant_rate")){
                 messageReduce();
             }else if (mapID.contains("find")) {
                 returnWorkerResult(mapID);
-            }
-            else{
+            }else{
                 roomReduce(mapID);
             }
 
@@ -160,13 +158,15 @@ public class ReducerThread extends Thread {
     //used to send a simple true or false message back to the master as the reduce result
     private void messageReduce(){
         try {
-            int result = in.readInt();
+            int result = (int) in.readObject();
             Socket masterSocket = new Socket("localhost", Config.REDUCER_MASTER_PORT);
             ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
             out.writeInt(result);
             out.flush();
 
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

@@ -1,6 +1,7 @@
 package com.example.dummy;
 
 import com.example.misc.Config;
+import com.example.misc.TypeChecking;
 import com.example.mogbnb.MasterFunction;
 import com.example.mogbnb.Room;
 import com.example.mogbnb.Filter;
@@ -12,6 +13,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -99,10 +101,10 @@ public class Tenant implements Serializable {
     }
 
     private static void searchRoom() {
-        Scanner scanner = new Scanner(System.in);
-
         System.out.print("Enter area (leave blank for no preference): ");
+        Scanner scanner = new Scanner(System.in);
         String area = scanner.nextLine();
+        if (area.equals("")) area = null;
 
         System.out.print("Enter check-in date (YYYY-MM-DD, leave blank for no preference): ");
         LocalDate checkIn = readDate();
@@ -110,14 +112,26 @@ public class Tenant implements Serializable {
         System.out.print("Enter check-out date (YYYY-MM-DD, leave blank for no preference): ");
         LocalDate checkOut = readDate();
 
-        System.out.print("Number of persons (1 for minimum ): ");
-        int noOfPersons = Integer.parseInt(scanner.nextLine());
+        System.out.print("Number of persons: ");
+        scanner = new Scanner(System.in);
+        String noOfPersonsStr = scanner.nextLine();
+        int noOfPersons;
+        if (noOfPersonsStr.equals("") || !TypeChecking.isInteger(noOfPersonsStr)) noOfPersons = -1;
+        else noOfPersons = Integer.parseInt(noOfPersonsStr);
 
-        System.out.print("Enter the minimum price  (0 for no preference): ");
-        double price = Double.parseDouble(scanner.nextLine());
+        System.out.print("Enter the maximum price: ");
+        scanner = new Scanner(System.in);
+        String priceStr = scanner.nextLine();
+        double price;
+        if (priceStr.equals("") || !TypeChecking.isDouble(priceStr)) price = -1;
+        else price = Double.parseDouble(priceStr);
 
-        System.out.print("Minimum number of stars (0 for lowest rating): ");
-        int stars = Integer.parseInt(scanner.nextLine());
+        System.out.print("Minimum number of stars: ");
+        scanner = new Scanner(System.in);
+        String starsStr = scanner.nextLine();
+        double stars;
+        if (starsStr.equals("") || !TypeChecking.isDouble(starsStr)) stars = -1;
+        else stars = Double.parseDouble(starsStr);
 
         Filter filter = new Filter(area, checkIn, checkOut, noOfPersons, price, stars);
 
@@ -129,9 +143,11 @@ public class Tenant implements Serializable {
             out.writeObject(filter);
             out.flush();
 
-            List<Room> rooms = (List<Room>) in.readObject();
-            System.out.println("Results");
+            String mapIDResult = (String) in.readObject();
+            ArrayList<Room> rooms = (ArrayList<Room>) in.readObject();
+            System.out.println("\nResults\n------------------------------------------------");
             rooms.forEach(System.out::println);
+            System.out.println("------------------------------------------------\n");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -231,6 +247,12 @@ public class Tenant implements Serializable {
             System.err.println("An error occurred while communicating with the server: " + e.getMessage());
         }
     }
+
+
+     public static void main(String[] args) {
+         Tenant tenant = new Tenant();
+         tenant.runTenant();
+     }
 }
 
 
