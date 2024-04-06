@@ -298,8 +298,9 @@ public class Manager {
         System.out.print("End date (YYYY-MM-DD): ");
         LocalDate end = DummyMain.readDate();
 
-        // create a filter with only start and end date
-        Filter dates = new Filter(null, start, end, -1, -1, -1);
+        // create an array with start and end date
+        ArrayList<LocalDate> dates = new ArrayList<>();
+        dates.add(start); dates.add(end);
 
         try {
             socket = new Socket("localhost", Config.USER_MASTER_PORT);

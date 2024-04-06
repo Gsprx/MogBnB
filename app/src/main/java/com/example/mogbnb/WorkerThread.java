@@ -123,6 +123,7 @@ public class WorkerThread extends Thread {
                 areaResults.merge(r.getArea(), r.totalDaysBooked(), Integer::sum);
             }
         }
+        System.out.println(areaResults.size());
         sendResults(areaResults);
     }
 
