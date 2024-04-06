@@ -152,11 +152,15 @@ public class WorkerThread extends Thread {
         int user = bookInfo.getValue().getKey();
         Map.Entry<LocalDate, LocalDate> stay = bookInfo.getValue().getValue();
 
+        int result = 0;
         for (Room r : rooms) {
             if (r.getRoomName().equals(roomName)) {
-
+                if (r.bookRoom(stay.getKey(), stay.getValue(), user)) result = 1;
             }
         }
+
+        //return a verification message back to master
+        sendResults(result);
     }
 
     /**

@@ -223,7 +223,9 @@ public class Tenant implements Serializable {
             ObjectInputStream book_in = new ObjectInputStream(socket.getInputStream());
 
             // read check-in, check-out
+            System.out.println("Enter checkIn (YYYY-MM-DD): ");
             LocalDate checkIn = readDate();
+            System.out.println("Enter checkOut (YYYY-MM-DD): ");
             LocalDate checkOut = readDate();
 
             // Now, send the booking along with room information to the server
