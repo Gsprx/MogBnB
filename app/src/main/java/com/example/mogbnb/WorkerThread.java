@@ -37,14 +37,14 @@ public class WorkerThread extends Thread {
 
     /**
      * Used by threads to run their different functions based on mapID.
-     * (NOTE) mapIDs: manager_show_x_ - return all rooms
-     *                manager_add_x_ - add a room
-     *                manager_show_bookings_x - return all bookings
+     * (NOTE) mapIDs: manager_show_x - return all rooms
+     *                manager_add_x - add a room
+     *                manager_bookings_of_room_x - return all bookings of a room
      *                manager_area_bookings_x - return bookings per area for a time period
-     *                tenant_search_x_ - search rooms
-     *                tenant_rate_x_ - rate a specific room
-     *                tenant_book_x_ - make a reservation for a specific room
-     *                find_x_ - return specific room based on room's name
+     *                tenant_search_x - search rooms
+     *                tenant_rate_x - rate a specific room
+     *                tenant_book_x - make a reservation for a specific room
+     *                find_x - return specific room based on room's name
      */
     // TODO: function manager_booking_areas
     public void run() {
@@ -62,6 +62,8 @@ public class WorkerThread extends Thread {
             rateRoom();
         } else if (mapID.contains("tenant_book")) {
             bookRoom();
+        } else if (mapID.contains("manager_bookings_of_room")) {
+            showBookingsOfRoom();
         }
     }
 
@@ -127,6 +129,41 @@ public class WorkerThread extends Thread {
 
         System.out.println(areaResults.size());
         sendResults(areaResults);
+    }
+
+    // expected mapValue is a String (roomName)
+    private void showBookingsOfRoom() {
+        String roomName = (String) mapValue;
+        ArrayList<String> bookings = new ArrayList<>();
+        for (Room r : rooms) {
+            if (r.getRoomName().equals(roomName)) {
+                // iterate through the bookingTable
+                int u_id = 0; // user id
+                LocalDate checkInH = null; // checkIn holder
+                LocalDate checkOutH = null; // checkOut holder
+                for (int i=0; i<r.getAvailableDays(); i++) {
+                    // if we find != user_id, that means we found the beginning of a reservation
+                    if (r.getBookingTable()[i] != u_id) {
+                        // if the current bookingTable value is not 0 or the index is not 0, meaning its not the first day or the first day after the room was not occupied
+                        if (u_id != 0 && i > 0) {
+                            checkOutH = r.getCurrentDate().plusDays(i);
+                            bookings.add(u_id + ": " + checkInH + " - " + checkOutH);
+                        }
+                        u_id = r.getBookingTable()[i];
+                        checkInH = r.getCurrentDate().plusDays(i);
+                    }
+                }
+                // if the room is booked until the last day it is available, the last reservation will not be accounted because we will not get a checkOutH
+                // so when the for loop breaks we also make sure that if it was booked for a <checkIn>-<checkOut> (where the checkOut is at the last day of the room),
+                // it will be added to the bookings list
+                if (r.getBookingTable()[r.getAvailableDays() - 1] != 0) {
+                    checkOutH = r.getCurrentDate().plusDays(r.getAvailableDays());
+                    bookings.add(r.getBookingTable()[r.getAvailableDays() - 1] + ": " + checkInH + " - " + checkOutH);
+                }
+            }
+        }
+
+        sendResults(bookings);
     }
 
     //expected mapValue is an array [room_name, rating]

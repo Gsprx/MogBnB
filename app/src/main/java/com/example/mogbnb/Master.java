@@ -42,9 +42,10 @@ public class Master extends Thread {
         INPUT_IDs.put(MasterFunction.SHOW_BOOKINGS.getEncoded(), 0);
         INPUT_IDs.put(MasterFunction.RATE_ROOM.getEncoded(), 0);
         INPUT_IDs.put(MasterFunction.BOOK_ROOM.getEncoded(), 0);
+        INPUT_IDs.put(MasterFunction.SHOW_BOOKINGS_OF_ROOM.getEncoded(), 0);
 
         workers = new ArrayList<>();
-        for (int i=0; i<numOfWorkers; i++) {
+        for (int i=1; i<=numOfWorkers; i++) {
             workers.add(new Worker(i));
         }
     }

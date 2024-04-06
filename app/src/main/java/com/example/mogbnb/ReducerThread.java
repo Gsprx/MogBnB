@@ -38,8 +38,10 @@ public class ReducerThread extends Thread {
             }else if(mapID.contains("tenant_rate") || mapID.contains("tenant_book")){
                 messageReduce();
             }else if (mapID.contains("find")) {
-                returnWorkerResult(mapID);
-            }else{
+                returnWorkerResultRoomSearch(mapID);
+            }else if (mapID.contains("manager_bookings_of_room_")){
+                returnWorkerResultBookSearch(mapID);
+            } else {
                 roomReduce(mapID);
             }
 
@@ -48,7 +50,7 @@ public class ReducerThread extends Thread {
         }
     }
 
-    private void returnWorkerResult(String mapID) {
+    private void returnWorkerResultRoomSearch(String mapID) {
         try {
             ArrayList<Room> room = (ArrayList<Room>) in.readObject();
             Socket masterSocket = new Socket("localhost", Config.REDUCER_MASTER_PORT);
@@ -57,11 +59,21 @@ public class ReducerThread extends Thread {
             out.writeObject(room);
             out.flush();
 
-        } catch (UnknownHostException e) {
+        } catch (ClassNotFoundException | IOException e) {
             throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+        }
+    }
+
+    private void returnWorkerResultBookSearch(String mapID) {
+        try {
+            ArrayList<String> room = (ArrayList<String>) in.readObject();
+            Socket masterSocket = new Socket("localhost", Config.REDUCER_MASTER_PORT);
+            ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
+            out.writeObject(mapID);
+            out.writeObject(room);
+            out.flush();
+
+        } catch (ClassNotFoundException | IOException e) {
             throw new RuntimeException(e);
         }
     }

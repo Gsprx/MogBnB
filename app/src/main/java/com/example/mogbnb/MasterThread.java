@@ -64,6 +64,9 @@ public class MasterThread extends Thread {
                 case 9:
                     bookRoom();
                     break;
+                case 10:
+                    showBookingsOfRoom();
+                    break;
                 default:
                     System.out.println("Function not identified!!");
                     break;
@@ -109,7 +112,6 @@ public class MasterThread extends Thread {
             ArrayList<Room> roomsResult = (ArrayList<Room>) reducer_in.readObject();
 
             // write to user
-            out.writeObject(mapIdResult);
             out.writeObject(roomsResult);
             out.flush();
 
@@ -178,7 +180,6 @@ public class MasterThread extends Thread {
             HashMap<String, Integer> result = (HashMap<String, Integer>) reducer_in.readObject();
 
             // write to user
-            out.writeObject(mapIdResult);
             out.writeObject(result);
             out.flush();
 
@@ -286,7 +287,6 @@ public class MasterThread extends Thread {
             ArrayList<Room> roomsResult = (ArrayList<Room>) reducer_in.readObject();
 
             // Write to user
-            out.writeObject(mapIdResult);
             out.writeObject(roomsResult);
             out.flush();
 
@@ -412,6 +412,50 @@ public class MasterThread extends Thread {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Show reservations of a room | inputID : 10
+     * - Create mapID
+     * - Hash room name
+     * - Get right worker
+     * - Send request
+     */
+    private void showBookingsOfRoom() {
+        // send mapID to workers
+        String mapID;
+        synchronized (Master.INPUT_IDs) {
+            mapID = "manager_bookings_of_room_" + Master.INPUT_IDs.get(MasterFunction.SHOW_BOOKINGS_OF_ROOM.getEncoded());
+            // increment
+            Master.INPUT_IDs.merge(MasterFunction.SHOW_BOOKINGS_OF_ROOM.getEncoded(), 1, Integer::sum);
+        }
+
+        // get the worker we need to out to using hash function
+        String roomName = (String) inputValue;
+        int workerIndex = (Master.hash(roomName) % Config.NUM_OF_WORKERS) + 1;
+
+        // send to worker
+        sendRequest(mapID, roomName, workerIndex);
+
+        // wait for response
+        try {
+            Socket reducerResultSocket = reducerListener.accept();
+
+            ObjectInputStream reducer_in = new ObjectInputStream(reducerResultSocket.getInputStream());
+            String resultID = (String) reducer_in.readObject();
+            ArrayList<String> result = (ArrayList<String>) reducer_in.readObject();
+
+            out.writeObject(result);
+            out.flush();
+
+            reducer_in.close();
+            reducerResultSocket.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 }

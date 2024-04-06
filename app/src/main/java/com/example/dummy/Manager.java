@@ -78,8 +78,6 @@ public class Manager {
             out.writeObject(null);
             out.flush();
 
-            String resultID = (String) in.readObject();
-            System.out.println("[Result-ID: " + resultID + "]");
             ArrayList<Room> resultObj = (ArrayList<Room>) in.readObject();
 
             System.out.println("|Registered rooms|");
@@ -99,59 +97,6 @@ public class Manager {
         } catch (Exception e) {
             System.out.println("Something went wrong fetching the data. Error: " + e + "\n");
         }
-    }
-
-    /**
-     * Get a room by its name.
-     */
-    private static void managerGetRoomByName() {
-        // waiting input stream -> its going to be a list with all the registered rooms
-        ObjectInputStream in = null;
-        // holds a code for the function that needs to be executed and an object argument
-        ObjectOutputStream out = null;
-        Socket socket = null;
-
-        // get room name
-        System.out.println("|Get Room by Name|");
-        System.out.print("Name of room: ");
-        Scanner inp = new Scanner(System.in);
-        String input = inp.nextLine();
-
-        try {
-            socket = new Socket("localhost", Config.USER_MASTER_PORT);
-
-            out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
-
-            // write
-            out.writeInt(MasterFunction.FIND_ROOM_BY_NAME.getEncoded());
-            out.writeObject(input);
-            out.flush();
-
-            // wait for input
-            ArrayList<Room> rooms = (ArrayList<Room>) in.readObject();
-
-            if (rooms != null) {
-                for (Room r : rooms) {
-                    System.out.println(r + "\n");
-                }
-            } else {
-                System.out.println("Empty list...Real quiet...");
-            }
-            System.out.println();
-
-            out.close();
-            in.close();
-            socket.close();
-
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
     }
 
     /**
@@ -257,7 +202,7 @@ public class Manager {
 
     /**
      * Manage bookings.
-     * Options: 1) Show the bookings for each room
+     * Options: 1) Show the bookings for a chosen room
      *          2) Show the bookings in an area, given a "<start_date> - <end_date>"
      */
     private static void managerManageBookings() {
@@ -265,7 +210,7 @@ public class Manager {
         // manager chooses option
         while (running) {
             System.out.println("\n|Manage Bookings|");
-            System.out.println("1) Show all\n2) Areas\n");
+            System.out.println("1) Show for room\n2) Areas\n");
             String option;
             // if the user gives invalid info then ask again
             do {
@@ -273,16 +218,68 @@ public class Manager {
                 Scanner inp = new Scanner(System.in);
                 option = inp.nextLine().toLowerCase();
                 if (option.equals("exit")) {
-                    running = false;
-                    break;
+                    return;
                 } else if (!option.equals("1") && !option.equals("2"))
                     System.out.println("[-] Option " + option + " not found.");
             } while (!option.equals("1") && !option.equals("2"));
 
             // option 1: show all bookings
-            if (option.equals("1")) continue;
+            if (option.equals("1")) managerShowBookingsForRoom();
             else managerShowBookingsPerArea();
         }
+    }
+
+    private static void managerShowBookingsForRoom() {
+        // first show all rooms
+        managerShowRooms();
+
+        // then ask to choose a specific room
+        // waiting input stream -> its going to be a list with all the registered rooms
+        ObjectInputStream in = null;
+        // holds a code for the function that needs to be executed and an object argument
+        ObjectOutputStream out = null;
+        Socket socket = null;
+
+        // get room name
+        System.out.println("|Get bookings of room|");
+        System.out.print("Name of room: ");
+        Scanner inp = new Scanner(System.in);
+        String input = inp.nextLine();
+
+        try {
+            socket = new Socket("localhost", Config.USER_MASTER_PORT);
+
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
+
+            // write
+            out.writeInt(MasterFunction.SHOW_BOOKINGS_OF_ROOM.getEncoded());
+            out.writeObject(input);
+            out.flush();
+
+            // wait for input
+            ArrayList<String> bookings = (ArrayList<String>) in.readObject();
+
+            if (bookings != null) {
+                System.out.println();
+                for (String b : bookings) {
+                    System.out.println(b);
+                    System.out.println("-----------------------------");
+                }
+            } else {
+                System.out.println("Empty list...Real quiet...");
+            }
+            System.out.println();
+
+            out.close();
+            in.close();
+            socket.close();
+
+        } catch (ClassNotFoundException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
     private static void managerShowBookingsPerArea() {
@@ -313,8 +310,6 @@ public class Manager {
             out.writeObject(dates);
             out.flush();
 
-            String resultID = (String) in.readObject();
-            System.out.println("[Result-ID: " + resultID + "]");
             HashMap<String, Integer> areas = (HashMap<String, Integer>) in.readObject();
 
             // Iterating HashMap

@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class Tenant{
+public class Tenant implements Serializable{
 
     private int id;
 
@@ -87,6 +87,7 @@ public class Tenant{
             out.flush();
 
             List<Room> bookings = (List<Room>) in.readObject();
+
             if (bookings.isEmpty()) {
                 System.out.println("No bookings found.");
             } else {
@@ -140,9 +141,7 @@ public class Tenant{
             out.writeObject(filter);
             out.flush();
 
-            String mapIDResult = (String) in.readObject();
             ArrayList<Room> rooms = (ArrayList<Room>) in.readObject();
-            System.out.println("\nResults for " + mapIDResult + "\n------------------------------------------------");
             rooms.forEach(System.out::println);
             System.out.println("------------------------------------------------\n");
         } catch (IOException | ClassNotFoundException e) {

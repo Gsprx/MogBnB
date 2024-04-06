@@ -242,7 +242,6 @@ public class Room implements Serializable {
     // getter functions
     //
 
-
     public double getPricePerDay() {
         return pricePerDay;
     }
@@ -274,7 +273,10 @@ public class Room implements Serializable {
     public String getRoomImage() {
         return roomImage;
     }
+
+    public LocalDate getCurrentDate() {return currentDate;}
     public int[] getBookingTable(){return bookingTable;}
+
     @NonNull
     @Override
     public String toString() {

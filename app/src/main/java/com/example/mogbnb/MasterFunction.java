@@ -47,6 +47,13 @@ public enum MasterFunction {
         public int getEncoded() {
             return 9;
         }
+    },
+    SHOW_BOOKINGS_OF_ROOM {
+        @Override
+        public int getEncoded() {
+            return 10;
+        }
     };
+
     public abstract int getEncoded();
 }
