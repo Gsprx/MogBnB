@@ -16,7 +16,7 @@ public class Room implements Serializable {
     private int noOfReviews;
     private double pricePerDay;
     private String roomImage; //Path to url of the image
-    private final int[] bookingTable; //true - yes booking , false - no booking for the day indicated by the index
+    private final int[] bookingTable; // 0 - No booking for the day, else booked by the user with id equal to the int.
     private static LocalDate currentDate;
 
     public Room(String roomName, int noOfPersons, int availableDays, String area, double stars, int noOfReviews, String roomImage, double pricePerDay) {
@@ -57,22 +57,19 @@ public class Room implements Serializable {
         } else if (start.isAfter(finalAvailableDate) || end.isAfter(finalAvailableDate)) {
             throw new RuntimeException("Error! The requested dates are outside of the available days for this room");
         }
-        //check if the room has the dates available
+
         int indexOfCheckInDate = (int) ChronoUnit.DAYS.between(Room.currentDate, start);
-
-
-
-        //case where the room can be booked for all the days given, the booking table is "locked" temporarily
-        //then unlocked once the changes to availability are made.
 
         //lock the booking table
         synchronized (this.bookingTable){
+            //check if the room has the dates available
             //case where the room cannot be booked because of unavailable dates in the duration given,
             //caused by someone else booking a day in the duration given, before the current user manages to themselves
             //no changes are made to the booking table of this room
             if (!checkAvailability(indexOfCheckInDate,indexOfCheckInDate + bookingDaysTotal)){
                 return false;
             }
+            //case where the room can be booked for all the days given, uses the user id as the value of the day
             for(int i = indexOfCheckInDate; i<indexOfCheckInDate+bookingDaysTotal; i++){
                 bookingTable[i] = userID;
             }
