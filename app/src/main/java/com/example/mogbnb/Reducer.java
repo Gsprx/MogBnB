@@ -24,14 +24,15 @@ public class Reducer extends Thread {
     public Reducer(){
         mapIDCounter = new HashMap<>();
         roomListBuffer = new HashMap<>();
+        areaBookingsBuffer = new HashMap<>();
     }
 
-    /*
+
     public static void main(String[] args){
         Reducer reducer = new Reducer();
         reducer.start();
     }
-     */
+
 
     public void run() {
         // Get number of workers once
