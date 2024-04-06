@@ -20,25 +20,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-public class Tenant implements Serializable {
+public class Tenant{
 
     private int id;
-    public Tenant() {
-        try (Socket socket = new Socket("localhost", Config.USER_MASTER_PORT);
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
-            out.writeInt(MasterFunction.ASSIGN_USER_ID.getEncoded());
-            out.writeObject(null);
-            out.flush();
-
-            id = in.readInt();
-
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public Tenant(int id) {
+        this.id = id;
     }
 
     public int getId() {
@@ -312,8 +299,8 @@ public class Tenant implements Serializable {
 
 
      public static void main(String[] args) {
-         Tenant tenant = new Tenant();
-         tenant.runTenant();
+        Tenant tenant = new Tenant(Integer.parseInt(args[0]));
+        tenant.runTenant();
      }
 }
 

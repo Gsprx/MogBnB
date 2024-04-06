@@ -14,19 +14,17 @@ import java.util.List;
 
 public class Worker extends Thread {
     private ArrayList<Room> roomData;
-    private static int classID;
     private final int id;
 
-    public Worker(){
+    public Worker(int id){
         roomData = new ArrayList<>();
-        classID++;
-        id = classID;
+        this.id = id;
     }
 
     /**
      * Main function after starting a thread, the worker node listens actively for map messages from the Master node,
      * and uses WorkerThreads for the workload given to it.
-     * If Worker gets a mapID of 1 (a.k.a. Add a room) then it does the work itself, otherwise it uses worker threads.
+     *
      */
     public void run(){
         //socket used to receive calls from master
@@ -49,5 +47,10 @@ public class Worker extends Thread {
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String args[]){
+        Worker worker = new Worker(Integer.parseInt(args[0]));
+        worker.start();
     }
 }
