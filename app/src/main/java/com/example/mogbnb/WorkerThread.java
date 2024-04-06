@@ -122,7 +122,7 @@ public class WorkerThread extends Thread {
         LocalDate end = dates.get(1);
 
         for(Room r : rooms){
-            areaResults.merge(r.getArea(), r.totalDaysBooked(), Integer::sum);
+            areaResults.merge(r.getArea(), r.totalDaysBooked(start, end), Integer::sum);
         }
         sendResults(areaResults);
     }
