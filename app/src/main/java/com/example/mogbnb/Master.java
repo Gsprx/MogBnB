@@ -45,7 +45,7 @@ public class Master extends Thread {
 
         workers = new ArrayList<>();
         for (int i=0; i<numOfWorkers; i++) {
-            workers.add(new Worker());
+            workers.add(new Worker(i));
         }
     }
 
