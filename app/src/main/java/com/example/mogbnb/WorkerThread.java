@@ -114,14 +114,15 @@ public class WorkerThread extends Thread {
         }
     }
 
-    // expected mapValue is a Filter object
+    // expected mapValue is an ArrayList [start, end] local dates
     private void areaBookings() {
         HashMap<String,Integer> areaResults = new HashMap<>();
-        Filter filter = (Filter) mapValue;
+        ArrayList<LocalDate> dates = (ArrayList<LocalDate>) mapValue;
+        LocalDate start = dates.get(0);
+        LocalDate end = dates.get(1);
+
         for(Room r : rooms){
-            if(r.filterAccepted(filter)) {
-                areaResults.merge(r.getArea(), r.totalDaysBooked(), Integer::sum);
-            }
+            areaResults.merge(r.getArea(), r.totalDaysBooked(start, end), Integer::sum);
         }
         System.out.println(areaResults.size());
         sendResults(areaResults);
@@ -147,16 +148,18 @@ public class WorkerThread extends Thread {
         sendResults(foundRoom);
     }
 
+    //expected mapValue is an ArrayList of : [roomName, userID, checkIn, checkOut]
     private void bookRoom() {
-        Map.Entry<String, Map.Entry<Integer, Map.Entry<LocalDate, LocalDate>>> bookInfo = (Map.Entry<String, Map.Entry<Integer, Map.Entry<LocalDate, LocalDate>>>) mapValue;
-        String roomName = bookInfo.getKey();
-        int user = bookInfo.getValue().getKey();
-        Map.Entry<LocalDate, LocalDate> stay = bookInfo.getValue().getValue();
+        ArrayList<Object> data = (ArrayList<Object>) mapValue;
+        String roomName = (String) data.get(0);
+        int userID = (int) data.get(1);
+        LocalDate checkIn = (LocalDate) data.get(2);
+        LocalDate checkOut = (LocalDate) data.get(3);
 
         int result = 0;
         for (Room r : rooms) {
             if (r.getRoomName().equals(roomName)) {
-                if (r.bookRoom(stay.getKey(), stay.getValue(), user)) result = 1;
+                if (r.bookRoom(checkIn, checkOut, userID)) result = 1;
             }
         }
 

@@ -144,8 +144,27 @@ public class Room implements Serializable {
      */
     public int totalDaysBooked(){
         int count = 0;
+
         for (int day : bookingTable){
             if (day != 0){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Used to obtain total days booked for a room.
+     * @param start date
+     * @param end date
+     * @return total amount of days booked for the given duration
+     */
+    public int totalDaysBooked(LocalDate start, LocalDate end){
+        int count = 0;
+        int indexOfCheckInDate = (int) ChronoUnit.DAYS.between(Room.currentDate, start);
+        int bookingDaysTotal = (int) ChronoUnit.DAYS.between(start, end);
+        for (int i = indexOfCheckInDate; i<indexOfCheckInDate + bookingDaysTotal; i++){
+            if (bookingTable[i]!= 0){
                 count++;
             }
         }
