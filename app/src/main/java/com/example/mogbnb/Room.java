@@ -98,29 +98,42 @@ public class Room implements Serializable {
         LocalDate checkInDate = filter.getCheckIn();
 
         long bookingDaysTotal;
-        int indexOfCheckInDate;
+
         // if checkIn and checkOut not null calculate normally
         if (checkInDate != null && checkOutDate != null) {
+
+
+            //check if check in/out dates are within the booking table
+            LocalDate finalDate = currentDate.plusDays(availableDays - 1);
+            if(checkInDate.isAfter(finalDate)){
+                return false;
+            }
+            else if(checkOutDate.isAfter(finalDate)){
+                return false;
+            }
+
+
+            int indexOfCheckInDate;
             bookingDaysTotal = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
             indexOfCheckInDate = (int) ChronoUnit.DAYS.between(Room.currentDate, checkInDate);
+
+            // if the booking period requested is bigger than the availability of the room return false
+            if ((int) ChronoUnit.DAYS.between(Room.currentDate, checkOutDate)>availableDays) {
+                return false;
+            }
+
+            //check if filtered days are not booked
+            for (int i = 0; i < bookingDaysTotal; i++) {
+                if (bookingTable[indexOfCheckInDate + i] != 0) {
+                    return false;
+                }
+            }
         } else {
             // else set bookingDays to 0 (so we avoid for loop below)
             bookingDaysTotal = 0;
-            indexOfCheckInDate = 0;
-            checkOutDate = Room.currentDate;
         }
 
-        // if the booking period requested is bigger than the availability of the room return false
-        if ((int) ChronoUnit.DAYS.between(Room.currentDate, checkOutDate)>availableDays) {
-            return false;
-        }
 
-        //check if filtered days are not booked
-        for (int i = 0; i < bookingDaysTotal; i++) {
-            if (bookingTable[indexOfCheckInDate + i] != 0) {
-                return false;
-            }
-        }
         //filtered days are all available from this point onward
 
         return ((filter.getArea() == null || filter.getArea().equalsIgnoreCase(this.area))&&(filter.getPrice()==-1 || filter.getPrice()>=this.pricePerDay)&&(filter.getStars()==-1 || filter.getStars()<=this.stars)
@@ -160,9 +173,21 @@ public class Room implements Serializable {
      * @return total amount of days booked for the given duration
      */
     public int totalDaysBooked(LocalDate start, LocalDate end){
+
+        //check if start/end dates are within the booking table
+        LocalDate finalDate = currentDate.plusDays(availableDays - 1);
+        if(start.isAfter(finalDate)){
+            return 0;
+        }
+        else if(end.isAfter(finalDate)){
+            end = finalDate;
+        }
+
         int count = 0;
         int indexOfCheckInDate = (int) ChronoUnit.DAYS.between(Room.currentDate, start);
         int bookingDaysTotal = (int) ChronoUnit.DAYS.between(start, end);
+
+
         for (int i = indexOfCheckInDate; i<indexOfCheckInDate + bookingDaysTotal; i++){
             if (bookingTable[i]!= 0){
                 count++;
