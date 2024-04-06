@@ -114,14 +114,15 @@ public class WorkerThread extends Thread {
         }
     }
 
-    // expected mapValue is a Filter object
+    // expected mapValue is an ArrayList [start, end] local dates
     private void areaBookings() {
         HashMap<String,Integer> areaResults = new HashMap<>();
-        Filter filter = (Filter) mapValue;
+        ArrayList<LocalDate> dates = (ArrayList<LocalDate>) mapValue;
+        LocalDate start = dates.get(0);
+        LocalDate end = dates.get(1);
+
         for(Room r : rooms){
-            if(r.filterAccepted(filter)) {
-                areaResults.merge(r.getArea(), r.totalDaysBooked(), Integer::sum);
-            }
+            areaResults.merge(r.getArea(), r.totalDaysBooked(), Integer::sum);
         }
         sendResults(areaResults);
     }
