@@ -101,8 +101,19 @@ public class Room implements Serializable {
 
         // if checkIn and checkOut not null calculate normally
         if (checkInDate != null && checkOutDate != null) {
-            int indexOfCheckInDate;
 
+
+            //check if check in/out dates are within the booking table
+            LocalDate finalDate = currentDate.plusDays(availableDays - 1);
+            if(checkInDate.isAfter(finalDate)){
+                return false;
+            }
+            else if(checkOutDate.isAfter(finalDate)){
+                return false;
+            }
+
+
+            int indexOfCheckInDate;
             bookingDaysTotal = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
             indexOfCheckInDate = (int) ChronoUnit.DAYS.between(Room.currentDate, checkInDate);
 
@@ -162,9 +173,21 @@ public class Room implements Serializable {
      * @return total amount of days booked for the given duration
      */
     public int totalDaysBooked(LocalDate start, LocalDate end){
+
+        //check if start/end dates are within the booking table
+        LocalDate finalDate = currentDate.plusDays(availableDays - 1);
+        if(start.isAfter(finalDate)){
+            return 0;
+        }
+        else if(end.isAfter(finalDate)){
+            end = finalDate;
+        }
+
         int count = 0;
         int indexOfCheckInDate = (int) ChronoUnit.DAYS.between(Room.currentDate, start);
         int bookingDaysTotal = (int) ChronoUnit.DAYS.between(start, end);
+
+
         for (int i = indexOfCheckInDate; i<indexOfCheckInDate + bookingDaysTotal; i++){
             if (bookingTable[i]!= 0){
                 count++;
