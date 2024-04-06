@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -35,13 +37,13 @@ public class WorkerThread extends Thread {
 
     /**
      * Used by threads to run their different functions based on mapID.
-     * <p>
      * (NOTE) mapIDs: manager_show_x_ - return all rooms
      *                manager_add_x_ - add a room
      *                manager_show_bookings_x - return all bookings
      *                manager_area_bookings_x - return bookings per area for a time period
      *                tenant_search_x_ - search rooms
      *                tenant_rate_x_ - rate a specific room
+     *                tenant_book_x_ - make a reservation for a specific room
      *                find_x_ - return specific room based on room's name
      */
     // TODO: function manager_booking_areas
@@ -58,6 +60,8 @@ public class WorkerThread extends Thread {
             areaBookings();
         } else if(mapID.contains("tenant_rate")){
             rateRoom();
+        } else if (mapID.contains("tenant_book")) {
+            bookRoom();
         }
     }
 
@@ -124,13 +128,10 @@ public class WorkerThread extends Thread {
 
     //expected mapValue is an array [room_name, rating]
     private void rateRoom() {
-        HashMap<String, Double> rateInfo = (HashMap<String, Double>) mapValue; // [String roomName, double rating]
-        String roomName = "";
-        double rating = 0.0;
-        for (HashMap.Entry<String, Double> set : rateInfo.entrySet()) {
-            roomName = set.getKey();
-            rating = set.getValue();
-        }
+        Map.Entry<String, Double> rateInfo = (Map.Entry<String, Double>) mapValue; // [String roomName, double rating]
+        String roomName = rateInfo.getKey();
+        double rating = rateInfo.getValue();
+
         int foundRoom = 0;
         for (Room r : rooms) {
             if (r.getRoomName().equalsIgnoreCase(roomName)) {
@@ -140,8 +141,22 @@ public class WorkerThread extends Thread {
                 }
             }
         }
+
         //return a verification message back to master
         sendResults(foundRoom);
+    }
+
+    private void bookRoom() {
+        Map.Entry<String, Map.Entry<Integer, Map.Entry<LocalDate, LocalDate>>> bookInfo = (Map.Entry<String, Map.Entry<Integer, Map.Entry<LocalDate, LocalDate>>>) mapValue;
+        String roomName = bookInfo.getKey();
+        int user = bookInfo.getValue().getKey();
+        Map.Entry<LocalDate, LocalDate> stay = bookInfo.getValue().getValue();
+
+        for (Room r : rooms) {
+            if (r.getRoomName().equals(roomName)) {
+
+            }
+        }
     }
 
     /**

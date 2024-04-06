@@ -47,7 +47,6 @@ public class Room implements Serializable {
     public boolean bookRoom(LocalDate start, LocalDate end) throws RuntimeException{
         int bookingDaysTotal = (int)ChronoUnit.DAYS.between(start, end);
 
-
         //error handling for invalid dates
         LocalDate finalAvailableDate = currentDate.plusDays(availableDays);
         //check if given dates are out of bounds for the booking table
@@ -77,7 +76,6 @@ public class Room implements Serializable {
         }
         //unlock the booking table
         return true;
-
     }
 
 
@@ -135,9 +133,9 @@ public class Room implements Serializable {
      * Used to add a new review to a specific room.
      * @param stars the double number of stars for the review
      */
-    public void addReview(double stars){
+    public void addReview(double stars) {
+        this.stars = (noOfReviews > 0) ? (this.stars + stars)/2 : stars;
         this.noOfReviews++;
-        this.stars = (this.stars + stars)/2;
     }
 
 

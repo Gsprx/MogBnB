@@ -13,9 +13,11 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Tenant implements Serializable {
@@ -38,49 +40,56 @@ public class Tenant implements Serializable {
             throw new RuntimeException(e);
         }
     }
+
+    public int getId() {
+        return id;
+    }
+
     public void runTenant() {
         displayOperationOptions(this);
     }
 
-        /**
-         * Displays a menu of operations (see bookings, search for a room, rate a room, exit) and processes user input to perform the selected action.
-         */
-        private static void displayOperationOptions(Tenant tenant){
+    /**
+     * Displays a menu of operations (see bookings, search for a room, rate a room, exit) and processes user input to perform the selected action.
+     */
+    private void displayOperationOptions(Tenant tenant){
+        while (true) {
+            System.out.println("\nPlease select an operation:");
+            System.out.println("1. See my bookings");
+            System.out.println("2. Search for a room");
+            System.out.println("3. Make reservation");
+            System.out.println("4. Rate a room");
+            System.out.println("5. Exit");
+            System.out.print("Your choice: ");
+
             Scanner scanner = new Scanner(System.in);
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
 
-            while (true) {
-                System.out.println("\nPlease select an operation:");
-                System.out.println("1. See my bookings");
-                System.out.println("2. Search for a room");
-                System.out.println("3. Rate a room");
-                System.out.println("4. Exit");
-                System.out.print("Your choice: ");
-
-                int choice = scanner.nextInt();
-                scanner.nextLine(); // Consume newline
-
-                switch (choice) {
-                    case 1:
-                        seeBookings(tenant);
-                        break;
-                    case 2:
-                        searchRoom();
-                        break;
-                    case 3:
-                        rateRoom();
-                        break;
-                    case 4:
-                        System.out.println("Exiting...");
-                        return;
-                    default:
-                        System.out.println("Invalid choice. Please select again.");
-                }
+            switch (choice) {
+                case 1:
+                    seeBookings(tenant);
+                    break;
+                case 2:
+                    searchRoom();
+                    break;
+                case 3:
+                    makeReservation(tenant);
+                    break;
+                case 4:
+                    rateRoom();
+                    break;
+                case 5:
+                    System.out.println("Exiting...");
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please select again.");
+                    break;
             }
         }
+    }
 
-
-
-    private static void seeBookings( Tenant tenant) {
+    private static void seeBookings(Tenant tenant) {
         try (Socket socket = new Socket("localhost", Config.USER_MASTER_PORT);
              ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
              ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
@@ -145,7 +154,7 @@ public class Tenant implements Serializable {
 
             String mapIDResult = (String) in.readObject();
             ArrayList<Room> rooms = (ArrayList<Room>) in.readObject();
-            System.out.println("\nResults\n------------------------------------------------");
+            System.out.println("\nResults for " + mapIDResult + "\n------------------------------------------------");
             rooms.forEach(System.out::println);
             System.out.println("------------------------------------------------\n");
         } catch (IOException | ClassNotFoundException e) {
@@ -181,13 +190,64 @@ public class Tenant implements Serializable {
     }
 
     /**
+     * Make a reservation.
+     */
+    private static void makeReservation(Tenant tenant) {
+        System.out.println("\nEnter the name of the room you want to book:");
+        Scanner scanner = new Scanner(System.in);
+        String roomName = scanner.nextLine();
+
+        try {
+            Socket socket = new Socket("localhost", Config.USER_MASTER_PORT);
+            ObjectOutputStream search_out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream search_in = new ObjectInputStream(socket.getInputStream());
+
+            search_out.writeInt(MasterFunction.FIND_ROOM_BY_NAME.getEncoded());
+            // Send the room name for searching
+            search_out.writeObject(roomName);
+            search_out.flush();
+
+            // Receive the room information from the server
+            Room room = (Room) search_in.readObject();
+            if (room == null) {
+                System.out.println("Room not found.");
+                return;
+            }
+
+            search_out.close();
+            search_in.close();
+            socket.close();
+
+            socket = new Socket("localhost", Config.USER_MASTER_PORT);
+            ObjectOutputStream book_out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream book_in = new ObjectInputStream(socket.getInputStream());
+
+            // read check-in, check-out
+            LocalDate checkIn = readDate();
+            LocalDate checkOut = readDate();
+
+            // Now, send the booking along with room information to the server
+            book_out.writeInt(MasterFunction.BOOK_ROOM.getEncoded());
+            Map.Entry<String, Map.Entry<Integer, Map.Entry<LocalDate, LocalDate>>> roomBooking =
+                    new AbstractMap.SimpleEntry<>(roomName, new AbstractMap.SimpleEntry<>(tenant.getId(), new AbstractMap.SimpleEntry<>(checkIn, checkOut)));
+            book_out.writeObject(roomBooking);
+            book_out.flush();
+
+            // Await confirmation from the server
+            String response = (String) book_in.readObject();
+            System.out.println(response);
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Allows the user to rate a room by its name. Prompts for the room name and the desired rating, then updates the room's information accordingly.
      */
-
     private static void rateRoom() {
-        Scanner scanner = new Scanner(System.in);
-
         System.out.println("\nEnter the name of the room you want to rate:");
+        Scanner scanner = new Scanner(System.in);
         String roomName = scanner.nextLine();
 
         try {
@@ -221,6 +281,7 @@ public class Tenant implements Serializable {
             while (!validInput) {
                 try {
                     System.out.println("Enter your rating (0.0 to 5.0):");
+                    scanner = new Scanner(System.in);
                     rating = Double.parseDouble(scanner.nextLine());
                     if (rating < 0 || rating > 5) {
                         System.out.println("Rating must be between 0.0 and 5.0.");
@@ -234,8 +295,7 @@ public class Tenant implements Serializable {
 
             // Now, send the rating along with room information to the server
             rate_out.writeInt(MasterFunction.RATE_ROOM.getEncoded());
-            HashMap<String, Double> roomRating = new HashMap<>();
-            roomRating.put(roomName, rating);
+            Map.Entry<String, Double> roomRating = new AbstractMap.SimpleEntry<>(roomName, rating);
             rate_out.writeObject(roomRating);
             rate_out.flush();
 

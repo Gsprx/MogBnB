@@ -10,9 +10,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MasterThread extends Thread {
     ObjectOutputStream out;
@@ -57,6 +59,9 @@ public class MasterThread extends Thread {
                     break;
                 case 8:
                     assign_user_id();
+                    break;
+                case 9:
+                    bookRoom();
                     break;
                 default:
                     System.out.println("Function not identified!!");
@@ -292,8 +297,8 @@ public class MasterThread extends Thread {
         }
 
     }
-    private void showBookings() {
 
+    private void showBookings() {
         String mapID;
         synchronized (Master.INPUT_IDs) {
             mapID = "tenant_show_bookings_" + Master.INPUT_IDs.get(MasterFunction.SHOW_BOOKINGS.getEncoded());
@@ -324,12 +329,10 @@ public class MasterThread extends Thread {
             throw new RuntimeException(e);
         }
     }
+
     private void rateRoom() {
-        HashMap<String, Double> rateInfo = (HashMap<String, Double>) inputValue; // [String roomName, double rating]
-        String roomName = "";
-        for (HashMap.Entry<String, Double> set : rateInfo.entrySet()) {
-            roomName = set.getKey();
-        }
+        Map.Entry<String, Double> rateInfo = (Map.Entry<String, Double>) inputValue; // [String roomName, double rating]
+        String roomName = rateInfo.getKey();
 
         String mapID;
         synchronized (Master.INPUT_IDs) {
@@ -359,10 +362,56 @@ public class MasterThread extends Thread {
             e.printStackTrace();
         }
     }
+
     private void assign_user_id() throws IOException {
         out.writeInt(Master.USER_IDS);
         out.flush();
         Master.USER_IDS++;
+    }
+
+    /**
+     * Make a reservation for a room | inputID : 9
+     * - Create mapID
+     * - Hash input value
+     * - Assign the right worker
+     * - Send request
+     * - Wait for response from reducer
+     * - Answer to user
+     */
+    private void bookRoom() {
+        // send mapID to workers
+        String mapID;
+        synchronized (Master.INPUT_IDs) {
+            mapID = "tenant_book_" + Master.INPUT_IDs.get(MasterFunction.BOOK_ROOM.getEncoded());
+            // increment
+            Master.INPUT_IDs.merge(MasterFunction.BOOK_ROOM.getEncoded(), 1, Integer::sum);
+        }
+
+        // get the worker we need to out to using hash function
+        Map.Entry<String, Map.Entry<Integer, Map.Entry<LocalDate, LocalDate>>> request = (Map.Entry<String, Map.Entry<Integer, Map.Entry<LocalDate, LocalDate>>>) inputValue;
+        String roomName = request.getKey();
+        int workerIndex = (Master.hash(roomName) % Config.NUM_OF_WORKERS) + 1;
+
+        // send to worker
+        sendRequest(mapID, request, workerIndex);
+
+        // wait for response
+        try {
+            Socket reducerResultSocket = reducerListener.accept();
+
+            ObjectInputStream reducer_in = new ObjectInputStream(reducerResultSocket.getInputStream());
+            int result = reducer_in.readInt();
+
+            if (result == 1) out.writeObject("Booking successful.");
+            else out.writeObject("An error occured.");
+            out.flush();
+
+            reducer_in.close();
+            reducerResultSocket.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 
