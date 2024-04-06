@@ -16,7 +16,7 @@ public class Room implements Serializable {
     private int noOfReviews;
     private double pricePerDay;
     private String roomImage; //Path to url of the image
-    private final boolean[] bookingTable; //true - yes booking , false - no booking for the day indicated by the index
+    private final int[] bookingTable; //true - yes booking , false - no booking for the day indicated by the index
     private static LocalDate currentDate;
 
     public Room(String roomName, int noOfPersons, int availableDays, String area, double stars, int noOfReviews, String roomImage, double pricePerDay) {
@@ -28,10 +28,10 @@ public class Room implements Serializable {
         this.noOfReviews = noOfReviews;
         this.roomImage = roomImage;
         this.pricePerDay = pricePerDay;
-        bookingTable = new boolean[availableDays];
+        bookingTable = new int[availableDays];
         //initiate all days as not booked in the booking table
         for(int i = 0; i<availableDays; i++){
-            bookingTable[i] = false;
+            bookingTable[i] = 0;
         }
         if (currentDate == null)
             currentDate = LocalDate.now();
@@ -41,10 +41,11 @@ public class Room implements Serializable {
      * Method used book a room for the duration of two given dates.
      * @param start Start of booking
      * @param end End of booking
+     * @param userID ID of the user attempting to book the room
      * @return True if the room can be booked for the duration of the two given dates, else false.
      * @throws RuntimeException
      */
-    public boolean bookRoom(LocalDate start, LocalDate end) throws RuntimeException{
+    public boolean bookRoom(LocalDate start, LocalDate end, int userID) throws RuntimeException{
         int bookingDaysTotal = (int)ChronoUnit.DAYS.between(start, end);
 
 
@@ -59,31 +60,31 @@ public class Room implements Serializable {
         //check if the room has the dates available
         int indexOfCheckInDate = (int) ChronoUnit.DAYS.between(Room.currentDate, start);
 
-        //case where the room cannot be booked because of unavailable dates in the duration given,
-        //caused by someone else booking a day in the duration given, before the current user manages to themselves
-        //no changes are made to the booking table of this room
-        if (!checkAvailability(indexOfCheckInDate,indexOfCheckInDate + bookingDaysTotal)){
-            return false;
-        }
+
 
         //case where the room can be booked for all the days given, the booking table is "locked" temporarily
         //then unlocked once the changes to availability are made.
 
         //lock the booking table
         synchronized (this.bookingTable){
-            for(int i = indexOfCheckInDate; i<indexOfCheckInDate+bookingDaysTotal; i++){
-                bookingTable[i] = true;
+            //case where the room cannot be booked because of unavailable dates in the duration given,
+            //caused by someone else booking a day in the duration given, before the current user manages to themselves
+            //no changes are made to the booking table of this room
+            if (!checkAvailability(indexOfCheckInDate,indexOfCheckInDate + bookingDaysTotal)){
+                return false;
             }
+            for(int i = indexOfCheckInDate; i<indexOfCheckInDate+bookingDaysTotal; i++){
+                bookingTable[i] = userID;
+            }
+            //unlock the booking table
+            return true;
         }
-        //unlock the booking table
-        return true;
-
     }
 
 
     private boolean checkAvailability(int indexForBooking, int end){
         for (int i = indexForBooking; i< end; i++){
-            if (this.bookingTable[i]){
+            if (this.bookingTable[i] != 0){
                 return false;
             }
         }
@@ -120,7 +121,7 @@ public class Room implements Serializable {
 
         //check if filtered days are not booked
         for (int i = 0; i < bookingDaysTotal; i++) {
-            if (bookingTable[indexOfCheckInDate + i]) {
+            if (bookingTable[indexOfCheckInDate + i] != 0) {
                 return false;
             }
         }
@@ -147,8 +148,8 @@ public class Room implements Serializable {
      */
     public int totalDaysBooked(){
         int count = 0;
-        for (boolean day : bookingTable){
-            if (day){
+        for (int day : bookingTable){
+            if (day != 0){
                 count++;
             }
         }
@@ -233,7 +234,7 @@ public class Room implements Serializable {
     public String getRoomImage() {
         return roomImage;
     }
-    public boolean[] getBookingTable(){return bookingTable;}
+    public int[] getBookingTable(){return bookingTable;}
     @NonNull
     @Override
     public String toString() {
