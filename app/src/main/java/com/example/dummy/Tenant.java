@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Tenant implements Serializable {
@@ -230,8 +231,8 @@ public class Tenant implements Serializable {
 
             // Now, send the booking along with room information to the server
             book_out.writeInt(MasterFunction.BOOK_ROOM.getEncoded());
-            Map.Entry<String, Map.Entry<Integer, Map.Entry<LocalDate, LocalDate>>> roomBooking =
-                    new AbstractMap.SimpleEntry<>(roomName, new AbstractMap.SimpleEntry<>(tenant.getId(), new AbstractMap.SimpleEntry<>(checkIn, checkOut)));
+            ArrayList<Object> roomBooking = new ArrayList<>();
+            roomBooking.add(roomName); roomBooking.add(tenant.getId()); roomBooking.add(checkIn); roomBooking.add(checkOut);
             book_out.writeObject(roomBooking);
             book_out.flush();
 

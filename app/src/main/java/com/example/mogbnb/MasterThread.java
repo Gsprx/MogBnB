@@ -6,6 +6,7 @@ import com.example.misc.Config;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -378,7 +379,7 @@ public class MasterThread extends Thread {
      * - Wait for response from reducer
      * - Answer to user
      */
-    private void bookRoom() {
+    private void bookRoom() throws IOException, ClassNotFoundException {
         // send mapID to workers
         String mapID;
         synchronized (Master.INPUT_IDs) {
@@ -388,8 +389,8 @@ public class MasterThread extends Thread {
         }
 
         // get the worker we need to out to using hash function
-        Map.Entry<String, Map.Entry<Integer, Map.Entry<LocalDate, LocalDate>>> request = (Map.Entry<String, Map.Entry<Integer, Map.Entry<LocalDate, LocalDate>>>) inputValue;
-        String roomName = request.getKey();
+        ArrayList<Object> request = (ArrayList<Object>) inputValue;
+        String roomName = (String) request.get(0);
         int workerIndex = (Master.hash(roomName) % Config.NUM_OF_WORKERS) + 1;
 
         // send to worker

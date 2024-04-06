@@ -124,6 +124,7 @@ public class WorkerThread extends Thread {
         for(Room r : rooms){
             areaResults.merge(r.getArea(), r.totalDaysBooked(start, end), Integer::sum);
         }
+
         System.out.println(areaResults.size());
         sendResults(areaResults);
     }
