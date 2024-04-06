@@ -1,12 +1,6 @@
 package com.example.mogbnb;
 
 public enum MasterFunction {
-    INIT_ROOMS {
-        @Override
-        public int getEncoded() {
-            return 0;
-        }
-    },
     SHOW_ROOMS {
         @Override
         public int getEncoded() {
@@ -47,6 +41,12 @@ public enum MasterFunction {
     ASSIGN_USER_ID{
         @Override
         public int getEncoded(){return 8;}
+    },
+    BOOK_ROOM {
+        @Override
+        public int getEncoded() {
+            return 9;
+        }
     };
     public abstract int getEncoded();
 }

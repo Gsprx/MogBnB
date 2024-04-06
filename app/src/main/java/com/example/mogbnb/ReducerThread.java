@@ -35,7 +35,7 @@ public class ReducerThread extends Thread {
             String mapID = (String) in.readObject();
             if (mapID.contains("manager_area_bookings")){
                 areaBookingReduce(mapID);
-            }else if(mapID.contains("tenant_rate")){
+            }else if(mapID.contains("tenant_rate") || mapID.contains("tenant_book")){
                 messageReduce();
             }else if (mapID.contains("find")) {
                 returnWorkerResult(mapID);
