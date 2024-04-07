@@ -56,7 +56,7 @@ public class Tenant implements Serializable{
 
             switch (choice) {
                 case 1:
-                    seeBookings(tenant);
+                    seeBookings();
                     break;
                 case 2:
                     searchRoom();
@@ -77,13 +77,13 @@ public class Tenant implements Serializable{
         }
     }
 
-    private static void seeBookings(Tenant tenant) {
+    private void seeBookings() {
         try (Socket socket = new Socket("localhost", Config.USER_MASTER_PORT);
              ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
              ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
             out.writeInt(MasterFunction.SHOW_BOOKINGS.getEncoded());
-            out.writeObject(tenant);
+            out.writeInt(id);
             out.flush();
 
             List<Room> bookings = (List<Room>) in.readObject();
@@ -98,7 +98,7 @@ public class Tenant implements Serializable{
         }
     }
 
-    private static void searchRoom() {
+    private void searchRoom() {
         System.out.print("Enter area (leave blank for no preference): ");
         Scanner scanner = new Scanner(System.in);
         String area = scanner.nextLine();
@@ -154,22 +154,21 @@ public class Tenant implements Serializable{
      *
      * @return A LocalDate object if a valid date is entered, or null if no date is specified.
      */
-    private static LocalDate readDate() {
-        Scanner scanner = new Scanner(System.in);
-
-        LocalDate date = null;
+    public static LocalDate readDate() {
+        LocalDate date;
         while (true) {
-            String input = scanner.nextLine().trim();
-            if (input.isEmpty()) {
-                // No date entered, return null to indicate no preference
-                return null;
-            } else {
+            Scanner inp = new Scanner(System.in);
+            String input = inp.nextLine().trim();
+            if (!input.isEmpty()) {
                 try {
                     date = LocalDate.parse(input); // Try to parse the input
+                    if (date.isBefore(LocalDate.now())){
+                        System.out.print("[-]Invalid date, must be a date from today onward (" + LocalDate.now().toString() +  ") : ");
+                        continue;
+                    }
                     break; // Break the loop if parsing is successful
                 } catch (DateTimeParseException e) {
-
-                    System.out.print("Invalid date format. Please enter a date in YYYY-MM-DD format or leave blank for no preference: ");
+                    System.out.print("[-]Invalid date format. Please enter a date in YYYY-MM-DD format: ");
                 }
             }
         }
@@ -179,7 +178,7 @@ public class Tenant implements Serializable{
     /**
      * Make a reservation.
      */
-    private static void makeReservation(Tenant tenant) {
+    private void makeReservation(Tenant tenant) {
         System.out.println("\nEnter the name of the room you want to book:");
         Scanner scanner = new Scanner(System.in);
         String roomName = scanner.nextLine();
@@ -234,7 +233,7 @@ public class Tenant implements Serializable{
     /**
      * Allows the user to rate a room by its name. Prompts for the room name and the desired rating, then updates the room's information accordingly.
      */
-    private static void rateRoom() {
+    private void rateRoom() {
         System.out.println("\nEnter the name of the room you want to rate:");
         Scanner scanner = new Scanner(System.in);
         String roomName = scanner.nextLine();

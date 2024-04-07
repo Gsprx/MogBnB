@@ -58,9 +58,9 @@ public class MasterThread extends Thread {
                 case 7:
                     showBookings();
                     break;
-                case 8:
-                    assign_user_id();
-                    break;
+//                case 8:
+//                    assign_user_id();
+//                    break;
                 case 9:
                     bookRoom();
                     break;
@@ -364,11 +364,11 @@ public class MasterThread extends Thread {
         }
     }
 
-    private void assign_user_id() throws IOException {
-        out.writeInt(Master.USER_IDS);
-        out.flush();
-        Master.USER_IDS++;
-    }
+//    private void assign_user_id() throws IOException {
+//        out.writeInt(Master.USER_IDS);
+//        out.flush();
+//        Master.USER_IDS++;
+//    }
 
     /**
      * Make a reservation for a room | inputID : 9
