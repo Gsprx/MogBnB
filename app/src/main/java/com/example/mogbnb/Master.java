@@ -66,7 +66,7 @@ public class Master extends Thread {
             for (Worker w : workers)
                 w.start();
             // start the reducer
-            Reducer reducer = new Reducer();
+            Reducer reducer = new Reducer(numOfWorkers);
             reducer.start();
 
             // load the rooms to the workers

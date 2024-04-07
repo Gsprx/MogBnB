@@ -23,7 +23,8 @@ public class Reducer extends Thread {
     private int numOfWorkers;
 
 
-    public Reducer(){
+    public Reducer(int numOfWorkers){
+        this.numOfWorkers = numOfWorkers;
         mapIDCounter = new HashMap<>();
         roomListBuffer = new HashMap<>();
         areaBookingsBuffer = new HashMap<>();
@@ -32,31 +33,31 @@ public class Reducer extends Thread {
 
 
     public static void main(String[] args){
-        Reducer reducer = new Reducer();
+        Reducer reducer = new Reducer(Integer.parseInt(args[0]));
         reducer.start();
     }
 
 
     public void run() {
-        // Get number of workers once
-        if(numOfWorkers == 0) {
-            synchronized ((Integer) numOfWorkers) {
-                try {
-                    ServerSocket initSocketServer = new ServerSocket(Config.MASTER_REDUCER_PORT);
-                    Socket initSocket = initSocketServer.accept();
-
-                    ObjectInputStream initInputStream = new ObjectInputStream(initSocket.getInputStream());
-
-                    numOfWorkers = initInputStream.readInt();
-
-                    initInputStream.close();
-                    initSocket.close();
-                    initSocketServer.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
+//        // Get number of workers once
+//        if(numOfWorkers == 0) {
+//            synchronized ((Integer) numOfWorkers) {
+//                try {
+//                    ServerSocket initSocketServer = new ServerSocket(Config.MASTER_REDUCER_PORT);
+//                    Socket initSocket = initSocketServer.accept();
+//
+//                    ObjectInputStream initInputStream = new ObjectInputStream(initSocket.getInputStream());
+//
+//                    numOfWorkers = initInputStream.readInt();
+//
+//                    initInputStream.close();
+//                    initSocket.close();
+//                    initSocketServer.close();
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//        }
 
         //setup the server and start while true loop
         try {
