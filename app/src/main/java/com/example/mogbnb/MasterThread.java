@@ -176,7 +176,6 @@ public class MasterThread extends Thread {
 
             // read from reducer
             ObjectInputStream reducer_in = new ObjectInputStream(reducerResultSocket.getInputStream());
-            String mapIdResult = (String) reducer_in.readObject();
             HashMap<String, Integer> result = (HashMap<String, Integer>) reducer_in.readObject();
 
             // write to user
@@ -216,7 +215,6 @@ public class MasterThread extends Thread {
 
             // read from reducer
             ObjectInputStream reducer_in = new ObjectInputStream(reducerResultSocket.getInputStream());
-            String mapIdResult = (String) reducer_in.readObject();
             ArrayList<Room> result = (ArrayList<Room>) reducer_in.readObject();
             Room r = null;
             if (result != null) r = result.get(0);
@@ -283,7 +281,6 @@ public class MasterThread extends Thread {
 
             // Read from reducer
             ObjectInputStream reducer_in = new ObjectInputStream(reducerResultSocket.getInputStream());
-            String mapIdResult = (String) reducer_in.readObject();
             ArrayList<Room> roomsResult = (ArrayList<Room>) reducer_in.readObject();
 
             // Write to user
@@ -318,7 +315,7 @@ public class MasterThread extends Thread {
             Socket reducerResultSocket = reducerListener.accept();
 
             ObjectInputStream reducer_in = new ObjectInputStream(reducerResultSocket.getInputStream());
-            ArrayList<Room> bookingsResult = (ArrayList<Room>) reducer_in.readObject();
+            HashMap<String, ArrayList<LocalDate>> bookingsResult = (HashMap<String, ArrayList<LocalDate>>) reducer_in.readObject();
 
             out.writeObject(bookingsResult);
             out.flush();
@@ -443,7 +440,6 @@ public class MasterThread extends Thread {
             Socket reducerResultSocket = reducerListener.accept();
 
             ObjectInputStream reducer_in = new ObjectInputStream(reducerResultSocket.getInputStream());
-            String resultID = (String) reducer_in.readObject();
             ArrayList<String> result = (ArrayList<String>) reducer_in.readObject();
 
             out.writeObject(result);

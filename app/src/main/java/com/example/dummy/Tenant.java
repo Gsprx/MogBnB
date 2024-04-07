@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Tenant implements Serializable{
 
@@ -83,15 +84,18 @@ public class Tenant implements Serializable{
              ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
             out.writeInt(MasterFunction.SHOW_BOOKINGS.getEncoded());
-            out.writeInt(id);
+            out.writeObject(id);
             out.flush();
 
-            List<Room> bookings = (List<Room>) in.readObject();
+            HashMap<String,ArrayList<LocalDate>> bookings = (HashMap<String,ArrayList<LocalDate>>) in.readObject();
 
             if (bookings.isEmpty()) {
                 System.out.println("No bookings found.");
             } else {
-                bookings.forEach(System.out::println);
+                Set<String> roomNames = bookings.keySet();
+                for (String name : roomNames){
+                    System.out.println("Room: " + name + "\nDays booked: " + bookings.get(name).toString());
+                }
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -104,27 +108,27 @@ public class Tenant implements Serializable{
         String area = scanner.nextLine();
         if (area.equals("")) area = null;
 
-        System.out.print("Enter check-in date (YYYY-MM-DD, leave blank for no preference): ");
+        System.out.print("Enter check-in date (YYYY-MM-DD): ");
         LocalDate checkIn = readDate();
 
-        System.out.print("Enter check-out date (YYYY-MM-DD, leave blank for no preference): ");
+        System.out.print("Enter check-out date (YYYY-MM-DD): ");
         LocalDate checkOut = readDate();
 
-        System.out.print("Number of persons: ");
+        System.out.print("Number of persons (leave blank for no preference): ");
         scanner = new Scanner(System.in);
         String noOfPersonsStr = scanner.nextLine();
         int noOfPersons;
         if (noOfPersonsStr.equals("") || !TypeChecking.isInteger(noOfPersonsStr)) noOfPersons = -1;
         else noOfPersons = Integer.parseInt(noOfPersonsStr);
 
-        System.out.print("Enter the maximum price: ");
+        System.out.print("Enter the maximum price (leave blank for no preference): ");
         scanner = new Scanner(System.in);
         String priceStr = scanner.nextLine();
         double price;
         if (priceStr.equals("") || !TypeChecking.isDouble(priceStr)) price = -1;
         else price = Double.parseDouble(priceStr);
 
-        System.out.print("Minimum number of stars: ");
+        System.out.print("Minimum number of stars (leave blank for no preference): ");
         scanner = new Scanner(System.in);
         String starsStr = scanner.nextLine();
         double stars;
@@ -142,6 +146,7 @@ public class Tenant implements Serializable{
             out.flush();
 
             ArrayList<Room> rooms = (ArrayList<Room>) in.readObject();
+            System.out.println("------------------ROOMS FOUND-------------------\n");
             rooms.forEach(System.out::println);
             System.out.println("------------------------------------------------\n");
         } catch (IOException | ClassNotFoundException e) {

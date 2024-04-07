@@ -83,7 +83,6 @@ public class ReducerThread extends Thread {
                 //send the final refined list to the master using the reducer -> master port
                 Socket masterSocket = new Socket("localhost", Config.REDUCER_MASTER_PORT);
                 ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
-                out.writeObject(mapID);
                 out.writeObject(daysBookedBuffer.get(mapID));
                 out.flush();
 
@@ -106,7 +105,6 @@ public class ReducerThread extends Thread {
             ArrayList<Room> room = (ArrayList<Room>) in.readObject();
             Socket masterSocket = new Socket("localhost", Config.REDUCER_MASTER_PORT);
             ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
-            out.writeObject(mapID);
             out.writeObject(room);
             out.flush();
 
@@ -120,7 +118,6 @@ public class ReducerThread extends Thread {
             ArrayList<String> room = (ArrayList<String>) in.readObject();
             Socket masterSocket = new Socket("localhost", Config.REDUCER_MASTER_PORT);
             ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
-            out.writeObject(mapID);
             out.writeObject(room);
             out.flush();
 
@@ -152,7 +149,6 @@ public class ReducerThread extends Thread {
                 //send the final refined list to the master using the reducer -> master port
                 Socket masterSocket = new Socket("localhost", Config.REDUCER_MASTER_PORT);
                 ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
-                out.writeObject(mapID);
                 out.writeObject(roomListBuffer.get(mapID));
                 out.flush();
 
@@ -200,7 +196,6 @@ public class ReducerThread extends Thread {
                 //send the final refined list to the master using the reducer -> master port
                 Socket masterSocket = new Socket("localhost", Config.REDUCER_MASTER_PORT);
                 ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
-                out.writeObject(mapID);
                 out.writeObject(areaBookingsBuffer.get(mapID));
                 out.flush();
 
