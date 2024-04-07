@@ -49,6 +49,10 @@ public class Master extends Thread {
             workers.add(new Worker(i));
         }
     }
+    public static void main(String[] args) {
+        Master master = new Master(Config.NUM_OF_WORKERS);
+        master.start();
+    }
 
     /**
      * Start the master server.
@@ -81,13 +85,13 @@ public class Master extends Thread {
                 loadToWorker.close();
             }
 
-            // pass the num of workers to the reducer
-            Socket initToReducer = new Socket("localhost", Config.MASTER_REDUCER_PORT);
-            ObjectOutputStream outNoOfWorkers = new ObjectOutputStream(initToReducer.getOutputStream());
-            outNoOfWorkers.writeInt(numOfWorkers);
-            outNoOfWorkers.flush();
-            outNoOfWorkers.close();
-            initToReducer.close();
+//            // pass the num of workers to the reducer
+//            Socket initToReducer = new Socket("localhost", Config.MASTER_REDUCER_PORT);
+//            ObjectOutputStream outNoOfWorkers = new ObjectOutputStream(initToReducer.getOutputStream());
+//            outNoOfWorkers.writeInt(numOfWorkers);
+//            outNoOfWorkers.flush();
+//            outNoOfWorkers.close();
+//            initToReducer.close();
 
             // listen for requests from user
             while (true) {
@@ -129,8 +133,5 @@ public class Master extends Thread {
         return hash;
     }
 
-    public static void main(String[] args) {
-        Master master = new Master(Config.NUM_OF_WORKERS);
-        master.start();
-    }
+
 }

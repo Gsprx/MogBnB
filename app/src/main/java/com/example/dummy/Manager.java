@@ -284,16 +284,26 @@ public class Manager {
 
     private static void managerShowBookingsPerArea() {
         // waiting input stream -> its going to be a list with all the bookings
-        ObjectInputStream in = null;
+        ObjectInputStream in;
         // holds a code for the function that needs to be executed and an object argument
-        ObjectOutputStream out = null;
-        Socket socket = null;
+        ObjectOutputStream out;
+        Socket socket;
 
+        LocalDate start;
+        LocalDate end;
         System.out.println("\n|Bookings per area|");
-        System.out.print("Start date (YYYY-MM-DD): ");
-        LocalDate start = DummyMain.readDate();
-        System.out.print("End date (YYYY-MM-DD): ");
-        LocalDate end = DummyMain.readDate();
+        while(true) {
+            System.out.print("Start date (YYYY-MM-DD): ");
+            start = DummyMain.readDate();
+            System.out.print("End date (YYYY-MM-DD): ");
+            end = DummyMain.readDate();
+            if(start.isAfter(end)){
+                System.out.print("[-]Invalid dates, start date must be the same or before the end date!\n");
+            }
+            else {
+                break;
+            }
+        }
 
         // create an array with start and end date
         ArrayList<LocalDate> dates = new ArrayList<>();

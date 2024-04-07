@@ -43,19 +43,20 @@ public class DummyMain {
      * @return A LocalDate object if a valid date is entered, or null if no date is specified.
      */
     public static LocalDate readDate() {
-        LocalDate date = null;
+        LocalDate date;
         while (true) {
             Scanner inp = new Scanner(System.in);
             String input = inp.nextLine().trim();
-            if (input.isEmpty()) {
-                // No date entered, return null to indicate no preference
-                return null;
-            } else {
+            if (!input.isEmpty()) {
                 try {
                     date = LocalDate.parse(input); // Try to parse the input
+                    if (date.isBefore(LocalDate.now())){
+                        System.out.print("[-]Invalid date, must be a date from today onward (" + LocalDate.now().toString() +  ") : ");
+                        continue;
+                    }
                     break; // Break the loop if parsing is successful
                 } catch (DateTimeParseException e) {
-                    System.out.print("[-]Invalid date format. Please enter a date in YYYY-MM-DD format or leave blank for no preference: ");
+                    System.out.print("[-]Invalid date format. Please enter a date in YYYY-MM-DD format: ");
                 }
             }
         }
