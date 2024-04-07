@@ -226,9 +226,8 @@ public class Tenant implements Serializable{
             // read check-in, check-out
             LocalDate checkIn;
             LocalDate checkOut;
-            System.out.println("\n|Bookings per area|");
             while(true) {
-                System.out.print("Start date (YYYY-MM-DD): ");
+                System.out.print("\nStart date (YYYY-MM-DD): ");
                 checkIn = DummyMain.readDate();
                 System.out.print("End date (YYYY-MM-DD): ");
                 checkOut = DummyMain.readDate();

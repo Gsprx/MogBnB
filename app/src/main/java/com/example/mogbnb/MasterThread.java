@@ -108,7 +108,6 @@ public class MasterThread extends Thread {
 
             // read from reducer
             ObjectInputStream reducer_in = new ObjectInputStream(reducerResultSocket.getInputStream());
-            String mapIdResult = (String) reducer_in.readObject();
             ArrayList<Room> roomsResult = (ArrayList<Room>) reducer_in.readObject();
 
             // write to user

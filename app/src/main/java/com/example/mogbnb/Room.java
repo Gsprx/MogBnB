@@ -49,7 +49,7 @@ public class Room implements Serializable {
         int bookingDaysTotal = (int)ChronoUnit.DAYS.between(start, end);
 
         //error handling for invalid dates
-        LocalDate finalAvailableDate = currentDate.plusDays(availableDays);
+        LocalDate finalAvailableDate = currentDate.plusDays(availableDays-1);
         //check if given dates are out of bounds for the booking table
         if(bookingDaysTotal>availableDays){
             throw new RuntimeException("Error! The requested dates exceed the available days for this room.");
