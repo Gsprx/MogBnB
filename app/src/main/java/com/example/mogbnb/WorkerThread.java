@@ -44,9 +44,9 @@ public class WorkerThread extends Thread {
      *                tenant_search_x - search rooms
      *                tenant_rate_x - rate a specific room
      *                tenant_book_x - make a reservation for a specific room
+     *                tenant_show_bookings_x - show all bookings related to a tenant
      *                find_x - return specific room based on room's name
      */
-    // TODO: function manager_booking_areas
     public void run() {
         if(mapID.contains("manager_show")){
             showRooms();
@@ -64,8 +64,12 @@ public class WorkerThread extends Thread {
             bookRoom();
         } else if (mapID.contains("manager_bookings_of_room")) {
             showBookingsOfRoom();
+        } else if (mapID.contains("tenant_show_bookings")){
+            tenantBookings();
         }
     }
+
+
 
     //  ------------------------      WORK FUNCTIONS      ----------------------------------
 
@@ -197,11 +201,36 @@ public class WorkerThread extends Thread {
         int result = 0;
         for (Room r : rooms) {
             if (r.getRoomName().equals(roomName)) {
-                if (r.bookRoom(checkIn, checkOut, userID)) result = 1;
+                if (r.bookRoom(checkIn, checkOut, userID)) {
+                    result = 1;
+                }
             }
         }
 
         //return a verification message back to master
+        sendResults(result);
+    }
+    //expected map value is the user's id
+    private void tenantBookings() {
+        HashMap<String,ArrayList<LocalDate>> result = new HashMap<>();
+        int userID = (int) mapValue;
+
+        //create a list of dates booked by the user for each room
+        for (Room r : rooms){
+            ArrayList<LocalDate> daysBooked = new ArrayList<>();
+            int[] bookingTable = r.getBookingTable();
+            for(int dayIndex = 0; dayIndex<bookingTable.length; dayIndex++){
+                //check if the IDs match to add the date in the list for the specific room
+                if(bookingTable[dayIndex] == userID){
+                    daysBooked.add(r.getCurrentDate().plusDays(dayIndex));
+                }
+            }
+            //only add the list to the result if it has at least one day booked by the user
+            if(daysBooked.size()>0){
+                result.put(r.getRoomName(), daysBooked);
+            }
+        }
+        //send the result to the reducer node
         sendResults(result);
     }
 

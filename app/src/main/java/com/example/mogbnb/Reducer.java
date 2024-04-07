@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -18,6 +19,7 @@ public class Reducer extends Thread {
     HashMap<String, Integer> mapIDCounter;
     HashMap<String, ArrayList<Room>> roomListBuffer; //used to hold room values from workers until all workers are finished. key = mapID
     HashMap<String, HashMap<String,Integer>> areaBookingsBuffer; //used to hold hashmaps of area-days_booked tuples until all workers are finished. key = mapID
+    HashMap<String, HashMap<String, ArrayList<LocalDate>>> daysBookedBuffer;//used to hold hashmaps of room name - days booked tuples until all workers are finished. = key = mapID
     private int numOfWorkers;
 
 
@@ -25,6 +27,7 @@ public class Reducer extends Thread {
         mapIDCounter = new HashMap<>();
         roomListBuffer = new HashMap<>();
         areaBookingsBuffer = new HashMap<>();
+        daysBookedBuffer = new HashMap<>();
     }
 
 
@@ -61,7 +64,7 @@ public class Reducer extends Thread {
 
             while (true) {
                 socket = server.accept();
-                Thread t = new ReducerThread(socket, mapIDCounter, numOfWorkers, roomListBuffer, areaBookingsBuffer);
+                Thread t = new ReducerThread(socket, mapIDCounter, numOfWorkers, roomListBuffer, areaBookingsBuffer, daysBookedBuffer);
                 t.start();
             }
         } catch (IOException e) {

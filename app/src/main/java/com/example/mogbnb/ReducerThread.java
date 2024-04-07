@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -16,13 +17,16 @@ public class ReducerThread extends Thread {
     private HashMap<String, Integer> mapIDCounter;
     private HashMap<String, ArrayList<Room>> roomListBuffer;
     private HashMap<String, HashMap<String,Integer>> areaBookingsBuffer;
+    private HashMap<String, HashMap<String, ArrayList<LocalDate>>> daysBookedBuffer;
 
-    public ReducerThread(Socket socket, HashMap<String, Integer> mapIDBuffer, int numOfWorkers, HashMap<String, ArrayList<Room>> mapValueBuffer, HashMap<String, HashMap<String,Integer>> areaBookings) {
+    public ReducerThread(Socket socket, HashMap<String, Integer> mapIDBuffer, int numOfWorkers, HashMap<String, ArrayList<Room>> mapValueBuffer, HashMap<String, HashMap<String,Integer>> areaBookings
+    , HashMap<String, HashMap<String, ArrayList<LocalDate>>> daysBookedBuffer) {
         try {
             this.areaBookingsBuffer = areaBookings;
             this.numOfWorkers = numOfWorkers;
             this.mapIDCounter = mapIDBuffer;
             this.roomListBuffer = mapValueBuffer;
+            this.daysBookedBuffer = daysBookedBuffer;
             in = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -39,13 +43,60 @@ public class ReducerThread extends Thread {
                 messageReduce();
             }else if (mapID.contains("find")) {
                 returnWorkerResultRoomSearch(mapID);
-            }else if (mapID.contains("manager_bookings_of_room_")){
+            }else if (mapID.contains("manager_bookings_of_room")){
                 returnWorkerResultBookSearch(mapID);
+            } else if (mapID.contains("tenant_show_bookings")) {
+                tenantShowBookingsReduce(mapID);
             } else {
                 roomReduce(mapID);
             }
 
     } catch (ClassNotFoundException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void tenantShowBookingsReduce(String mapID) {
+        try{
+            synchronized (mapIDCounter){
+                synchronized (daysBookedBuffer){
+                    //if key exists       : increase the value of the counter related to the specific map ID by 1
+                    //if key doesn't exist: add a new mapping of mapID,1
+                    mapIDCounter.merge(mapID, 1, Integer::sum);
+
+                    HashMap<String,ArrayList<LocalDate>> inputHMap = (HashMap<String,ArrayList<LocalDate>>)in.readObject();
+                    HashMap<String,ArrayList<LocalDate>> existingHMap = daysBookedBuffer.get(mapID);
+
+                    //merge existing area values with new input
+                    //if existing values don't exist, initiate them with the input
+                    if(existingHMap!= null) {
+                        existingHMap.putAll(inputHMap);
+                    }
+                    else{
+                        daysBookedBuffer.put(mapID,inputHMap);
+                    }
+                }
+            }
+
+            //when the counter reaches num of workers, the reducer thread can output the result of the workers
+            if (mapIDCounter.get(mapID) == numOfWorkers) {
+                //send the final refined list to the master using the reducer -> master port
+                Socket masterSocket = new Socket("localhost", Config.REDUCER_MASTER_PORT);
+                ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
+                out.writeObject(mapID);
+                out.writeObject(daysBookedBuffer.get(mapID));
+                out.flush();
+
+                //sync and remove the buffered data related to the map request after sending it to master
+                synchronized (mapIDCounter) {
+                    synchronized (daysBookedBuffer) {
+                        mapIDCounter.remove(mapID);
+                        daysBookedBuffer.remove(mapID);
+                    }
+                }
+            }
+
+        } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
