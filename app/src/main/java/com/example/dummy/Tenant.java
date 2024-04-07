@@ -63,7 +63,7 @@ public class Tenant implements Serializable{
                     searchRoom();
                     break;
                 case 3:
-                    makeReservation(tenant);
+                    makeReservation();
                     break;
                 case 4:
                     rateRoom();
@@ -108,11 +108,21 @@ public class Tenant implements Serializable{
         String area = scanner.nextLine();
         if (area.equals("")) area = null;
 
-        System.out.print("Enter check-in date (YYYY-MM-DD): ");
-        LocalDate checkIn = readDate();
-
-        System.out.print("Enter check-out date (YYYY-MM-DD): ");
-        LocalDate checkOut = readDate();
+        LocalDate checkIn;
+        LocalDate checkOut;
+        System.out.println("\n|Bookings per area|");
+        while(true) {
+            System.out.print("Start date (YYYY-MM-DD): ");
+            checkIn= DummyMain.readDate();
+            System.out.print("End date (YYYY-MM-DD): ");
+            checkOut= DummyMain.readDate();
+            if(checkIn.isAfter(checkOut)){
+                System.out.print("[-]Invalid dates, start date must be the same or before the end date!\n");
+            }
+            else {
+                break;
+            }
+        }
 
         System.out.print("Number of persons (leave blank for no preference): ");
         scanner = new Scanner(System.in);
@@ -183,7 +193,7 @@ public class Tenant implements Serializable{
     /**
      * Make a reservation.
      */
-    private void makeReservation(Tenant tenant) {
+    private void makeReservation() {
         System.out.println("\nEnter the name of the room you want to book:");
         Scanner scanner = new Scanner(System.in);
         String roomName = scanner.nextLine();
@@ -214,15 +224,26 @@ public class Tenant implements Serializable{
             ObjectInputStream book_in = new ObjectInputStream(socket.getInputStream());
 
             // read check-in, check-out
-            System.out.println("Enter checkIn (YYYY-MM-DD): ");
-            LocalDate checkIn = readDate();
-            System.out.println("Enter checkOut (YYYY-MM-DD): ");
-            LocalDate checkOut = readDate();
+            LocalDate checkIn;
+            LocalDate checkOut;
+            System.out.println("\n|Bookings per area|");
+            while(true) {
+                System.out.print("Start date (YYYY-MM-DD): ");
+                checkIn = DummyMain.readDate();
+                System.out.print("End date (YYYY-MM-DD): ");
+                checkOut = DummyMain.readDate();
+                if(checkIn.isAfter(checkOut)){
+                    System.out.print("[-]Invalid dates, start date must be the same or before the end date!\n");
+                }
+                else {
+                    break;
+                }
+            }
 
             // Now, send the booking along with room information to the server
             book_out.writeInt(MasterFunction.BOOK_ROOM.getEncoded());
             ArrayList<Object> roomBooking = new ArrayList<>();
-            roomBooking.add(roomName); roomBooking.add(tenant.getId()); roomBooking.add(checkIn); roomBooking.add(checkOut);
+            roomBooking.add(roomName); roomBooking.add(id); roomBooking.add(checkIn); roomBooking.add(checkOut);
             book_out.writeObject(roomBooking);
             book_out.flush();
 
