@@ -332,8 +332,8 @@ public class MasterThread extends Thread {
     }
 
     private void rateRoom() {
-        Map.Entry<String, Double> rateInfo = (Map.Entry<String, Double>) inputValue; // [String roomName, double rating]
-        String roomName = rateInfo.getKey();
+        ArrayList<Object> rateInfo = (ArrayList<Object>) inputValue; // [String roomName, double rating]
+        String roomName = (String) rateInfo.get(0);
 
         String mapID;
         synchronized (Master.INPUT_IDs) {

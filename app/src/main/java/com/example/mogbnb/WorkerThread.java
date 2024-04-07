@@ -168,9 +168,9 @@ public class WorkerThread extends Thread {
 
     //expected mapValue is an array [room_name, rating]
     private void rateRoom() {
-        Map.Entry<String, Double> rateInfo = (Map.Entry<String, Double>) mapValue; // [String roomName, double rating]
-        String roomName = rateInfo.getKey();
-        double rating = rateInfo.getValue();
+        ArrayList<Object> rateInfo = (ArrayList<Object>) mapValue; // [String roomName, double rating]
+        String roomName = (String) rateInfo.get(0);
+        double rating = (double) rateInfo.get(1);
 
         int foundRoom = 0;
         for (Room r : rooms) {

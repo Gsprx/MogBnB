@@ -284,7 +284,9 @@ public class Tenant implements Serializable{
 
             // Now, send the rating along with room information to the server
             rate_out.writeInt(MasterFunction.RATE_ROOM.getEncoded());
-            Map.Entry<String, Double> roomRating = new AbstractMap.SimpleEntry<>(roomName, rating);
+            ArrayList<Object> roomRating = new ArrayList<>();
+            roomRating.add(roomName);
+            roomRating.add(roomRating);
             rate_out.writeObject(roomRating);
             rate_out.flush();
 
