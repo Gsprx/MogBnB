@@ -32,13 +32,13 @@ public class Tenant implements Serializable{
     }
 
     public void runTenant() {
-        displayOperationOptions(this);
+        displayOperationOptions();
     }
 
     /**
      * Displays a menu of operations (see bookings, search for a room, rate a room, exit) and processes user input to perform the selected action.
      */
-    private void displayOperationOptions(Tenant tenant){
+    private void displayOperationOptions(){
         while (true) {
             System.out.println("\nPlease select an operation:");
             System.out.println("1. See my bookings");
@@ -104,6 +104,7 @@ public class Tenant implements Serializable{
         Scanner scanner = new Scanner(System.in);
         String area = scanner.nextLine();
         if (area.equals("")) area = null;
+        if (area.equalsIgnoreCase("exit")) return;
 
         LocalDate checkIn;
         LocalDate checkOut;
@@ -126,21 +127,27 @@ public class Tenant implements Serializable{
         String noOfPersonsStr = scanner.nextLine();
         int noOfPersons;
         if (noOfPersonsStr.equals("") || !TypeChecking.isInteger(noOfPersonsStr)) noOfPersons = -1;
-        else noOfPersons = Integer.parseInt(noOfPersonsStr);
+        else if (noOfPersonsStr.equalsIgnoreCase("exit")) {
+            return;
+        } else noOfPersons = Integer.parseInt(noOfPersonsStr);
 
         System.out.print("Enter the maximum price (leave blank for no preference): ");
         scanner = new Scanner(System.in);
         String priceStr = scanner.nextLine();
         double price;
         if (priceStr.equals("") || !TypeChecking.isDouble(priceStr)) price = -1;
-        else price = Double.parseDouble(priceStr);
+        else if (priceStr.equalsIgnoreCase("exit")) {
+            return;
+        } else price = Double.parseDouble(priceStr);
 
         System.out.print("Minimum number of stars (leave blank for no preference): ");
         scanner = new Scanner(System.in);
         String starsStr = scanner.nextLine();
         double stars;
         if (starsStr.equals("") || !TypeChecking.isDouble(starsStr)) stars = -1;
-        else stars = Double.parseDouble(starsStr);
+        else if (starsStr.equalsIgnoreCase("exit")) {
+            return;
+        } else stars = Double.parseDouble(starsStr);
 
         Filter filter = new Filter(area, checkIn, checkOut, noOfPersons, price, stars);
 
@@ -153,7 +160,7 @@ public class Tenant implements Serializable{
             out.flush();
 
             ArrayList<Room> rooms = (ArrayList<Room>) in.readObject();
-            System.out.println("------------------ROOMS FOUND-------------------\n");
+            System.out.println("------------------ROOMS FOUND-------------------");
             rooms.forEach(System.out::println);
             System.out.println("------------------------------------------------\n");
         } catch (IOException | ClassNotFoundException e) {
@@ -168,6 +175,8 @@ public class Tenant implements Serializable{
         System.out.println("\nEnter the name of the room you want to book:");
         Scanner scanner = new Scanner(System.in);
         String roomName = scanner.nextLine();
+
+        if(roomName.equalsIgnoreCase("exit")) return;
 
         try {
             Socket socket = new Socket("localhost", Config.USER_MASTER_PORT);
@@ -190,7 +199,7 @@ public class Tenant implements Serializable{
             // show booking table
             System.out.println("Room calendar");
             for (int i=0; i<room.getBookingTable().length; i++) {
-                if (i % 5 == 0) {
+                if (i % 7 == 0) {
                     System.out.println();
                 }
 
@@ -251,6 +260,8 @@ public class Tenant implements Serializable{
         Scanner scanner = new Scanner(System.in);
         String roomName = scanner.nextLine();
 
+        if(roomName.equalsIgnoreCase("exit")) return;
+
         try {
             Socket socket = new Socket("localhost", Config.USER_MASTER_PORT);
             ObjectOutputStream search_out = new ObjectOutputStream(socket.getOutputStream());
@@ -283,7 +294,9 @@ public class Tenant implements Serializable{
                 try {
                     System.out.println("Enter your rating (0.0 to 5.0):");
                     scanner = new Scanner(System.in);
-                    rating = Double.parseDouble(scanner.nextLine());
+                    String input = scanner.nextLine();
+                    if(input.equalsIgnoreCase("exit")) return;
+                    rating = Double.parseDouble(input);
                     if (rating < 0 || rating > 5) {
                         System.out.println("Rating must be between 0.0 and 5.0.");
                     } else {
