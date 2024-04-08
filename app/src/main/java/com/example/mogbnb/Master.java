@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,9 +19,7 @@ public class Master extends Thread {
     // It needs to keep track of the requests it sends.
     public static final HashMap<Integer, Integer> INPUT_IDs = new HashMap<>();
 
-    protected static int USER_IDS=1;
     int numOfWorkers;
-    ArrayList<Worker> workers;
 
     /* Socket for receiving requests */
     Socket socket = null;
@@ -43,14 +40,9 @@ public class Master extends Thread {
         INPUT_IDs.put(MasterFunction.RATE_ROOM.getEncoded(), 0);
         INPUT_IDs.put(MasterFunction.BOOK_ROOM.getEncoded(), 0);
         INPUT_IDs.put(MasterFunction.SHOW_BOOKINGS_OF_ROOM.getEncoded(), 0);
-
-        workers = new ArrayList<>();
-        for (int i=1; i<=numOfWorkers; i++) {
-            workers.add(new Worker(i));
-        }
     }
     public static void main(String[] args) {
-        Master master = new Master(Config.NUM_OF_WORKERS);
+        Master master = new Master(Integer.parseInt(args[0]));
         master.start();
     }
 
@@ -66,13 +58,6 @@ public class Master extends Thread {
             // create the reducer listener server socket
             reducerListener = new ServerSocket(Config.REDUCER_MASTER_PORT);
 
-            // start the workers
-            for (Worker w : workers)
-                w.start();
-            // start the reducer
-            Reducer reducer = new Reducer(numOfWorkers);
-            reducer.start();
-
             // load the rooms to the workers
             for (Room r : ROOMS_FROM_JSON) {
                 int workerIndex = (Master.hash(r.getRoomName()) % numOfWorkers) + 1;
@@ -84,14 +69,6 @@ public class Master extends Thread {
                 loadToWorkerOut.close();
                 loadToWorker.close();
             }
-
-//            // pass the num of workers to the reducer
-//            Socket initToReducer = new Socket("localhost", Config.MASTER_REDUCER_PORT);
-//            ObjectOutputStream outNoOfWorkers = new ObjectOutputStream(initToReducer.getOutputStream());
-//            outNoOfWorkers.writeInt(numOfWorkers);
-//            outNoOfWorkers.flush();
-//            outNoOfWorkers.close();
-//            initToReducer.close();
 
             // listen for requests from user
             while (true) {
@@ -110,10 +87,6 @@ public class Master extends Thread {
                 throw new RuntimeException(e);
             }
         }
-    }
-
-    public ArrayList<Worker> getWorkers() {
-        return workers;
     }
 
     public int getNumOfWorkers() {

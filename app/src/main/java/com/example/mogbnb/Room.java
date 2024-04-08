@@ -1,11 +1,11 @@
 package com.example.mogbnb;
+
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
 import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
 import java.util.Objects;
-
 
 public class Room implements Serializable {
     private String roomName;
@@ -33,8 +33,9 @@ public class Room implements Serializable {
         for(int i = 0; i<availableDays; i++){
             bookingTable[i] = 0;
         }
-        if (currentDate == null)
+        if (currentDate == null) {
             currentDate = LocalDate.now();
+        }
     }
 
     /**
@@ -69,7 +70,7 @@ public class Room implements Serializable {
                 return false;
             }
             //case where the room can be booked for all the days given, uses the user id as the value of the day
-            for(int i = indexOfCheckInDate; i<indexOfCheckInDate+bookingDaysTotal; i++){
+            for(int i = indexOfCheckInDate; i<=indexOfCheckInDate+bookingDaysTotal; i++){
                 bookingTable[i] = userID;
             }
             //unlock the booking table
@@ -79,7 +80,7 @@ public class Room implements Serializable {
 
 
     private boolean checkAvailability(int indexForBooking, int end){
-        for (int i = indexForBooking; i< end; i++){
+        for (int i = indexForBooking; i<=end; i++){
             if (this.bookingTable[i] != 0){
                 return false;
             }
@@ -102,7 +103,6 @@ public class Room implements Serializable {
         // if checkIn and checkOut not null calculate normally
         if (checkInDate != null && checkOutDate != null) {
 
-
             //check if check in/out dates are within the booking table
             LocalDate finalDate = currentDate.plusDays(availableDays - 1);
             if(checkInDate.isAfter(finalDate)){
@@ -123,7 +123,7 @@ public class Room implements Serializable {
             }
 
             //check if filtered days are not booked
-            for (int i = 0; i < bookingDaysTotal; i++) {
+            for (int i = 0; i <=bookingDaysTotal; i++) {
                 if (bookingTable[indexOfCheckInDate + i] != 0) {
                     return false;
                 }
@@ -188,7 +188,7 @@ public class Room implements Serializable {
         int bookingDaysTotal = (int) ChronoUnit.DAYS.between(start, end);
 
 
-        for (int i = indexOfCheckInDate; i<indexOfCheckInDate + bookingDaysTotal; i++){
+        for (int i = indexOfCheckInDate; i<=indexOfCheckInDate + bookingDaysTotal; i++){
             if (bookingTable[i]!= 0){
                 count++;
             }
@@ -238,6 +238,10 @@ public class Room implements Serializable {
         this.roomImage = roomImage;
     }
 
+    public static void setCurrentDate() {
+        if (currentDate == null)
+            currentDate = LocalDate.now();
+    }
     //
     // getter functions
     //

@@ -1,24 +1,21 @@
 package com.example.dummy;
 
 import com.example.misc.Config;
+import com.example.misc.Misc;
 import com.example.misc.TypeChecking;
+import com.example.mogbnb.Filter;
 import com.example.mogbnb.MasterFunction;
 import com.example.mogbnb.Room;
-import com.example.mogbnb.Filter;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -110,12 +107,12 @@ public class Tenant implements Serializable{
 
         LocalDate checkIn;
         LocalDate checkOut;
-        System.out.println("\n|Bookings per area|");
+
         while(true) {
             System.out.print("Start date (YYYY-MM-DD): ");
-            checkIn= DummyMain.readDate();
+            checkIn= Misc.readDate();
             System.out.print("End date (YYYY-MM-DD): ");
-            checkOut= DummyMain.readDate();
+            checkOut= Misc.readDate();
             if(checkIn.isAfter(checkOut)){
                 System.out.print("[-]Invalid dates, start date must be the same or before the end date!\n");
             }
@@ -165,32 +162,6 @@ public class Tenant implements Serializable{
     }
 
     /**
-     * Reads a date input from the user, ensuring the format is valid. Allows for blank input to indicate no preference.
-     *
-     * @return A LocalDate object if a valid date is entered, or null if no date is specified.
-     */
-    public static LocalDate readDate() {
-        LocalDate date;
-        while (true) {
-            Scanner inp = new Scanner(System.in);
-            String input = inp.nextLine().trim();
-            if (!input.isEmpty()) {
-                try {
-                    date = LocalDate.parse(input); // Try to parse the input
-                    if (date.isBefore(LocalDate.now())){
-                        System.out.print("[-]Invalid date, must be a date from today onward (" + LocalDate.now().toString() +  ") : ");
-                        continue;
-                    }
-                    break; // Break the loop if parsing is successful
-                } catch (DateTimeParseException e) {
-                    System.out.print("[-]Invalid date format. Please enter a date in YYYY-MM-DD format: ");
-                }
-            }
-        }
-        return date;
-    }
-
-    /**
      * Make a reservation.
      */
     private void makeReservation() {
@@ -210,10 +181,27 @@ public class Tenant implements Serializable{
 
             // Receive the room information from the server
             Room room = (Room) search_in.readObject();
+            Room.setCurrentDate();
             if (room == null) {
                 System.out.println("Room not found.");
                 return;
             }
+
+            // show booking table
+            System.out.println("Room calendar");
+            for (int i=0; i<room.getBookingTable().length; i++) {
+                if (i % 5 == 0) {
+                    System.out.println();
+                }
+
+                // if booking in i != 0, then room is unavailable
+                LocalDate dateOf_i = room.getCurrentDate().plusDays(i);
+                if (room.getBookingTable()[i] != 0)
+                    System.out.print(dateOf_i + ": Unavailable | ");
+                else
+                    System.out.print(dateOf_i + ": Available | ");
+            }
+            System.out.println();
 
             search_out.close();
             search_in.close();
@@ -228,9 +216,9 @@ public class Tenant implements Serializable{
             LocalDate checkOut;
             while(true) {
                 System.out.print("\nStart date (YYYY-MM-DD): ");
-                checkIn = DummyMain.readDate();
+                checkIn = Misc.readDate();
                 System.out.print("End date (YYYY-MM-DD): ");
-                checkOut = DummyMain.readDate();
+                checkOut = Misc.readDate();
                 if(checkIn.isAfter(checkOut)){
                     System.out.print("[-]Invalid dates, start date must be the same or before the end date!\n");
                 }
@@ -310,7 +298,7 @@ public class Tenant implements Serializable{
             rate_out.writeInt(MasterFunction.RATE_ROOM.getEncoded());
             ArrayList<Object> roomRating = new ArrayList<>();
             roomRating.add(roomName);
-            roomRating.add(roomRating);
+            roomRating.add(rating);
             rate_out.writeObject(roomRating);
             rate_out.flush();
 

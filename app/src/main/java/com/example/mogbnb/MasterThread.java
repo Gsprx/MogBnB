@@ -1,21 +1,16 @@
 package com.example.mogbnb;
 
-import com.example.dummy.Manager;
 import com.example.misc.Config;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Array;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class MasterThread extends Thread {
     ObjectOutputStream out;
@@ -58,9 +53,6 @@ public class MasterThread extends Thread {
                 case 7:
                     showBookings();
                     break;
-//                case 8:
-//                    assign_user_id();
-//                    break;
                 case 9:
                     bookRoom();
                     break;
@@ -359,12 +351,6 @@ public class MasterThread extends Thread {
             e.printStackTrace();
         }
     }
-
-//    private void assign_user_id() throws IOException {
-//        out.writeInt(Master.USER_IDS);
-//        out.flush();
-//        Master.USER_IDS++;
-//    }
 
     /**
      * Make a reservation for a room | inputID : 9

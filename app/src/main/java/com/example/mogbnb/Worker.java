@@ -1,16 +1,11 @@
 package com.example.mogbnb;
 
-import com.example.dummy.Manager;
 import com.example.misc.Config;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Worker extends Thread {
     private ArrayList<Room> roomData;

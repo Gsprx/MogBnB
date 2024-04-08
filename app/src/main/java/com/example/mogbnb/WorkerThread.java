@@ -9,7 +9,6 @@ import java.net.Socket;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -90,6 +89,7 @@ public class WorkerThread extends Thread {
                     return;
                 }
             }
+            Room.setCurrentDate();
             this.rooms.add(room);
             System.out.println(workerID + ": " + (Room) mapValue);
         }
@@ -150,7 +150,7 @@ public class WorkerThread extends Thread {
                     if (r.getBookingTable()[i] != u_id) {
                         // if the current bookingTable value is not 0 or the index is not 0, meaning its not the first day or the first day after the room was not occupied
                         if (u_id != 0 && i > 0) {
-                            checkOutH = r.getCurrentDate().plusDays(i);
+                            checkOutH = r.getCurrentDate().plusDays(i-1);
                             bookings.add(u_id + ": " + checkInH + " - " + checkOutH);
                         }
                         u_id = r.getBookingTable()[i];
@@ -161,7 +161,7 @@ public class WorkerThread extends Thread {
                 // so when the for loop breaks we also make sure that if it was booked for a <checkIn>-<checkOut> (where the checkOut is at the last day of the room),
                 // it will be added to the bookings list
                 if (r.getBookingTable()[r.getAvailableDays() - 1] != 0) {
-                    checkOutH = r.getCurrentDate().plusDays(r.getAvailableDays());
+                    checkOutH = r.getCurrentDate().plusDays(r.getAvailableDays() - 1);
                     bookings.add(r.getBookingTable()[r.getAvailableDays() - 1] + ": " + checkInH + " - " + checkOutH);
                 }
             }

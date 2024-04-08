@@ -1,8 +1,8 @@
 package com.example.dummy;
 
 import com.example.misc.Config;
+import com.example.misc.Misc;
 import com.example.misc.TypeChecking;
-import com.example.mogbnb.Filter;
 import com.example.mogbnb.MasterFunction;
 import com.example.mogbnb.Room;
 
@@ -14,7 +14,6 @@ import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -294,9 +293,9 @@ public class Manager {
         System.out.println("\n|Bookings per area|");
         while(true) {
             System.out.print("Start date (YYYY-MM-DD): ");
-            start = DummyMain.readDate();
+            start = Misc.readDate();
             System.out.print("End date (YYYY-MM-DD): ");
-            end = DummyMain.readDate();
+            end = Misc.readDate();
             if(start.isAfter(end)){
                 System.out.print("[-]Invalid dates, start date must be the same or before the end date!\n");
             }
