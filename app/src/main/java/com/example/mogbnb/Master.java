@@ -60,8 +60,8 @@ public class Master extends Thread {
 
             // load the rooms to the workers
             for (Room r : ROOMS_FROM_JSON) {
-                int workerIndex = (Master.hash(r.getRoomName()) % numOfWorkers) + 1;
-                Socket loadToWorker = new Socket("localhost", Config.INIT_WORKER_PORT + workerIndex);
+                int workerIndex = (int) (Master.hash(r.getRoomName()) % numOfWorkers) + 1;
+                Socket loadToWorker = new Socket(Config.WORKER_IP[workerIndex-1], Config.INIT_WORKER_PORT + workerIndex);
                 ObjectOutputStream loadToWorkerOut = new ObjectOutputStream(loadToWorker.getOutputStream());
                 loadToWorkerOut.writeObject("manager_add");
                 loadToWorkerOut.writeObject(r);
@@ -75,7 +75,7 @@ public class Master extends Thread {
                 // accept the connection for user-master
                 socket = server.accept();
 
-                Thread t = new MasterThread(socket, reducerListener);
+                Thread t = new MasterThread(socket, reducerListener, numOfWorkers);
                 t.start();
             }
         } catch (IOException e) {
@@ -98,11 +98,12 @@ public class Master extends Thread {
      * @param s String to hash
      * @return Result of hashing
      */
-    public static int hash(String s) {
-        int hash = 7;
+    public static long hash(String s) {
+        long hash = 7;
         for (int i = 0; i < s.length(); i++) {
-            hash = hash*31 + s.charAt(i);
+            hash = hash*11 + s.charAt(i);
         }
+        System.out.println(hash);
         return hash;
     }
 

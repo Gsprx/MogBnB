@@ -51,6 +51,7 @@ public class Manager {
                 // option 3: manage bookings
                 default:
                     managerManageBookings();
+                    System.out.println();
                     break;
             }
         }
@@ -68,7 +69,7 @@ public class Manager {
         Socket socket = null;
 
         try {
-            socket = new Socket("localhost", Config.USER_MASTER_PORT);
+            socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
 
@@ -178,7 +179,7 @@ public class Manager {
         if (ans.equals("n")) {System.out.println("Canceling...\n");}
         else {
             try {
-                socket = new Socket("localhost", Config.USER_MASTER_PORT);
+                socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
                 out = new ObjectOutputStream(socket.getOutputStream());
 
                 Room r = new Room(rName, noOfPeople, availDays, area, 0, 0, roomImg, price);
@@ -246,7 +247,7 @@ public class Manager {
         String input = inp.nextLine();
 
         try {
-            socket = new Socket("localhost", Config.USER_MASTER_PORT);
+            socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
 
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
@@ -309,7 +310,7 @@ public class Manager {
         dates.add(start); dates.add(end);
 
         try {
-            socket = new Socket("localhost", Config.USER_MASTER_PORT);
+            socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
 
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());

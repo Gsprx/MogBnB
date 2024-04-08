@@ -76,7 +76,7 @@ public class Tenant implements Serializable{
     }
 
     private void seeBookings() {
-        try (Socket socket = new Socket("localhost", Config.USER_MASTER_PORT);
+        try (Socket socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
              ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
              ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
@@ -104,7 +104,7 @@ public class Tenant implements Serializable{
         Scanner scanner = new Scanner(System.in);
         String area = scanner.nextLine();
         if (area.equals("")) area = null;
-        if (area.equalsIgnoreCase("exit")) return;
+        if (area != null && area.equalsIgnoreCase("exit")) return;
 
         LocalDate checkIn;
         LocalDate checkOut;
@@ -151,7 +151,7 @@ public class Tenant implements Serializable{
 
         Filter filter = new Filter(area, checkIn, checkOut, noOfPersons, price, stars);
 
-        try (Socket socket = new Socket("localhost", Config.USER_MASTER_PORT);
+        try (Socket socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
              ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
              ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
@@ -179,7 +179,7 @@ public class Tenant implements Serializable{
         if(roomName.equalsIgnoreCase("exit")) return;
 
         try {
-            Socket socket = new Socket("localhost", Config.USER_MASTER_PORT);
+            Socket socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
             ObjectOutputStream search_out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream search_in = new ObjectInputStream(socket.getInputStream());
 
@@ -216,7 +216,7 @@ public class Tenant implements Serializable{
             search_in.close();
             socket.close();
 
-            socket = new Socket("localhost", Config.USER_MASTER_PORT);
+            socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
             ObjectOutputStream book_out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream book_in = new ObjectInputStream(socket.getInputStream());
 
@@ -263,7 +263,7 @@ public class Tenant implements Serializable{
         if(roomName.equalsIgnoreCase("exit")) return;
 
         try {
-            Socket socket = new Socket("localhost", Config.USER_MASTER_PORT);
+            Socket socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
             ObjectOutputStream search_out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream search_in = new ObjectInputStream(socket.getInputStream());
 
@@ -286,7 +286,7 @@ public class Tenant implements Serializable{
             search_in.close();
             socket.close();
 
-            socket = new Socket("localhost", Config.USER_MASTER_PORT);
+            socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
             ObjectOutputStream rate_out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream rate_in = new ObjectInputStream(socket.getInputStream());
 

@@ -240,7 +240,7 @@ public class WorkerThread extends Thread {
     private void sendResults(Object resultForReducer){
         try {
             //socket used to send results to reducer
-            Socket outputSocket = new Socket("localhost", Config.WORKER_REDUCER_PORT);
+            Socket outputSocket = new Socket(Config.REDUCER_IP, Config.WORKER_REDUCER_PORT);
 
             //get the output stream to send results
             ObjectOutputStream out = new ObjectOutputStream(outputSocket.getOutputStream());

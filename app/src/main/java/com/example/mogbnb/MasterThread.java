@@ -18,8 +18,10 @@ public class MasterThread extends Thread {
     int inputID;
     Object inputValue;
     ServerSocket reducerListener;
+    int numOfWorkers;
 
-    public MasterThread(Socket socket, ServerSocket reducerListener) throws IOException {
+    public MasterThread(Socket socket, ServerSocket reducerListener, int numOfWorkers) throws IOException {
+        this.numOfWorkers = numOfWorkers;
         out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());
         this.reducerListener = reducerListener;
@@ -90,7 +92,7 @@ public class MasterThread extends Thread {
             Master.INPUT_IDs.merge(MasterFunction.SHOW_ROOMS.getEncoded(), 1, Integer::sum);
         }
         // send to each worker
-        for (int i = 1; i <= Config.NUM_OF_WORKERS; i++) {
+        for (int i = 1; i <= numOfWorkers; i++) {
             sendRequest(mapID, null, i);
         }
 
@@ -135,7 +137,7 @@ public class MasterThread extends Thread {
 
         // get the worker we need to out to using hash function
         Room r = (Room) inputValue;
-        int workerIndex = (Master.hash(r.getRoomName()) % Config.NUM_OF_WORKERS) + 1;
+        int workerIndex = (int) (Master.hash(r.getRoomName()) % numOfWorkers) + 1;
 
         // send to worker
         sendRequest(mapID, r, workerIndex);
@@ -157,7 +159,7 @@ public class MasterThread extends Thread {
             Master.INPUT_IDs.merge(MasterFunction.BOOKINGS_PER_AREA.getEncoded(), 1, Integer::sum);
         }
         // send to each worker
-        for (int i = 1; i <= Config.NUM_OF_WORKERS; i++) {
+        for (int i = 1; i <= numOfWorkers; i++) {
             sendRequest(mapID, inputValue, i);
         }
 
@@ -195,7 +197,7 @@ public class MasterThread extends Thread {
 
         // get the worker we need to out to using hash function
         String roomName = (String) inputValue;
-        int workerIndex = (Master.hash(roomName) % Config.NUM_OF_WORKERS) + 1;
+        int workerIndex = (int) (Master.hash(roomName) % numOfWorkers) + 1;
 
         // send to worker
         sendRequest(mapID, roomName, workerIndex);
@@ -234,7 +236,7 @@ public class MasterThread extends Thread {
      */
     private void sendRequest(String mapID, Object mapValue, int workerIndex) {
         try {
-            Socket workerSocket = new Socket("localhost", Config.INIT_WORKER_PORT + workerIndex);
+            Socket workerSocket = new Socket(Config.WORKER_IP[workerIndex-1], Config.INIT_WORKER_PORT + workerIndex);
             ObjectOutputStream workerOut = new ObjectOutputStream(workerSocket.getOutputStream());
 
             // send mapID
@@ -263,7 +265,7 @@ public class MasterThread extends Thread {
             Master.INPUT_IDs.merge(MasterFunction.SEARCH_ROOM.getEncoded(), 1, Integer::sum);
         }
         // send to each worker
-        for (int i = 1; i <= Config.NUM_OF_WORKERS; i++) {
+        for (int i = 1; i <= numOfWorkers; i++) {
             sendRequest(mapID, searchCriteria, i);
         }
         try {
@@ -296,7 +298,7 @@ public class MasterThread extends Thread {
 
         // Requests booking information from all worker nodes.
 
-        for (int i = 1; i <= Config.NUM_OF_WORKERS; i++) {
+        for (int i = 1; i <= numOfWorkers; i++) {
             sendRequest(mapID, inputValue, i);
         }
 
@@ -330,7 +332,7 @@ public class MasterThread extends Thread {
         }
 
         // Hash the room name to find the correct worker
-        int workerIndex = (Master.hash(roomName) % Config.NUM_OF_WORKERS) + 1;
+        int workerIndex = (int) (Master.hash(roomName) % numOfWorkers) + 1;
 
         sendRequest(mapID, rateInfo, workerIndex);
 
@@ -373,7 +375,7 @@ public class MasterThread extends Thread {
         // get the worker we need to out to using hash function
         ArrayList<Object> request = (ArrayList<Object>) inputValue;
         String roomName = (String) request.get(0);
-        int workerIndex = (Master.hash(roomName) % Config.NUM_OF_WORKERS) + 1;
+        int workerIndex = (int) (Master.hash(roomName) % numOfWorkers) + 1;
 
         // send to worker
         sendRequest(mapID, request, workerIndex);
@@ -415,7 +417,7 @@ public class MasterThread extends Thread {
 
         // get the worker we need to out to using hash function
         String roomName = (String) inputValue;
-        int workerIndex = (Master.hash(roomName) % Config.NUM_OF_WORKERS) + 1;
+        int workerIndex = (int) (Master.hash(roomName) % numOfWorkers) + 1;
 
         // send to worker
         sendRequest(mapID, roomName, workerIndex);

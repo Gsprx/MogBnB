@@ -7,4 +7,7 @@ public class Config {
     public static int WORKER_REDUCER_PORT = 6000;
     public static int REDUCER_MASTER_PORT = 5353; //used by reducers to send refined results of workers to master
 
+    public static String MASTER_IP = "localhost";
+    public static String[] WORKER_IP = {"localhost", "localhost", "localhost"};
+    public static String REDUCER_IP = "localhost";
 }
