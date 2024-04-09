@@ -210,7 +210,7 @@ public class Manager {
         // manager chooses option
         while (running) {
             System.out.println("\n|Manage Bookings|");
-            System.out.println("1) Show for room\n2) Areas\n");
+            System.out.println("1) Show for room\n2) Areas\nType -exit- to return to main menu\n");
             String option;
             // if the user gives invalid info then ask again
             do {
