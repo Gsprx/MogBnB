@@ -28,5 +28,45 @@
     "noOfReviews": 120,
     "roomImage": "https://example.com/room3.jpg",
     "pricePerDay": 150.0
+  },
+  {
+    "roomName": "Room 4",
+    "noOfPersons": 2,
+    "availableDays": 10,
+    "area": "Midtown",
+    "stars": 3.5,
+    "noOfReviews": 75,
+    "roomImage": "https://example.com/room4.jpg",
+    "pricePerDay": 90.0
+  },
+  {
+    "roomName": "Room 5",
+    "noOfPersons": 1,
+    "availableDays": 8,
+    "area": "Riverside",
+    "stars": 4.2,
+    "noOfReviews": 110,
+    "roomImage": "https://example.com/room5.jpg",
+    "pricePerDay": 70.0
+  },
+  {
+    "roomName": "Room 6",
+    "noOfPersons": 3,
+    "availableDays": 7,
+    "area": "Uptown",
+    "stars": 5.0,
+    "noOfReviews": 200,
+    "roomImage": "https://example.com/room6.jpg",
+    "pricePerDay": 120.0
+  },
+  {
+    "roomName": "Room 7",
+    "noOfPersons": 5,
+    "availableDays": 9,
+    "area": "Historic District",
+    "stars": 4.6,
+    "noOfReviews": 160,
+    "roomImage": "https://example.com/room7.jpg",
+    "pricePerDay": 200.0
   }
 ]
