@@ -146,7 +146,7 @@ public class Room implements Serializable {
      * @param stars the double number of stars for the review
      */
     public void addReview(double stars) {
-        this.stars = (noOfReviews > 0) ? (this.stars + stars)/2 : stars;
+        this.stars = (noOfReviews > 0) ? (noOfReviews*this.stars + stars)/(noOfReviews + 1) : stars;
         this.noOfReviews++;
     }
 
