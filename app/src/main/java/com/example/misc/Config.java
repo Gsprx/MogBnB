@@ -5,7 +5,7 @@ public class Config {
     public static int USER_MASTER_PORT = 4444;
     public static int INIT_WORKER_PORT = 5000;
     public static int WORKER_REDUCER_PORT = 6000;
-    public static int REDUCER_MASTER_PORT = 5353; //used by reducers to send refined results of workers to master
+    public static int REDUCER_MASTER_PORT = 7000; //used by reducers to send refined results of workers to master
 
     public static String MASTER_IP = "localhost";
     public static String[] WORKER_IP = {"localhost", "localhost", "localhost"};
