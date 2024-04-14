@@ -32,5 +32,13 @@ public class Misc {
         }
         return date;
     }
+    public static long hash(String s) {
+        long hash = 7;
+        for (int i = 0; i < s.length(); i++) {
+            hash = hash*11 + s.charAt(i);
+        }
+        System.out.println(hash);
+        return hash;
+    }
 
 }

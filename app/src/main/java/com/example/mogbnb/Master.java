@@ -2,6 +2,7 @@ package com.example.mogbnb;
 
 import com.example.misc.Config;
 import com.example.misc.JsonConverter;
+import com.example.misc.Misc;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -60,7 +61,7 @@ public class Master extends Thread {
 
             // load the rooms to the workers
             for (Room r : ROOMS_FROM_JSON) {
-                int workerIndex = (int) (Master.hash(r.getRoomName()) % numOfWorkers) + 1;
+                int workerIndex = (int) (Misc.hash(r.getRoomName()) % numOfWorkers) + 1;
                 Socket loadToWorker = new Socket(Config.WORKER_IP[workerIndex-1], Config.INIT_WORKER_PORT + workerIndex);
                 ObjectOutputStream loadToWorkerOut = new ObjectOutputStream(loadToWorker.getOutputStream());
                 loadToWorkerOut.writeObject("manager_add");
@@ -98,14 +99,7 @@ public class Master extends Thread {
      * @param s String to hash
      * @return Result of hashing
      */
-    public static long hash(String s) {
-        long hash = 7;
-        for (int i = 0; i < s.length(); i++) {
-            hash = hash*11 + s.charAt(i);
-        }
-        System.out.println(hash);
-        return hash;
-    }
+
 
 
 }

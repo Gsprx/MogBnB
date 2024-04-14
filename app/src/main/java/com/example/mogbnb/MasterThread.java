@@ -1,6 +1,7 @@
 package com.example.mogbnb;
 
 import com.example.misc.Config;
+import com.example.misc.Misc;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -137,7 +138,7 @@ public class MasterThread extends Thread {
 
         // get the worker we need to out to using hash function
         Room r = (Room) inputValue;
-        int workerIndex = (int) (Master.hash(r.getRoomName()) % numOfWorkers) + 1;
+        int workerIndex = (int) (Misc.hash(r.getRoomName()) % numOfWorkers) + 1;
 
         // send to worker
         sendRequest(mapID, r, workerIndex);
@@ -197,7 +198,7 @@ public class MasterThread extends Thread {
 
         // get the worker we need to out to using hash function
         String roomName = (String) inputValue;
-        int workerIndex = (int) (Master.hash(roomName) % numOfWorkers) + 1;
+        int workerIndex = (int) (Misc.hash(roomName) % numOfWorkers) + 1;
 
         // send to worker
         sendRequest(mapID, roomName, workerIndex);
@@ -332,7 +333,7 @@ public class MasterThread extends Thread {
         }
 
         // Hash the room name to find the correct worker
-        int workerIndex = (int) (Master.hash(roomName) % numOfWorkers) + 1;
+        int workerIndex = (int) (Misc.hash(roomName) % numOfWorkers) + 1;
 
         sendRequest(mapID, rateInfo, workerIndex);
 
@@ -375,7 +376,7 @@ public class MasterThread extends Thread {
         // get the worker we need to out to using hash function
         ArrayList<Object> request = (ArrayList<Object>) inputValue;
         String roomName = (String) request.get(0);
-        int workerIndex = (int) (Master.hash(roomName) % numOfWorkers) + 1;
+        int workerIndex = (int) (Misc.hash(roomName) % numOfWorkers) + 1;
 
         // send to worker
         sendRequest(mapID, request, workerIndex);
@@ -417,7 +418,7 @@ public class MasterThread extends Thread {
 
         // get the worker we need to out to using hash function
         String roomName = (String) inputValue;
-        int workerIndex = (int) (Master.hash(roomName) % numOfWorkers) + 1;
+        int workerIndex = (int) (Misc.hash(roomName) % numOfWorkers) + 1;
 
         // send to worker
         sendRequest(mapID, roomName, workerIndex);
