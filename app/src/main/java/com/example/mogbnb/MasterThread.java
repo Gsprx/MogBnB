@@ -21,11 +21,11 @@ public class MasterThread extends Thread {
     ServerSocket reducerListener;
     int numOfWorkers;
 
-    public MasterThread(Socket socket, ServerSocket reducerListener, int numOfWorkers) throws IOException {
+    public MasterThread(Socket socket, int numOfWorkers) throws IOException {
         this.numOfWorkers = numOfWorkers;
         out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());
-        this.reducerListener = reducerListener;
+
     }
 
     public void run() {
@@ -87,11 +87,20 @@ public class MasterThread extends Thread {
     private void showRooms() {
         // send mapID to workers
         String mapID;
+
         synchronized (Master.INPUT_IDs) {
             mapID = "manager_show_" + Master.INPUT_IDs.get(MasterFunction.SHOW_ROOMS.getEncoded());
             // increment
             Master.INPUT_IDs.merge(MasterFunction.SHOW_ROOMS.getEncoded(), 1, Integer::sum);
         }
+
+        //create unique port to use based on map id
+        try {
+            reducerListener = new ServerSocket((int) (Config.REDUCER_MASTER_PORT + Misc.hash(mapID)%10000));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         // send to each worker
         for (int i = 1; i <= numOfWorkers; i++) {
             sendRequest(mapID, null, i);
@@ -159,6 +168,14 @@ public class MasterThread extends Thread {
             // increment
             Master.INPUT_IDs.merge(MasterFunction.BOOKINGS_PER_AREA.getEncoded(), 1, Integer::sum);
         }
+        //create unique port to use based on map id
+        try {
+            reducerListener = new ServerSocket((int) (Config.REDUCER_MASTER_PORT + Misc.hash(mapID)%10000));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
         // send to each worker
         for (int i = 1; i <= numOfWorkers; i++) {
             sendRequest(mapID, inputValue, i);
@@ -194,6 +211,14 @@ public class MasterThread extends Thread {
             mapID = "find_" + Master.INPUT_IDs.get(MasterFunction.FIND_ROOM_BY_NAME.getEncoded());
             // increment
             Master.INPUT_IDs.merge(MasterFunction.FIND_ROOM_BY_NAME.getEncoded(), 1, Integer::sum);
+        }
+
+
+        //create unique port to use based on map id
+        try {
+            reducerListener = new ServerSocket((int) (Config.REDUCER_MASTER_PORT + Misc.hash(mapID)%10000));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
         // get the worker we need to out to using hash function
@@ -265,6 +290,15 @@ public class MasterThread extends Thread {
             mapID = "tenant_search_" + Master.INPUT_IDs.get(MasterFunction.SEARCH_ROOM.getEncoded());
             Master.INPUT_IDs.merge(MasterFunction.SEARCH_ROOM.getEncoded(), 1, Integer::sum);
         }
+
+
+        //create unique port to use based on map id
+        try {
+            reducerListener = new ServerSocket((int) (Config.REDUCER_MASTER_PORT + Misc.hash(mapID)%10000));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         // send to each worker
         for (int i = 1; i <= numOfWorkers; i++) {
             sendRequest(mapID, searchCriteria, i);
@@ -295,6 +329,13 @@ public class MasterThread extends Thread {
         synchronized (Master.INPUT_IDs) {
             mapID = "tenant_show_bookings_" + Master.INPUT_IDs.get(MasterFunction.SHOW_BOOKINGS.getEncoded());
             Master.INPUT_IDs.merge(MasterFunction.SHOW_BOOKINGS.getEncoded(), 1, Integer::sum);
+        }
+
+        //create unique port to use based on map id
+        try {
+            reducerListener = new ServerSocket((int) (Config.REDUCER_MASTER_PORT + Misc.hash(mapID)%10000));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
         // Requests booking information from all worker nodes.
@@ -330,6 +371,13 @@ public class MasterThread extends Thread {
         synchronized (Master.INPUT_IDs) {
             mapID = "tenant_rate_" + Master.INPUT_IDs.get(MasterFunction.RATE_ROOM.getEncoded());
             Master.INPUT_IDs.merge(MasterFunction.RATE_ROOM.getEncoded(), 1, Integer::sum);
+        }
+
+        //create unique port to use based on map id
+        try {
+            reducerListener = new ServerSocket((int) (Config.REDUCER_MASTER_PORT + Misc.hash(mapID)%10000));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
         // Hash the room name to find the correct worker
@@ -373,6 +421,13 @@ public class MasterThread extends Thread {
             Master.INPUT_IDs.merge(MasterFunction.BOOK_ROOM.getEncoded(), 1, Integer::sum);
         }
 
+        //create unique port to use based on map id
+        try {
+            reducerListener = new ServerSocket((int) (Config.REDUCER_MASTER_PORT + Misc.hash(mapID)%10000));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         // get the worker we need to out to using hash function
         ArrayList<Object> request = (ArrayList<Object>) inputValue;
         String roomName = (String) request.get(0);
@@ -414,6 +469,13 @@ public class MasterThread extends Thread {
             mapID = "manager_bookings_of_room_" + Master.INPUT_IDs.get(MasterFunction.SHOW_BOOKINGS_OF_ROOM.getEncoded());
             // increment
             Master.INPUT_IDs.merge(MasterFunction.SHOW_BOOKINGS_OF_ROOM.getEncoded(), 1, Integer::sum);
+        }
+
+        //create unique port to use based on map id
+        try {
+            reducerListener = new ServerSocket((int) (Config.REDUCER_MASTER_PORT + Misc.hash(mapID)%10000));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
         // get the worker we need to out to using hash function

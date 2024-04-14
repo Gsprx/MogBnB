@@ -27,8 +27,6 @@ public class Master extends Thread {
 
     /* Socket for handling the connection */
     ServerSocket server;
-    ServerSocket reducerListener;
-
     public Master(int numOfWorkers) {
         this.numOfWorkers = numOfWorkers;
         // add all the inputIds and set them to 0
@@ -56,9 +54,6 @@ public class Master extends Thread {
             // create the server socket
             server = new ServerSocket(Config.USER_MASTER_PORT);
 
-            // create the reducer listener server socket
-            reducerListener = new ServerSocket(Config.REDUCER_MASTER_PORT);
-
             // load the rooms to the workers
             for (Room r : ROOMS_FROM_JSON) {
                 int workerIndex = (int) (Misc.hash(r.getRoomName()) % numOfWorkers) + 1;
@@ -76,7 +71,7 @@ public class Master extends Thread {
                 // accept the connection for user-master
                 socket = server.accept();
 
-                Thread t = new MasterThread(socket, reducerListener, numOfWorkers);
+                Thread t = new MasterThread(socket, numOfWorkers);
                 t.start();
             }
         } catch (IOException e) {

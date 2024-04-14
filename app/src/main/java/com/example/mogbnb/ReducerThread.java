@@ -1,6 +1,7 @@
 package com.example.mogbnb;
 
 import com.example.misc.Config;
+import com.example.misc.Misc;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -39,7 +40,7 @@ public class ReducerThread extends Thread {
             if (mapID.contains("manager_area_bookings")){
                 areaBookingReduce(mapID);
             }else if(mapID.contains("tenant_rate") || mapID.contains("tenant_book")){
-                messageReduce();
+                messageReduce(mapID);
             }else if (mapID.contains("find")) {
                 returnWorkerResultRoomSearch(mapID);
             }else if (mapID.contains("manager_bookings_of_room")){
@@ -80,7 +81,7 @@ public class ReducerThread extends Thread {
             //when the counter reaches num of workers, the reducer thread can output the result of the workers
             if (mapIDCounter.get(mapID) == numOfWorkers) {
                 //send the final refined list to the master using the reducer -> master port
-                Socket masterSocket = new Socket(Config.MASTER_IP, Config.REDUCER_MASTER_PORT);
+                Socket masterSocket = new Socket(Config.MASTER_IP, (Config.REDUCER_MASTER_PORT + (int) Misc.hash(mapID)%10000));
                 ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
                 out.writeObject(daysBookedBuffer.get(mapID));
                 out.flush();
@@ -102,7 +103,7 @@ public class ReducerThread extends Thread {
     private void returnWorkerResultRoomSearch(String mapID) {
         try {
             ArrayList<Room> room = (ArrayList<Room>) in.readObject();
-            Socket masterSocket = new Socket(Config.MASTER_IP, Config.REDUCER_MASTER_PORT);
+            Socket masterSocket = new Socket(Config.MASTER_IP, Config.REDUCER_MASTER_PORT + (int) Misc.hash(mapID)%10000);
             ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
             out.writeObject(room);
             out.flush();
@@ -115,7 +116,7 @@ public class ReducerThread extends Thread {
     private void returnWorkerResultBookSearch(String mapID) {
         try {
             ArrayList<String> room = (ArrayList<String>) in.readObject();
-            Socket masterSocket = new Socket(Config.MASTER_IP, Config.REDUCER_MASTER_PORT);
+            Socket masterSocket = new Socket(Config.MASTER_IP, Config.REDUCER_MASTER_PORT + (int) Misc.hash(mapID)%10000);
             ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
             out.writeObject(room);
             out.flush();
@@ -146,7 +147,7 @@ public class ReducerThread extends Thread {
             //when the counter reaches num of workers, the reducer thread can output the result of the workers
             if (mapIDCounter.get(mapID) == numOfWorkers) {
                 //send the final refined list to the master using the reducer -> master port
-                Socket masterSocket = new Socket(Config.MASTER_IP, Config.REDUCER_MASTER_PORT);
+                Socket masterSocket = new Socket(Config.MASTER_IP, Config.REDUCER_MASTER_PORT + (int) Misc.hash(mapID)%10000);
                 ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
                 out.writeObject(roomListBuffer.get(mapID));
                 out.flush();
@@ -193,7 +194,7 @@ public class ReducerThread extends Thread {
             //when the counter reaches num of workers, the reducer thread can output the result of the workers
             if (mapIDCounter.get(mapID) == numOfWorkers) {
                 //send the final refined list to the master using the reducer -> master port
-                Socket masterSocket = new Socket(Config.MASTER_IP, Config.REDUCER_MASTER_PORT);
+                Socket masterSocket = new Socket(Config.MASTER_IP, Config.REDUCER_MASTER_PORT + (int) Misc.hash(mapID)%10000);
                 ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
                 out.writeObject(areaBookingsBuffer.get(mapID));
                 out.flush();
@@ -213,10 +214,10 @@ public class ReducerThread extends Thread {
     }
 
     //used to send a simple true or false message back to the master as the reduce result
-    private void messageReduce(){
+    private void messageReduce(String mapID){
         try {
             int result = (int) in.readObject();
-            Socket masterSocket = new Socket(Config.MASTER_IP, Config.REDUCER_MASTER_PORT);
+            Socket masterSocket = new Socket(Config.MASTER_IP, Config.REDUCER_MASTER_PORT + (int) Misc.hash(mapID)%10000);
             ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
             out.writeInt(result);
             out.flush();
