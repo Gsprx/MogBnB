@@ -112,8 +112,10 @@ public class Tenant implements Serializable{
         while(true) {
             System.out.print("Start date (YYYY-MM-DD): ");
             checkIn= Misc.readDate();
+            if(checkIn==null)return;
             System.out.print("End date (YYYY-MM-DD): ");
             checkOut= Misc.readDate();
+            if(checkOut==null)return;
             if(checkIn.isAfter(checkOut)){
                 System.out.print("[-]Invalid dates, start date must be the same or before the end date!\n");
             }
@@ -197,7 +199,7 @@ public class Tenant implements Serializable{
             }
 
             // show booking table
-            System.out.println("Room calendar");
+            System.out.print("========== Room calendar ==========");
             for (int i=0; i<room.getBookingTable().length; i++) {
                 if (i % 7 == 0) {
                     System.out.println();
@@ -226,8 +228,12 @@ public class Tenant implements Serializable{
             while(true) {
                 System.out.print("\nStart date (YYYY-MM-DD): ");
                 checkIn = Misc.readDate();
+                if(checkIn==null)return;
+
                 System.out.print("End date (YYYY-MM-DD): ");
                 checkOut = Misc.readDate();
+                if(checkOut==null)return;
+
                 if(checkIn.isAfter(checkOut)){
                     System.out.print("[-]Invalid dates, start date must be the same or before the end date!\n");
                 }

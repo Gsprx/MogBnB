@@ -15,6 +15,8 @@ public class Misc {
         while (true) {
             Scanner inp = new Scanner(System.in);
             String input = inp.nextLine().trim();
+            //return null to signify exit call
+            if(input.equalsIgnoreCase("exit"))return null;
             if (!input.isEmpty()) {
                 try {
                     date = LocalDate.parse(input); // Try to parse the input
