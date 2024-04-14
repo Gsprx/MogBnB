@@ -121,6 +121,7 @@ public class MasterThread extends Thread {
             // close
             reducer_in.close();
             reducerResultSocket.close();
+            reducerListener.close();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -196,6 +197,7 @@ public class MasterThread extends Thread {
             //close
             reducer_in.close();
             reducerResultSocket.close();
+            reducerListener.close();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -236,7 +238,8 @@ public class MasterThread extends Thread {
             ObjectInputStream reducer_in = new ObjectInputStream(reducerResultSocket.getInputStream());
             ArrayList<Room> result = (ArrayList<Room>) reducer_in.readObject();
             Room r = null;
-            if (result != null) r = result.get(0);
+            if (!result.isEmpty()) r = result.get(0);
+            System.out.println(r);
 
             // write to user
             out.writeObject(r);
@@ -245,6 +248,7 @@ public class MasterThread extends Thread {
             //close
             reducer_in.close();
             reducerResultSocket.close();
+            reducerListener.close();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -317,7 +321,7 @@ public class MasterThread extends Thread {
 
             reducer_in.close();
             reducerResultSocket.close();
-
+            reducerListener.close();
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -357,6 +361,7 @@ public class MasterThread extends Thread {
 
             reducer_in.close();
             reducerResultSocket.close();
+            reducerListener.close();
 
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -397,6 +402,7 @@ public class MasterThread extends Thread {
 
             reducer_in.close();
             reducerResultSocket.close();
+            reducerListener.close();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -450,6 +456,8 @@ public class MasterThread extends Thread {
             reducer_in.close();
             reducerResultSocket.close();
 
+            reducerListener.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -497,6 +505,8 @@ public class MasterThread extends Thread {
 
             reducer_in.close();
             reducerResultSocket.close();
+
+            reducerListener.close();
 
         } catch (IOException e) {
             e.printStackTrace();

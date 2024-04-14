@@ -115,9 +115,9 @@ public class WorkerThread extends Thread {
         for (Room room : rooms){
             if (room.getRoomName().equalsIgnoreCase(queryRoomName)){
                 result.add(room);
-                sendResults(result);
             }
         }
+        sendResults(result);
     }
 
     // expected mapValue is an ArrayList [start, end] local dates

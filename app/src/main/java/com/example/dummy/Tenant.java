@@ -192,11 +192,12 @@ public class Tenant implements Serializable{
 
             // Receive the room information from the server
             Room room = (Room) search_in.readObject();
-            Room.setCurrentDate();
+
             if (room == null) {
                 System.out.println("Room not found.");
                 return;
             }
+            Room.setCurrentDate();
 
             // show booking table
             System.out.print("========== Room calendar ==========");
