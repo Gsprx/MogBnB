@@ -107,7 +107,6 @@ public class ReducerThread extends Thread {
     private void returnWorkerResultRoomSearch(String mapID) {
         try {
             ArrayList<Room> room = (ArrayList<Room>) in.readObject();
-            System.out.println(room);
             Socket masterSocket = new Socket(Config.MASTER_IP, (Config.REDUCER_MASTER_PORT));
             ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
             out.writeObject(mapID);

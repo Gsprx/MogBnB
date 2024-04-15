@@ -37,7 +37,6 @@ public class Misc {
         for (int i = 0; i < s.length(); i++) {
             hash = hash*11 + s.charAt(i);
         }
-        System.out.println(hash);
         return hash;
     }
 

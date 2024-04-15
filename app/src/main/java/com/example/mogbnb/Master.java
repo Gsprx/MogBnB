@@ -26,6 +26,7 @@ public class Master extends Thread {
     public static HashMap<String, Socket> userSockets;
 
     public Master(int numOfWorkers) {
+        userSockets = new HashMap<>();
         this.numOfWorkers = numOfWorkers;
         // add all the inputIds and set them to 0
         INPUT_IDs.put(MasterFunction.SHOW_ROOMS.getEncoded(), 0);
