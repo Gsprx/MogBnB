@@ -12,6 +12,7 @@ public class MasterClient extends Thread {
     public MasterClient(int numOfWorkers) {
         this.numOfWorkers = numOfWorkers;
     }
+
     public void run(){
         ServerSocket clientServer;
         try {

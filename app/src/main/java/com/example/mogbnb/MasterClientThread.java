@@ -17,11 +17,14 @@ public class MasterClientThread extends Thread {
     Socket userSocket;
     int numOfWorkers;
 
-    public MasterClientThread(Socket socket, int numOfWorkers) throws IOException {
+    public MasterClientThread(Socket socket, int numOfWorkers) {
         this.numOfWorkers = numOfWorkers;
         userSocket = socket;
-        in = new ObjectInputStream(userSocket.getInputStream());
-
+        try {
+            in = new ObjectInputStream(userSocket.getInputStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void run() {

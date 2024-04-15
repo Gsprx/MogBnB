@@ -37,6 +37,8 @@ public class Master extends Thread {
         INPUT_IDs.put(MasterFunction.RATE_ROOM.getEncoded(), 0);
         INPUT_IDs.put(MasterFunction.BOOK_ROOM.getEncoded(), 0);
         INPUT_IDs.put(MasterFunction.SHOW_BOOKINGS_OF_ROOM.getEncoded(), 0);
+
+        userSockets = new HashMap<>();
     }
     public static void main(String[] args) {
         Master master = new Master(Integer.parseInt(args[0]));
@@ -61,12 +63,12 @@ public class Master extends Thread {
                 loadToWorkerOut.close();
                 loadToWorker.close();
             }
+
             Thread clientServer = new MasterClient(numOfWorkers);
             clientServer.start();
 
             Thread reducerServer = new MasterReducer();
             reducerServer.start();
-
 
         } catch (IOException e) {
             throw new RuntimeException(e);

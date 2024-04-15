@@ -71,13 +71,13 @@ public class Manager {
         try {
             socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
             out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
 
             // out the show rooms function
             out.writeInt(MasterFunction.SHOW_ROOMS.getEncoded());
             out.writeObject(null);
             out.flush();
 
+            in = new ObjectInputStream(socket.getInputStream());
             ArrayList<Room> resultObj = (ArrayList<Room>) in.readObject();
 
             System.out.println("|Registered rooms|");
@@ -250,7 +250,6 @@ public class Manager {
             socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
 
             out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
 
             // write
             out.writeInt(MasterFunction.SHOW_BOOKINGS_OF_ROOM.getEncoded());
@@ -258,6 +257,7 @@ public class Manager {
             out.flush();
 
             // wait for input
+            in = new ObjectInputStream(socket.getInputStream());
             ArrayList<String> bookings = (ArrayList<String>) in.readObject();
 
             if (bookings != null) {
@@ -313,13 +313,13 @@ public class Manager {
             socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
 
             out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
 
             // write the filter
             out.writeInt(MasterFunction.BOOKINGS_PER_AREA.getEncoded());
             out.writeObject(dates);
             out.flush();
 
+            in = new ObjectInputStream(socket.getInputStream());
             HashMap<String, Integer> areas = (HashMap<String, Integer>) in.readObject();
 
             // Iterating HashMap

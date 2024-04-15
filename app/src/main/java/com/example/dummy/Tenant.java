@@ -183,7 +183,6 @@ public class Tenant implements Serializable{
         try {
             Socket socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
             ObjectOutputStream search_out = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream search_in = new ObjectInputStream(socket.getInputStream());
 
             search_out.writeInt(MasterFunction.FIND_ROOM_BY_NAME.getEncoded());
             // Send the room name for searching
@@ -191,7 +190,8 @@ public class Tenant implements Serializable{
             search_out.flush();
 
             // Receive the room information from the server
-            Room room = (Room) search_in.readObject();
+            ObjectInputStream search_in = new ObjectInputStream(socket.getInputStream());
+            Room room = ((ArrayList<Room>) search_in.readObject()).get(0);
 
             if (room == null) {
                 System.out.println("Room not found.");
@@ -221,7 +221,6 @@ public class Tenant implements Serializable{
 
             socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
             ObjectOutputStream book_out = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream book_in = new ObjectInputStream(socket.getInputStream());
 
             // read check-in, check-out
             LocalDate checkIn;
@@ -251,6 +250,7 @@ public class Tenant implements Serializable{
             book_out.flush();
 
             // Await confirmation from the server
+            ObjectInputStream book_in = new ObjectInputStream(socket.getInputStream());
             int result = (int) book_in.readObject();
             if (result == 1) System.out.println("Booking successful.");
             else System.out.println("Booking was unsuccessful, days requested were already booked!");
