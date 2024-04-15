@@ -25,13 +25,16 @@ public class MasterClientThread extends Thread {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     public void run() {
         // handle
         try {
+            System.out.println("[Master-Client Thread] entered try catch of switch statement (start of run)");
             inputID = in.readInt();
             inputValue = in.readObject();
+            System.out.println("[Master-Client Thread] read id of function : " + inputID);
 
             switch (inputID) {
                 case 1:
@@ -65,11 +68,7 @@ public class MasterClientThread extends Thread {
                     System.out.println("Function not identified!!");
                     break;
             }
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -291,6 +290,7 @@ public class MasterClientThread extends Thread {
             Socket workerSocket = new Socket(Config.WORKER_IP[workerIndex-1], Config.INIT_WORKER_PORT + workerIndex);
             ObjectOutputStream workerOut = new ObjectOutputStream(workerSocket.getOutputStream());
 
+            System.out.println("[Master-Client Thread] sent map request using map id: " + mapID);
             // send mapID
             workerOut.writeObject(mapID);
             // send data
@@ -307,6 +307,7 @@ public class MasterClientThread extends Thread {
     private void addSocketToMaster(String mapID){
         synchronized (Master.userSockets){
             Master.userSockets.put(mapID, userSocket);
+            System.out.println("[Master-Client Thread] added socket to static hashset: " + userSocket.toString() + " using ID:" + mapID);
         }
     }
 }

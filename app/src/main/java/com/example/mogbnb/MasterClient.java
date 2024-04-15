@@ -20,6 +20,7 @@ public class MasterClient extends Thread {
 
             while(true){
                 Socket socket = clientServer.accept();
+                System.out.println("[Master-Client] accepted socket: " + socket.toString());
                 Thread t = new MasterClientThread(socket, numOfWorkers);
                 t.start();
             }

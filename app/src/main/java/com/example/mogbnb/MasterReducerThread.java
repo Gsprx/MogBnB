@@ -12,16 +12,18 @@ public class MasterReducerThread extends Thread{
         this.reducerSocket = reducerSocket;
     }
     public void run(){
-        try{
+        try {
             ObjectInputStream in = new ObjectInputStream(reducerSocket.getInputStream());
             String mapID = (String) in.readObject();
 
             //get user socket using unique map id to send output to user
-            synchronized (Master.userSockets){
-                Socket replySocket = Master.userSockets.remove(mapID);
-                ObjectOutputStream out = new ObjectOutputStream(replySocket.getOutputStream());
-                out.writeObject(in.readObject());
+            Socket replySocket;
+            synchronized (Master.userSockets) {
+                replySocket = Master.userSockets.remove(mapID);
             }
+            System.out.println("[Master-Reducer] obtained socket " + replySocket.toString() + " to reply for map id:" + mapID);
+            ObjectOutputStream out = new ObjectOutputStream(replySocket.getOutputStream());
+            out.writeObject(in.readObject());
 
         }
         catch (IOException | ClassNotFoundException e) {
