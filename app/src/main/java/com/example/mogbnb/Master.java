@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,6 +22,8 @@ public class Master extends Thread {
     public static final HashMap<Integer, Integer> INPUT_IDs = new HashMap<>();
 
     int numOfWorkers;
+
+    public static HashMap<String, Socket> userSockets;
 
     /* Socket for receiving requests */
     Socket socket = null;
@@ -51,8 +54,6 @@ public class Master extends Thread {
      */
     public void run() {
         try {
-            // create the server socket
-            server = new ServerSocket(Config.USER_MASTER_PORT);
 
             // load the rooms to the workers
             for (Room r : ROOMS_FROM_JSON) {
@@ -65,23 +66,18 @@ public class Master extends Thread {
                 loadToWorkerOut.close();
                 loadToWorker.close();
             }
+            Thread clientServer = new MasterClient(numOfWorkers);
+            clientServer.start();
 
-            // listen for requests from user
-            while (true) {
-                // accept the connection for user-master
-                socket = server.accept();
+            Thread reducerServer = new MasterReducer();
+            reducerServer.start();
 
-                Thread t = new MasterThread(socket, numOfWorkers);
-                t.start();
-            }
+
+
+
+
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } finally {
-            try {
-                server.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
         }
     }
 

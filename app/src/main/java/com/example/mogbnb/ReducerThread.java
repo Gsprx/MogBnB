@@ -83,7 +83,7 @@ public class ReducerThread extends Thread {
             if (mapIDCounter.get(mapID) == numOfWorkers) {
                 //send the final refined list to the master using the reducer -> master port
                 System.out.println((int) Misc.hash(mapID)%10000);
-                Socket masterSocket = new Socket(Config.MASTER_IP, (int) (Config.REDUCER_MASTER_PORT + Misc.hash(mapID)%10000));
+                Socket masterSocket = new Socket(Config.MASTER_IP, (Config.REDUCER_MASTER_PORT));
                 ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
                 out.writeObject(daysBookedBuffer.get(mapID));
                 out.flush();
@@ -107,7 +107,7 @@ public class ReducerThread extends Thread {
         try {
             ArrayList<Room> room = (ArrayList<Room>) in.readObject();
             System.out.println(room);
-            Socket masterSocket = new Socket(Config.MASTER_IP, (int) (Config.REDUCER_MASTER_PORT + Misc.hash(mapID)%10000));
+            Socket masterSocket = new Socket(Config.MASTER_IP, (Config.REDUCER_MASTER_PORT));
             ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
             out.writeObject(room);
             out.flush();
@@ -121,7 +121,7 @@ public class ReducerThread extends Thread {
     private void returnWorkerResultBookSearch(String mapID) {
         try {
             ArrayList<String> room = (ArrayList<String>) in.readObject();
-            Socket masterSocket = new Socket(Config.MASTER_IP, (int) (Config.REDUCER_MASTER_PORT +Misc.hash(mapID)%10000));
+            Socket masterSocket = new Socket(Config.MASTER_IP, (Config.REDUCER_MASTER_PORT));
             ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
             out.writeObject(room);
             out.flush();
@@ -154,7 +154,7 @@ public class ReducerThread extends Thread {
             if (mapIDCounter.get(mapID) == numOfWorkers) {
                 //send the final refined list to the master using the reducer -> master port
                 System.out.println((int) Misc.hash(mapID)%10000);
-                Socket masterSocket = new Socket(Config.MASTER_IP, (int) (Config.REDUCER_MASTER_PORT +Misc.hash(mapID)%10000));
+                Socket masterSocket = new Socket(Config.MASTER_IP, (Config.REDUCER_MASTER_PORT));
                 ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
                 out.writeObject(roomListBuffer.get(mapID));
                 out.flush();
@@ -203,7 +203,7 @@ public class ReducerThread extends Thread {
             if (mapIDCounter.get(mapID) == numOfWorkers) {
                 //send the final refined list to the master using the reducer -> master port
                 System.out.println((int) Misc.hash(mapID)%10000);
-                Socket masterSocket = new Socket(Config.MASTER_IP, (int) (Config.REDUCER_MASTER_PORT +Misc.hash(mapID)%10000));
+                Socket masterSocket = new Socket(Config.MASTER_IP, (Config.REDUCER_MASTER_PORT));
                 ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
                 out.writeObject(areaBookingsBuffer.get(mapID));
                 out.flush();
@@ -228,9 +228,9 @@ public class ReducerThread extends Thread {
         try {
             int result = (int) in.readObject();
             System.out.println((int) Misc.hash(mapID)%10000);
-            Socket masterSocket = new Socket(Config.MASTER_IP, (int) (Config.REDUCER_MASTER_PORT +Misc.hash(mapID)%10000));
+            Socket masterSocket = new Socket(Config.MASTER_IP, (Config.REDUCER_MASTER_PORT));
             ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
-            out.writeInt(result);
+            out.writeObject(result);
             out.flush();
 
         } catch (IOException | ClassNotFoundException e) {
