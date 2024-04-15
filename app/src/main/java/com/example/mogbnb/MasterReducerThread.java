@@ -18,7 +18,7 @@ public class MasterReducerThread extends Thread{
 
             //get user socket using unique map id to send output to user
             synchronized (Master.userSockets){
-                Socket replySocket = Master.userSockets.get(mapID);
+                Socket replySocket = Master.userSockets.remove(mapID);
                 ObjectOutputStream out = new ObjectOutputStream(replySocket.getOutputStream());
                 out.writeObject(in.readObject());
             }
