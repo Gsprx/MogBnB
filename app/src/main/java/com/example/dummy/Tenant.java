@@ -251,8 +251,9 @@ public class Tenant implements Serializable{
             book_out.flush();
 
             // Await confirmation from the server
-            String response = (String) book_in.readObject();
-            System.out.println(response);
+            int result = (int) book_in.readObject();
+            if (result == 1) System.out.println("Booking successful.");
+            else System.out.println("Booking was unsuccessful, days requested were already booked!");
 
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -323,8 +324,9 @@ public class Tenant implements Serializable{
             rate_out.flush();
 
             // Await confirmation from the server
-            String response = (String) rate_in.readObject();
-            System.out.println(response);
+            int result = (int) rate_in.readObject();
+            if (result == 1) System.out.println("Rating updated successfully.");
+            else System.out.println("An error occurred while rating this room.");
 
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("An error occurred while communicating with the server: " + e.getMessage());

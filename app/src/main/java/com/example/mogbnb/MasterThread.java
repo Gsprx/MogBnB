@@ -395,9 +395,6 @@ public class MasterThread extends Thread {
 
             ObjectInputStream reducer_in = new ObjectInputStream(reducerResultSocket.getInputStream());
             int result = reducer_in.readInt();
-
-            if (result == 1) out.writeObject("Rating updated successfully.");
-            else out.writeObject("An error occurred while rating this room.");
             out.flush();
 
             reducer_in.close();
@@ -448,9 +445,6 @@ public class MasterThread extends Thread {
 
             ObjectInputStream reducer_in = new ObjectInputStream(reducerResultSocket.getInputStream());
             int result = reducer_in.readInt();
-
-            if (result == 1) out.writeObject("Booking successful.");
-            else out.writeObject("Booking was unsuccessful, days requested were already booked!");
             out.flush();
 
             reducer_in.close();
