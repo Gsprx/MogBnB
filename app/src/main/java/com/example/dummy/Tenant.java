@@ -201,12 +201,13 @@ public class Tenant implements Serializable{
 
             // Receive the room information from the server
             ObjectInputStream search_in = new ObjectInputStream(socket.getInputStream());
-            Room room = ((ArrayList<Room>) search_in.readObject()).get(0);
+            ArrayList<Room> inputRoom = ((ArrayList<Room>) search_in.readObject());
 
-            if (room == null) {
+            if (!inputRoom.isEmpty()) {
                 System.out.println("Room not found.");
                 return;
             }
+            Room room = inputRoom.get(0);
             Room.setCurrentDate();
 
             // show booking table
@@ -293,8 +294,9 @@ public class Tenant implements Serializable{
 
             ObjectInputStream search_in = new ObjectInputStream(socket.getInputStream());
             // Receive the room information from the server
-            Room room = (Room) search_in.readObject();
-            if (room == null) {
+            ArrayList<Room> inputRoom = ((ArrayList<Room>) search_in.readObject());
+
+            if (!inputRoom.isEmpty()) {
                 System.out.println("Room not found.");
                 return;
             }
