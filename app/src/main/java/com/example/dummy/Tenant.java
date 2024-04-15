@@ -203,7 +203,7 @@ public class Tenant implements Serializable{
             ObjectInputStream search_in = new ObjectInputStream(socket.getInputStream());
             ArrayList<Room> inputRoom = ((ArrayList<Room>) search_in.readObject());
 
-            if (!inputRoom.isEmpty()) {
+            if (inputRoom.isEmpty()) {
                 System.out.println("Room not found.");
                 return;
             }
@@ -296,7 +296,7 @@ public class Tenant implements Serializable{
             // Receive the room information from the server
             ArrayList<Room> inputRoom = ((ArrayList<Room>) search_in.readObject());
 
-            if (!inputRoom.isEmpty()) {
+            if (inputRoom.isEmpty()) {
                 System.out.println("Room not found.");
                 return;
             }
