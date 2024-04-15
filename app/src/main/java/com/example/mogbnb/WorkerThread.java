@@ -239,7 +239,7 @@ public class WorkerThread extends Thread {
      */
     private void sendResults(Object resultForReducer){
         try {
-            System.out.println(workerID + "> " + mapID + " " + mapValue.toString());
+            System.out.println(workerID + "> " + mapID + " " + resultForReducer.toString());
             //socket used to send results to reducer
             Socket outputSocket = new Socket(Config.REDUCER_IP, Config.WORKER_REDUCER_PORT);
 
