@@ -25,11 +25,6 @@ public class Master extends Thread {
 
     public static HashMap<String, Socket> userSockets;
 
-    /* Socket for receiving requests */
-    Socket socket = null;
-
-    /* Socket for handling the connection */
-    ServerSocket server;
     public Master(int numOfWorkers) {
         this.numOfWorkers = numOfWorkers;
         // add all the inputIds and set them to 0
@@ -73,9 +68,6 @@ public class Master extends Thread {
             reducerServer.start();
 
 
-
-
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -84,13 +76,6 @@ public class Master extends Thread {
     public int getNumOfWorkers() {
         return numOfWorkers;
     }
-
-    /**
-     * Hash function.
-     * @param s String to hash
-     * @return Result of hashing
-     */
-
 
 
 }

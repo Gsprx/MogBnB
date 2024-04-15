@@ -85,6 +85,7 @@ public class ReducerThread extends Thread {
                 System.out.println((int) Misc.hash(mapID)%10000);
                 Socket masterSocket = new Socket(Config.MASTER_IP, (Config.REDUCER_MASTER_PORT));
                 ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
+                out.writeObject(mapID);
                 out.writeObject(daysBookedBuffer.get(mapID));
                 out.flush();
 
@@ -109,6 +110,7 @@ public class ReducerThread extends Thread {
             System.out.println(room);
             Socket masterSocket = new Socket(Config.MASTER_IP, (Config.REDUCER_MASTER_PORT));
             ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
+            out.writeObject(mapID);
             out.writeObject(room);
             out.flush();
 
@@ -123,6 +125,7 @@ public class ReducerThread extends Thread {
             ArrayList<String> room = (ArrayList<String>) in.readObject();
             Socket masterSocket = new Socket(Config.MASTER_IP, (Config.REDUCER_MASTER_PORT));
             ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
+            out.writeObject(mapID);
             out.writeObject(room);
             out.flush();
 
@@ -156,6 +159,7 @@ public class ReducerThread extends Thread {
                 System.out.println((int) Misc.hash(mapID)%10000);
                 Socket masterSocket = new Socket(Config.MASTER_IP, (Config.REDUCER_MASTER_PORT));
                 ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
+                out.writeObject(mapID);
                 out.writeObject(roomListBuffer.get(mapID));
                 out.flush();
 
@@ -205,6 +209,7 @@ public class ReducerThread extends Thread {
                 System.out.println((int) Misc.hash(mapID)%10000);
                 Socket masterSocket = new Socket(Config.MASTER_IP, (Config.REDUCER_MASTER_PORT));
                 ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
+                out.writeObject(mapID);
                 out.writeObject(areaBookingsBuffer.get(mapID));
                 out.flush();
 
@@ -227,9 +232,9 @@ public class ReducerThread extends Thread {
     private void messageReduce(String mapID){
         try {
             int result = (int) in.readObject();
-            System.out.println((int) Misc.hash(mapID)%10000);
             Socket masterSocket = new Socket(Config.MASTER_IP, (Config.REDUCER_MASTER_PORT));
             ObjectOutputStream out = new ObjectOutputStream(masterSocket.getOutputStream());
+            out.writeObject(mapID);
             out.writeObject(result);
             out.flush();
 

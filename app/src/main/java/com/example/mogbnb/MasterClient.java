@@ -13,21 +13,18 @@ public class MasterClient extends Thread {
         this.numOfWorkers = numOfWorkers;
     }
     public void run(){
-        ServerSocket clientServer = null;
+        ServerSocket clientServer;
         try {
             clientServer = new ServerSocket(Config.USER_MASTER_PORT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        while(true){
-            try {
+
+            while(true){
                 Socket socket = clientServer.accept();
                 Thread t = new MasterClientThread(socket, numOfWorkers);
                 t.start();
-
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
     }
 }
