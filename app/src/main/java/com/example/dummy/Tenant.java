@@ -12,6 +12,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -76,26 +77,33 @@ public class Tenant implements Serializable{
     }
 
     private void seeBookings() {
-        try (Socket socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
-             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-             ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+        try {
+            Socket socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+
 
             out.writeInt(MasterFunction.SHOW_BOOKINGS.getEncoded());
             out.writeObject(id);
             out.flush();
 
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             HashMap<String,ArrayList<LocalDate>> bookings = (HashMap<String,ArrayList<LocalDate>>) in.readObject();
 
             if (bookings.isEmpty()) {
-                System.out.println("No bookings found.");
-            } else {
-                Set<String> roomNames = bookings.keySet();
-                for (String name : roomNames){
-                    System.out.println("Room: " + name + "\nDays booked: " + bookings.get(name).toString());
+                    System.out.println("No bookings found.");
+                } else {
+                    Set<String> roomNames = bookings.keySet();
+                    for (String name : roomNames){
+                        System.out.println("Room: " + name + "\nDays booked: " + bookings.get(name).toString());
+                    }
                 }
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+
+            } catch (UnknownHostException ex) {
+            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        } catch (ClassNotFoundException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
@@ -153,14 +161,16 @@ public class Tenant implements Serializable{
 
         Filter filter = new Filter(area, checkIn, checkOut, noOfPersons, price, stars);
 
-        try (Socket socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
-             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-             ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+        try {
+
+            Socket socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 
             out.writeInt(MasterFunction.SEARCH_ROOM.getEncoded());
             out.writeObject(filter);
             out.flush();
 
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             ArrayList<Room> rooms = (ArrayList<Room>) in.readObject();
             System.out.println("------------------ROOMS FOUND-------------------");
             rooms.forEach(System.out::println);
@@ -274,13 +284,14 @@ public class Tenant implements Serializable{
         try {
             Socket socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
             ObjectOutputStream search_out = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream search_in = new ObjectInputStream(socket.getInputStream());
+
 
             search_out.writeInt(MasterFunction.FIND_ROOM_BY_NAME.getEncoded());
             // Send the room name for searching
             search_out.writeObject(roomName);
             search_out.flush();
 
+            ObjectInputStream search_in = new ObjectInputStream(socket.getInputStream());
             // Receive the room information from the server
             Room room = (Room) search_in.readObject();
             if (room == null) {
@@ -297,7 +308,7 @@ public class Tenant implements Serializable{
 
             socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
             ObjectOutputStream rate_out = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream rate_in = new ObjectInputStream(socket.getInputStream());
+
 
             while (!validInput) {
                 try {
@@ -324,6 +335,7 @@ public class Tenant implements Serializable{
             rate_out.writeObject(roomRating);
             rate_out.flush();
 
+            ObjectInputStream rate_in = new ObjectInputStream(socket.getInputStream());
             // Await confirmation from the server
             int result = (int) rate_in.readObject();
             if (result == 1) System.out.println("Rating updated successfully.");
