@@ -5,7 +5,6 @@ import static com.example.misc.Config.defaultZoneId;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,23 +15,16 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.misc.Config;
 import com.example.misc.Misc;
 import com.example.mogbnb.R;
 import com.google.android.material.slider.Slider;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Enumeration;
 
-public class SearachFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
+public class SearchFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
     EditText area;
     EditText noOfPeople;
@@ -50,7 +42,7 @@ public class SearachFragment extends Fragment implements DatePickerDialog.OnDate
     // we will use this for setting the available days in the calendar DBD
     boolean checkInPressed;
 
-    public SearachFragment() {
+    public SearchFragment() {
         checkIn = null;
         checkOut = null;
         checkInPressed = false;

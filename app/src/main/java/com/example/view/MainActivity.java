@@ -8,19 +8,15 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 
 import com.example.mogbnb.R;
-import com.example.view.fragments.BookingsFragment;
+import com.example.view.fragments.RoomDetailsFragment;
 import com.example.view.fragments.ProfileFragment;
-import com.example.view.fragments.SearachFragment;
+import com.example.view.fragments.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-
-import java.text.DateFormat;
-import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView navbar;
-    SearachFragment search;
-    BookingsFragment bookings;
+    SearchFragment search;
+    RoomDetailsFragment bookings;
     ProfileFragment profile;
 
     @Override
@@ -29,9 +25,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // create search fragment
-        search = new SearachFragment();
+        search = new SearchFragment();
         // create bookings fragment
-        bookings = new BookingsFragment();
+        bookings = new RoomDetailsFragment();
         // create profile fragment
         profile = new ProfileFragment();
         // // when the main appears set the frame layout to the search fragment

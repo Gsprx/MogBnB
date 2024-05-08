@@ -9,7 +9,10 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-
+/*Functionality:
+1.Takes each user's request,figures out what they need, and either gets the information or makes changes based on that
+2.Talks back and forth with the users sending them what they asked for or confirming the job is done
+*/
 public class MasterClientThread extends Thread {
     ObjectInputStream in;
     int inputID;

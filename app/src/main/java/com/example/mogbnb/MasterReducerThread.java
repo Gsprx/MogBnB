@@ -5,7 +5,7 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-
+// focuses on putting together all the data that comes in related to one task.
 public class MasterReducerThread extends Thread{
     private Socket reducerSocket;
     public MasterReducerThread(Socket reducerSocket){

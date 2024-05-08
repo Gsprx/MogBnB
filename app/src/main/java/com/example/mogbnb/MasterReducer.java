@@ -8,6 +8,7 @@ import java.net.Socket;
 
 
 // Master-Reducer Server handles replies from Reducer Node
+
 public class MasterReducer extends Thread{
     public void run(){
         ServerSocket reducerServer;
