@@ -1,7 +1,10 @@
 package com.example.misc;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Misc {
@@ -32,6 +35,16 @@ public class Misc {
         }
         return date;
     }
+
+    public static Date parseDate(String dateString) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
+            return dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static long hash(String s) {
         long hash = 7;
         for (int i = 0; i < s.length(); i++) {

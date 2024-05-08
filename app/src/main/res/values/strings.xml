@@ -2,4 +2,5 @@
     <string name="app_name">MogBnB</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_empty_checkIn_checkOut">Not selected</string>
 </resources>

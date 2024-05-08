@@ -1,5 +1,7 @@
 package com.example.misc;
 
+import java.time.ZoneId;
+
 public class Config {
     public static int NUM_OF_WORKERS = 3;
     public static int USER_MASTER_PORT = 4444;
@@ -10,4 +12,6 @@ public class Config {
     public static String MASTER_IP = "localhost";
     public static String[] WORKER_IP = {"localhost", "localhost", "localhost"};
     public static String REDUCER_IP = "localhost";
+
+    public static ZoneId defaultZoneId = ZoneId.systemDefault();
 }
