@@ -11,7 +11,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+/*    Manages all parts of the system to make sure everything works together. */
 public class Master extends Thread {
 
     // load the existing rooms from json

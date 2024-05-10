@@ -8,8 +8,8 @@ android {
 
     defaultConfig {
         applicationId = "com.example.mogbnb"
-        minSdk = 26
-        targetSdk = 26
+        minSdk = 31
+        targetSdk = 31
         versionCode = 1
         versionName = "1.0"
 
@@ -38,4 +38,6 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation ("com.google.code.gson:gson:2.8.9")
+    implementation("com.wdullaer:materialdatetimepicker:4.2.3")
+
 }

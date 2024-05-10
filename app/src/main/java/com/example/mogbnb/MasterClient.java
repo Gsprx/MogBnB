@@ -6,7 +6,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-//Master-Client Server handles requests from Clients-Users
+//Master-Client Server handles requests from Clients-Users(like tenants and managers)
+
 public class MasterClient extends Thread {
     private int numOfWorkers;
     public MasterClient(int numOfWorkers) {
