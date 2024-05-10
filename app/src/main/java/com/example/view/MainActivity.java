@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.example.mogbnb.R;
 import com.example.view.fragments.RoomDetailsFragment;
@@ -24,14 +26,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // get intent from welcoming screen
+        Intent intent = getIntent();
+        // set user's username and id
+        String username = intent.getStringExtra("USERNAME");
+        String id = intent.getStringExtra("ID");
+
         // create search fragment
         search = new SearchFragment();
         // create bookings fragment
         bookings = new RoomDetailsFragment();
         // create profile fragment
-        profile = new ProfileFragment();
-        // // when the main appears set the frame layout to the search fragment
+        profile = new ProfileFragment(username, id);
+        // when the main appears set the frame layout to the search fragment
         replaceFragment(search);
+
 
         // get navbar
         navbar = findViewById(R.id.main_bottomNavView);
