@@ -40,6 +40,7 @@
             app:layout_constraintTop_toTopOf="@+id/frameLayout31" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSearchResults"
             android:layout_width="409dp"
             android:layout_height="510dp"
             android:layout_marginBottom="32dp"
