@@ -65,12 +65,13 @@
             android:id="@+id/search_add_checkIn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="180dp"
+            android:layout_marginStart="148dp"
             android:text="Add"
             app:icon="@drawable/baseline_add_circle_outline_24"
             app:layout_constraintBottom_toBottomOf="@+id/textView5"
             app:layout_constraintStart_toEndOf="@+id/textView5"
-            app:layout_constraintTop_toTopOf="@+id/textView5" />
+            app:layout_constraintTop_toTopOf="@+id/textView5"
+            app:layout_constraintVertical_bias="0.423" />
 
         <TextView
             android:id="@+id/textView7"
@@ -101,7 +102,7 @@
             android:id="@+id/search_add_checkOut"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="180dp"
+            android:layout_marginStart="148dp"
             android:text="Add"
             app:icon="@drawable/baseline_add_circle_outline_24"
             app:layout_constraintBottom_toBottomOf="@+id/textView7"
@@ -147,7 +148,7 @@
             android:id="@+id/search_area_entry"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="24dp"
             android:ems="10"
             android:hint="ex. Athens"
             android:inputType="text"
@@ -173,7 +174,7 @@
             android:id="@+id/search_numOfPeople_entry"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="24dp"
             android:ems="10"
             android:hint="ex. 3"
             android:inputType="number"
@@ -187,7 +188,7 @@
             android:id="@+id/search_price_slider"
             android:layout_width="210dp"
             android:layout_height="42dp"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="16dp"
             android:value="1000"
             android:valueFrom="0"
             android:valueTo="1000"
@@ -195,7 +196,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/textView13"
             app:layout_constraintStart_toEndOf="@+id/textView13"
             app:layout_constraintTop_toTopOf="@+id/textView13"
-            app:layout_constraintVertical_bias="0.423" />
+            app:layout_constraintVertical_bias="0.461" />
 
         <TextView
             android:id="@+id/textView13"
