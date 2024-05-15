@@ -5,6 +5,8 @@ import static com.example.misc.Config.defaultZoneId;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +17,22 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.misc.Config;
 import com.example.misc.Misc;
+import com.example.mogbnb.Filter;
+import com.example.mogbnb.MasterFunction;
 import com.example.mogbnb.R;
+import com.example.mogbnb.Room;
+import com.example.view.NetworkHandlerThread;
 import com.google.android.material.slider.Slider;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -97,6 +109,39 @@ public class SearchFragment extends Fragment implements DatePickerDialog.OnDateS
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                Filter filter = new Filter(
+                        area.getText().toString().equals("") ? null : area.getText().toString(),
+                        checkIn.toInstant()
+                        .atZone(defaultZoneId)
+                        .toLocalDate(),
+                        checkOut.toInstant()
+                        .atZone(defaultZoneId)
+                        .toLocalDate(),
+                        noOfPeople.getText().toString().equals("") ? -1 : Integer.parseInt(noOfPeople.getText().toString()), maxPrice.getValue(), minRating.getRating());
+
+                // send request to master and wait for response
+                NetworkHandlerThread t = new NetworkHandlerThread(MasterFunction.SEARCH_ROOM.getEncoded(), filter);
+                t.start();
+                while (true) {
+                    if (t.result != null) break;
+                }
+
+                ArrayList<Room> rooms = (ArrayList<Room>) t.result;
+
+                // change fragment to search results
+                int containerViewId = R.id.main_frameLayout;
+                Fragment searchResultsFragment = new SearchResultsFragment();
+                Bundle args = new Bundle();
+                args.putSerializable("rooms", rooms);
+                args.putSerializable("cIn", checkIn.toInstant().atZone(defaultZoneId).toLocalDate());
+                args.putSerializable("cOut", checkOut.toInstant().atZone(defaultZoneId).toLocalDate());
+                searchResultsFragment.setArguments(args);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(containerViewId, searchResultsFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
 

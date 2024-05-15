@@ -57,10 +57,10 @@ public class SelectRoomRVAdapter extends RecyclerView.Adapter<SelectRoomRVAdapte
         String formattedRating = df.format(rooms.get(position).getStars());
         holder.roomRating.setText(formattedRating);
 
-        holder.roomNumOfReviews.setText(rooms.get(position).getNoOfReviews());
+        holder.roomNumOfReviews.setText(String.valueOf(rooms.get(position).getNoOfReviews()));
 
         //TODO: set image later
-
+        holder.roomImage.setImageResource(R.drawable.child_po);
 
 
     }
