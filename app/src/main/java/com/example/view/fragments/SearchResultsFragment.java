@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,9 +21,9 @@ import com.example.view.recyclerViewAdapters.SelectRoomRVAdapter;
 import java.util.ArrayList;
 
 
-public class SearchResults extends Fragment {
+public class SearchResultsFragment extends Fragment {
 
-    public SearchResults() {
+    public SearchResultsFragment() {
         // Required empty public constructor
     }
 
@@ -58,7 +60,24 @@ public class SearchResults extends Fragment {
 
     //method is called when a room is clicked in the list
     private void showRoomDetails(Room room) {
-        //TODO: Start room details fragment
+        int containerViewId = R.id.main_frameLayout;
+
+        Fragment roomDetails = new RoomDetailsFragment();
+
+        Bundle args = new Bundle();
+        args.putSerializable("room", room);
+        //TODO: add checkin,out dates
+
+        roomDetails.setArguments(args);
+
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(containerViewId, roomDetails);
+
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
 
     }
 }
