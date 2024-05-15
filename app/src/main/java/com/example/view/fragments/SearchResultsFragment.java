@@ -18,11 +18,13 @@ import com.example.mogbnb.R;
 import com.example.mogbnb.Room;
 import com.example.view.recyclerViewAdapters.SelectRoomRVAdapter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 
 public class SearchResultsFragment extends Fragment {
-
+    LocalDate checkIn;
+    LocalDate checkOut;
     public SearchResultsFragment() {
         // Required empty public constructor
     }
@@ -39,6 +41,8 @@ public class SearchResultsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         //get rooms passed by the filter fragment
         ArrayList<Room> rooms = getArguments()!=null ? (ArrayList<Room>) getArguments().getSerializable("rooms") : new ArrayList<>();
+        checkIn = (LocalDate) getArguments().getSerializable("cIn");
+        checkOut = (LocalDate) getArguments().getSerializable("cOut");
 
         //get RV reference
         RecyclerView recyclerView = view.findViewById(R.id.rvSearchResults);
@@ -53,6 +57,7 @@ public class SearchResultsFragment extends Fragment {
 
         //bind adapter to RV
         recyclerView.setAdapter(adapter);
+
         //set layout for RV
         //TODO: Check if this code works (green fn implementation).
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -66,7 +71,8 @@ public class SearchResultsFragment extends Fragment {
 
         Bundle args = new Bundle();
         args.putSerializable("room", room);
-        //TODO: add checkin,out dates
+        args.putSerializable("cIn", checkIn);
+        args.putSerializable("cOut", checkOut);
 
         roomDetails.setArguments(args);
 
@@ -78,6 +84,5 @@ public class SearchResultsFragment extends Fragment {
 
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-
     }
 }
