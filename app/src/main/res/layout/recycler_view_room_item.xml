@@ -8,13 +8,16 @@
     <androidx.cardview.widget.CardView
         android:layout_width="411dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/white">
 
             <ImageView
                 android:id="@+id/imageRoomItem"
@@ -39,6 +42,7 @@
                 android:layout_marginStart="145dp"
                 android:layout_marginTop="8dp"
                 android:text="Room's Name"
+                android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="@+id/imageRoomItem"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,6 +53,7 @@
                 android:layout_marginStart="156dp"
                 android:layout_marginBottom="40dp"
                 android:text="Rating:"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageRoomItem" />
 
@@ -58,6 +63,7 @@
                 android:layout_height="20dp"
                 android:layout_marginStart="8dp"
                 android:text="rating"
+                android:textColor="@color/black"
                 app:layout_constraintStart_toEndOf="@+id/textView6"
                 app:layout_constraintTop_toTopOf="@+id/textView6" />
 
@@ -68,6 +74,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="36dp"
                 android:text="Price:"
+                android:textColor="@color/black"
                 app:layout_constraintStart_toEndOf="@+id/imageRoomItem"
                 app:layout_constraintTop_toBottomOf="@+id/textRoomItemName" />
 
@@ -77,6 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="price per night"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="@+id/textView18"
                 app:layout_constraintStart_toEndOf="@+id/textView18"
                 app:layout_constraintTop_toTopOf="@+id/textView18" />
@@ -88,6 +96,7 @@
                 android:layout_marginStart="200dp"
                 android:layout_marginBottom="16dp"
                 android:text="noReviews"
+                android:textColor="@color/black"
                 android:textSize="12sp"
                 android:textStyle="italic"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -100,6 +109,7 @@
                 android:layout_marginStart="156dp"
                 android:layout_marginBottom="16dp"
                 android:text="Reviews:"
+                android:textColor="@color/black"
                 android:textSize="12sp"
                 android:textStyle="italic"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.example.mogbnb.R;
+import com.example.view.fragments.BookingsFragment;
 import com.example.view.fragments.RoomDetailsFragment;
 import com.example.view.fragments.ProfileFragment;
 import com.example.view.fragments.SearchFragment;
@@ -18,7 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView navbar;
     SearchFragment search;
-    RoomDetailsFragment bookings;
+    BookingsFragment bookings;
     ProfileFragment profile;
 
     @Override
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         // create search fragment
         search = new SearchFragment();
         // create bookings fragment
-        bookings = new RoomDetailsFragment();
+        bookings = new BookingsFragment(id);
         // create profile fragment
         profile = new ProfileFragment(username, id);
         // when the main appears set the frame layout to the search fragment

@@ -17,10 +17,10 @@ public class ReducerThread extends Thread {
     private HashMap<String, Integer> mapIDCounter;
     private HashMap<String, ArrayList<Room>> roomListBuffer;
     private HashMap<String, HashMap<String,Integer>> areaBookingsBuffer;
-    private HashMap<String, HashMap<String, ArrayList<LocalDate>>> daysBookedBuffer;
+    private HashMap<String, HashMap<Room, ArrayList<LocalDate>>> daysBookedBuffer;
 
     public ReducerThread(Socket socket, HashMap<String, Integer> mapIDBuffer, int numOfWorkers, HashMap<String, ArrayList<Room>> mapValueBuffer, HashMap<String, HashMap<String,Integer>> areaBookings
-    , HashMap<String, HashMap<String, ArrayList<LocalDate>>> daysBookedBuffer) {
+    , HashMap<String, HashMap<Room, ArrayList<LocalDate>>> daysBookedBuffer) {
         try {
             this.areaBookingsBuffer = areaBookings;
             this.numOfWorkers = numOfWorkers;
@@ -65,8 +65,8 @@ public class ReducerThread extends Thread {
                     //if key doesn't exist: add a new mapping of mapID,1
                     mapIDCounter.merge(mapID, 1, Integer::sum);
 
-                    HashMap<String,ArrayList<LocalDate>> inputHMap = (HashMap<String,ArrayList<LocalDate>>)in.readObject();
-                    HashMap<String,ArrayList<LocalDate>> existingHMap = daysBookedBuffer.get(mapID);
+                    HashMap<Room,ArrayList<LocalDate>> inputHMap = (HashMap<Room,ArrayList<LocalDate>>)in.readObject();
+                    HashMap<Room,ArrayList<LocalDate>> existingHMap = daysBookedBuffer.get(mapID);
 
                     //merge existing area values with new input
                     //if existing values don't exist, initiate them with the input

@@ -61,8 +61,6 @@ public class SelectRoomRVAdapter extends RecyclerView.Adapter<SelectRoomRVAdapte
 
         //TODO: set image later
         holder.roomImage.setImageResource(R.drawable.child_po);
-
-
     }
 
 
@@ -87,9 +85,7 @@ public class SelectRoomRVAdapter extends RecyclerView.Adapter<SelectRoomRVAdapte
 
     //this class holds the View objects in the recycler view room item layout file
     //additionally handles the click listening
-    public class SelectRoomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
-
+    public class SelectRoomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView roomName;
         TextView roomPrice;
         TextView roomRating;

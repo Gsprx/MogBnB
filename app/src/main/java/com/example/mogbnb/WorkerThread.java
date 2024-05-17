@@ -212,7 +212,7 @@ public class WorkerThread extends Thread {
     }
     //expected map value is the user's id
     private void tenantBookings() {
-        HashMap<String,ArrayList<LocalDate>> result = new HashMap<>();
+        HashMap<Room,ArrayList<LocalDate>> result = new HashMap<>();
         int userID = (int) mapValue;
 
         //create a list of dates booked by the user for each room
@@ -227,7 +227,7 @@ public class WorkerThread extends Thread {
             }
             //only add the list to the result if it has at least one day booked by the user
             if(daysBooked.size()>0){
-                result.put(r.getRoomName(), daysBooked);
+                result.put(r, daysBooked);
             }
         }
         //send the result to the reducer node

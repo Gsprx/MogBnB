@@ -18,7 +18,7 @@ public class Reducer extends Thread {
     HashMap<String, Integer> mapIDCounter;
     HashMap<String, ArrayList<Room>> roomListBuffer; //used to hold room values from workers until all workers are finished. key = mapID
     HashMap<String, HashMap<String,Integer>> areaBookingsBuffer; //used to hold hashmaps of area-days_booked tuples until all workers are finished. key = mapID
-    HashMap<String, HashMap<String, ArrayList<LocalDate>>> daysBookedBuffer;//used to hold hashmaps of room name - days booked tuples until all workers are finished. = key = mapID
+    HashMap<String, HashMap<Room, ArrayList<LocalDate>>> daysBookedBuffer;//used to hold hashmaps of room name - days booked tuples until all workers are finished. = key = mapID
     private int numOfWorkers;
 
 

@@ -9,7 +9,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class NetworkHandlerThread extends Thread {
     int function;
@@ -28,6 +30,8 @@ public class NetworkHandlerThread extends Thread {
             case 5:
                 searchRoom();
                 break;
+            case 7:
+                showBookings();
             default:
                 break;
         }
@@ -50,5 +54,22 @@ public class NetworkHandlerThread extends Thread {
         }
     }
 
+    private void showBookings() {
+        try {
+            Socket socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+
+
+            out.writeInt(MasterFunction.SHOW_BOOKINGS.getEncoded());
+            out.writeObject(data);
+            out.flush();
+
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            this.result = (HashMap<Room,ArrayList<LocalDate>>) in.readObject();
+
+        } catch (ClassNotFoundException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

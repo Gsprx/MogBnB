@@ -87,14 +87,14 @@ public class Tenant implements Serializable{
             out.flush();
 
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-            HashMap<String,ArrayList<LocalDate>> bookings = (HashMap<String,ArrayList<LocalDate>>) in.readObject();
+            HashMap<Room, ArrayList<LocalDate>> bookings = (HashMap<Room,ArrayList<LocalDate>>) in.readObject();
 
             if (bookings.isEmpty()) {
                     System.out.println("No bookings found.");
                 } else {
-                    Set<String> roomNames = bookings.keySet();
-                    for (String name : roomNames){
-                        System.out.println("Room: " + name + "\nDays booked: " + bookings.get(name).toString());
+                    Set<Room> rooms = bookings.keySet();
+                    for (Room room : rooms){
+                        System.out.println("Room: " + room.getRoomName() + "\nDays booked: " + bookings.get(room).toString());
                     }
                 }
 
