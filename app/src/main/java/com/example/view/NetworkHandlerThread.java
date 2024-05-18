@@ -18,7 +18,7 @@ public class NetworkHandlerThread extends Thread {
     Object data;
     public Object result;
 
-    public NetworkHandlerThread(int function, Object data) {
+    public NetworkHandlerThread(int function, Object data) throws RuntimeException {
         this.function = function;
         this.data = data;
         this.result = null;
