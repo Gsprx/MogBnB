@@ -87,9 +87,9 @@ public class NetworkHandlerThread extends Thread {
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             this.result = in.readObject();
 
-            in.close();
+            /*in.close();
             out.close();
-            socket.close();
+            socket.close();*/
 
         } catch (ClassNotFoundException | IOException e) {
             throw new RuntimeException(e);

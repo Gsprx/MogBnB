@@ -39,9 +39,9 @@ public class BookingsFragment extends Fragment {
         NetworkHandlerThread t = new NetworkHandlerThread(MasterFunction.SHOW_BOOKINGS.getEncoded(), this.userID);
         t.start();
         
-        /*while (true) {
+        while (true) {
             if (t.result != null) break;
-        }*/
+        }
 
         bookings = (HashMap<Room, ArrayList<LocalDate>>) t.result;
 

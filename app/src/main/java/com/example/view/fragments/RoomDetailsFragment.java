@@ -38,8 +38,8 @@ public class RoomDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             room = (Room) getArguments().getSerializable("room");
-            LocalDate checkIn = (LocalDate) getArguments().getSerializable("cIn");
-            LocalDate checkOut = (LocalDate) getArguments().getSerializable("cOut");
+            checkIn = (LocalDate) getArguments().getSerializable("cIn");
+            checkOut = (LocalDate) getArguments().getSerializable("cOut");
         }
     }
     @Override
@@ -80,17 +80,14 @@ public class RoomDetailsFragment extends Fragment {
 
         NetworkHandlerThread bookingThread = new NetworkHandlerThread(MasterFunction.BOOK_ROOM.getEncoded(), bookingData);
         bookingThread.start();
-        try {
-            bookingThread.join();
-            int result = (int) bookingThread.result;
-            if (result == 1) {
-                Toast.makeText(getContext(), "Booking successful.", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(getContext(), "Booking was unsuccessful, days requested were already booked!", Toast.LENGTH_LONG).show();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "An error occurred during booking.", Toast.LENGTH_LONG).show();
+        while (true) {
+            if (bookingThread.result != null) break;
+        }
+        int result = (int) bookingThread.result;
+        if (result == 1) {
+            Toast.makeText(getContext(), "Booking successful.", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getContext(), "Booking was unsuccessful, days requested were already booked!", Toast.LENGTH_LONG).show();
         }
     }
 }
