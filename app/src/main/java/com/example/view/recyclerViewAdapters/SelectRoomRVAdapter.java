@@ -73,10 +73,10 @@ public class SelectRoomRVAdapter extends RecyclerView.Adapter<SelectRoomRVAdapte
     public int getItemCount() {
         return rooms.size();
     }
+
     public void setRooms(ArrayList<Room> rooms){
         this.rooms = rooms;
     }
-
 
     //method of this interface must be implemented by parent activity
     //parent activity is responsible for what to do when a room is clicked

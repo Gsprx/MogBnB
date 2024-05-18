@@ -54,10 +54,13 @@ public class SearchFragment extends Fragment implements DatePickerDialog.OnDateS
     // we will use this for setting the available days in the calendar DBD
     boolean checkInPressed;
 
-    public SearchFragment() {
+    int userID;
+
+    public SearchFragment(int userID) {
         checkIn = null;
         checkOut = null;
         checkInPressed = false;
+        this.userID = userID;
     }
 
     @Override
@@ -123,7 +126,7 @@ public class SearchFragment extends Fragment implements DatePickerDialog.OnDateS
 
                 // change fragment to search results
                 int containerViewId = R.id.main_frameLayout;
-                Fragment searchResultsFragment = new SearchResultsFragment();
+                Fragment searchResultsFragment = new SearchResultsFragment(userID);
                 Bundle args = new Bundle();
                 args.putSerializable("filter", filter);
                 searchResultsFragment.setArguments(args);

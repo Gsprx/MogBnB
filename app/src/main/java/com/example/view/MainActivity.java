@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         String id = intent.getStringExtra("ID");
 
         // create search fragment
-        search = new SearchFragment();
+        search = new SearchFragment(Integer.parseInt(id));
         // create bookings fragment
         bookings = new BookingsFragment(id);
         // create profile fragment
