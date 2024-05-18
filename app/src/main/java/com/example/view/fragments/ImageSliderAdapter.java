@@ -1,4 +1,4 @@
-package com.example.view;
+package com.example.view.fragments;
 
 import android.net.Uri;
 import android.view.LayoutInflater;

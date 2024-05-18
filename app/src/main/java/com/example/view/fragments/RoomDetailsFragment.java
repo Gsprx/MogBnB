@@ -18,7 +18,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.mogbnb.MasterFunction;
 import com.example.mogbnb.R;
 import com.example.mogbnb.Room;
-import com.example.view.ImageSliderAdapter;
+import com.example.view.fragments.ImageSliderAdapter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
