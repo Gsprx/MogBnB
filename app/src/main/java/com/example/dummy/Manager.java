@@ -14,6 +14,7 @@ import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -113,7 +114,9 @@ public class Manager {
         int availDays;
         String area;
         double price;
-        String roomImg;
+        String roomImg = null;
+        String description;
+        List<String> amenities = new ArrayList<>();
 
         String temp_inp = ""; // we will use this for the values that need to be transformed from string to int/double
 
@@ -159,14 +162,31 @@ public class Manager {
         } while (!TypeChecking.isDouble(temp_inp) || (TypeChecking.isDouble(temp_inp) && Double.parseDouble(temp_inp) <= 0));
         price = Double.parseDouble(temp_inp);
 
-        inp = new Scanner(System.in);       // image
-        System.out.print("[Image path]: ");
-        roomImg = inp.nextLine();
-        if (roomImg.equals("exit")) {System.out.println("Canceling...\n"); return;} // if input == exit, then return
+        inp = new Scanner(System.in);
+        System.out.print("[Description]: ");
+        description = inp.nextLine();
+        if (description.equals("exit")) {
+            System.out.println("Canceling...\n");
+            return;
+        }
 
-        // after completing all the necessary info, give option to ignore new room and exit
+        System.out.println("[Amenities] (type 'done' when finished):");
+        while (true) {
+            System.out.print("> ");
+            String amenity = inp.nextLine();
+            if (amenity.equalsIgnoreCase("done")) {
+                break;
+            } else if (amenity.equalsIgnoreCase("exit")) {
+                System.out.println("Canceling...\n");
+                return;
+            } else {
+                amenities.add(amenity);
+            }
+        }
+
         System.out.println("\nProceeding to add room: \nname: " + rName + "\nmax-people: " + noOfPeople + "\n" +
-                "calendar-days: " + availDays + "\narea: " + area + "\nprice: " + price + "\nimg-path: " + roomImg);
+                "calendar-days: " + availDays + "\narea: " + area + "\nprice: " + price + "\nimg-path: " + roomImg +
+                "\ndescription: " + description + "\nAmenities: " + String.join(", ", amenities));
         System.out.println("\nAre you sure?[Y/n]");
         String ans;
         do {
@@ -182,7 +202,7 @@ public class Manager {
                 socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
                 out = new ObjectOutputStream(socket.getOutputStream());
 
-                Room r = new Room(rName, noOfPeople, availDays, area, 0, 0, roomImg, price);
+                Room r = new Room(rName, noOfPeople, availDays, area, 0, 0, roomImg, price,amenities,description);
 
                 // out the add room function
                 out.writeInt(MasterFunction.ADD_ROOM.getEncoded());

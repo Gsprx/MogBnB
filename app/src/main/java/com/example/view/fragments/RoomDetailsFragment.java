@@ -62,12 +62,17 @@ public class RoomDetailsFragment extends Fragment {
         viewPagerImages.setAdapter(adapter);
         // Set the room details in the TextViews
         tvRoomName.setText(room.getRoomName());
-        String details = "Capacity: " + room.getNoOfPersons() +
+        String details = "Description: " + room.getDescription() + "\n\n" +
+                "Capacity: " + room.getNoOfPersons() +
                 "\nArea: " + room.getArea() +
                 "\nStars: " + room.getStars() +
                 "\nReviews: " + room.getNoOfReviews() +
-                "\nPrice per day: " + room.getPricePerDay()+" Euros";
-        tvRoomDetails.setText(details);
+                "\nPrice per day: " + room.getPricePerDay() + " Euros" +
+                "\nAmenities:\n" + String.join("\n", room.getAmenities());
+
+
+
+                tvRoomDetails.setText(details);
 
         btnBookRoom.setOnClickListener(v ->executeBooking() );
 
