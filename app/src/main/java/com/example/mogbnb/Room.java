@@ -19,10 +19,12 @@ public class Room implements Serializable {
     private int noOfReviews;
     private double pricePerDay;
     private String roomImage; //Path to url of the image
+    private List<String> amenities;
+    private String description;
     private final int[] bookingTable; // 0 - No booking for the day, else booked by the user with id equal to the int.
     private static LocalDate currentDate;
 
-    public Room(String roomName, int noOfPersons, int availableDays, String area, double stars, int noOfReviews, String roomImage, double pricePerDay) {
+    public Room(String roomName, int noOfPersons, int availableDays, String area, double stars, int noOfReviews, String roomImage, double pricePerDay,List<String> amenities, String description) {
         this.roomName = roomName;
         this.noOfPersons = noOfPersons;
         this.availableDays = availableDays;
@@ -31,6 +33,8 @@ public class Room implements Serializable {
         this.noOfReviews = noOfReviews;
         this.roomImage = roomImage;
         this.pricePerDay = pricePerDay;
+        this.amenities = amenities;
+        this.description = description;
         bookingTable = new int[availableDays];
         //initiate all days as not booked in the booking table
         for(int i = 0; i<availableDays; i++){
@@ -262,7 +266,14 @@ public class Room implements Serializable {
     //
     // getter functions
     //
+    // Getters and Setters for new fields
+    public List<String> getAmenities() {
+        return amenities;
+    }
 
+    public String getDescription() {
+        return description;
+    }
     public double getPricePerDay() {
         return pricePerDay;
     }

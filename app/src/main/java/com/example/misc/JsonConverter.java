@@ -34,9 +34,6 @@ public class JsonConverter {
             // Iterate over each map in the list, extracting properties and using them
             // to manually instantiate Room objects via the Room constructor.
             for (Map<String, Object> roomMap : roomMaps) {
-                //Note the need to cast
-                // and convert numeric values (e.g., from Double to int) as Gson deserializes
-                // numeric values as Double by default.
                 String roomName = (String) roomMap.get("roomName");
                 int noOfPersons = ((Double) roomMap.get("noOfPersons")).intValue();
                 int availableDays = ((Double) roomMap.get("availableDays")).intValue();
@@ -45,9 +42,11 @@ public class JsonConverter {
                 int noOfReviews = ((Double) roomMap.get("noOfReviews")).intValue();
                 String roomImage = (String) roomMap.get("roomImage");
                 double pricePerDay = (Double) roomMap.get("pricePerDay");
+                List<String> amenities = (List<String>) roomMap.get("amenities");
+                String description = (String) roomMap.get("description");
 
                 // Create a new Room object using the extracted properties and add it to the list of rooms.
-                Room room = new Room(roomName, noOfPersons, availableDays, area, stars, noOfReviews, roomImage, pricePerDay);
+                Room room = new Room(roomName, noOfPersons, availableDays, area, stars, noOfReviews, roomImage, pricePerDay, amenities, description);
                 rooms.add(room);
             }
             return rooms;
@@ -56,6 +55,7 @@ public class JsonConverter {
             return null;
         }
     }
+
     /**
      * Main method to demonstrate deserialization of JSON data into Room objects.
      * Prints information about each room to the console.
@@ -71,7 +71,7 @@ public class JsonConverter {
                 System.out.println(room.toString());
                 System.out.println(room.getBookingTable()[3]);
 
-                System.out.println("Length "+room.getBookingTable().length);
+                System.out.println("Length " + room.getBookingTable().length);
             }
         }
     }
