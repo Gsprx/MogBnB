@@ -6,7 +6,7 @@
     "area": "Downtown",
     "stars": 4.5,
     "noOfReviews": 100,
-    "roomImage": "https://example.com/room1.jpg",
+    "roomImage": "app/src/main/res/drawable",
     "pricePerDay": 100.0
   },
   {

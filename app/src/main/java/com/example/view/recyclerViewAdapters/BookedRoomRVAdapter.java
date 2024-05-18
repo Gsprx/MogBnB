@@ -65,7 +65,7 @@ public class BookedRoomRVAdapter extends RecyclerView.Adapter<BookedRoomRVAdapte
 
     @Override
     public int getItemCount() {
-        return bookings.size();
+        return bookings != null ? bookings.size() : 0;
     }
 
     public class BookedRoomsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
