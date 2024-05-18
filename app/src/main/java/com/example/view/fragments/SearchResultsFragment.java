@@ -14,10 +14,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.misc.Config;
+import com.example.mogbnb.Filter;
+import com.example.mogbnb.MasterFunction;
 import com.example.mogbnb.R;
 import com.example.mogbnb.Room;
 import com.example.view.recyclerViewAdapters.SelectRoomRVAdapter;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -40,11 +47,14 @@ public class SearchResultsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-        //get rooms passed by the filter fragment
-        ArrayList<Room> rooms = getArguments()!=null ? (ArrayList<Room>) getArguments().getSerializable("rooms") : new ArrayList<>();
-        checkIn = (LocalDate) getArguments().getSerializable("cIn");
-        checkOut = (LocalDate) getArguments().getSerializable("cOut");
+        //get filters passed
+        Filter filter = (Filter) getArguments().getSerializable("filter");
+        checkIn = filter.getCheckIn();
+        checkOut = filter.getCheckOut();
 
+
+        //create array list of shown rooms
+        ArrayList<Room> rooms = new ArrayList<>();
         //get RV reference
         RecyclerView recyclerView = view.findViewById(R.id.rvSearchResults);
         //create RV adapter
@@ -62,6 +72,37 @@ public class SearchResultsFragment extends Fragment {
         //set layout for RV
         //TODO: Check if this code works (green fn implementation).
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
+        //run background thread to acquire filtered rooms and update rv adapter
+        new Thread(() -> {
+            //connect to master and send filter request
+            ArrayList<Room> result;
+            try {
+                Socket socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
+                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+
+                out.writeInt(MasterFunction.SEARCH_ROOM.getEncoded());
+                out.writeObject(filter);
+                out.flush();
+
+                //wait for master to return rooms
+                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+                result =  (ArrayList<Room>) in.readObject();
+
+
+            } catch (ClassNotFoundException | IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            //update adapter with the rooms returned
+            requireActivity().runOnUiThread(() -> {
+                adapter.setRooms(result);
+                adapter.notifyDataSetChanged();
+            });
+        }).start();
+
+
+
     }
 
     //method is called when a room is clicked in the list

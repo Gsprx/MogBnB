@@ -120,22 +120,12 @@ public class SearchFragment extends Fragment implements DatePickerDialog.OnDateS
                         .toLocalDate(),
                         noOfPeople.getText().toString().equals("") ? -1 : Integer.parseInt(noOfPeople.getText().toString()), maxPrice.getValue(), minRating.getRating());
 
-                // send request to master and wait for response
-                NetworkHandlerThread t = new NetworkHandlerThread(MasterFunction.SEARCH_ROOM.getEncoded(), filter);
-                t.start();
-                while (true) {
-                    if (t.result != null) break;
-                }
-
-                ArrayList<Room> rooms = (ArrayList<Room>) t.result;
 
                 // change fragment to search results
                 int containerViewId = R.id.main_frameLayout;
                 Fragment searchResultsFragment = new SearchResultsFragment();
                 Bundle args = new Bundle();
-                args.putSerializable("rooms", rooms);
-                args.putSerializable("cIn", checkIn.toInstant().atZone(defaultZoneId).toLocalDate());
-                args.putSerializable("cOut", checkOut.toInstant().atZone(defaultZoneId).toLocalDate());
+                args.putSerializable("filter", filter);
                 searchResultsFragment.setArguments(args);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

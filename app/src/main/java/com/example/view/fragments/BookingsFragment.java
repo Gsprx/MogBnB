@@ -38,10 +38,11 @@ public class BookingsFragment extends Fragment {
         // send request to master and wait for response
         NetworkHandlerThread t = new NetworkHandlerThread(MasterFunction.SHOW_BOOKINGS.getEncoded(), this.userID);
         t.start();
-
+        
         while (true) {
             if (t.result != null) break;
         }
+
         bookings = (HashMap<Room, ArrayList<LocalDate>>) t.result;
 
         // build the recycler view

@@ -18,7 +18,7 @@ public class NetworkHandlerThread extends Thread {
     Object data;
     public Object result;
 
-    public NetworkHandlerThread(int function, Object data) {
+    public NetworkHandlerThread(int function, Object data) throws RuntimeException {
         this.function = function;
         this.data = data;
         this.result = null;
@@ -52,6 +52,7 @@ public class NetworkHandlerThread extends Thread {
 
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             this.result = in.readObject();
+
 
         } catch (ClassNotFoundException | IOException e) {
             throw new RuntimeException(e);
@@ -87,9 +88,9 @@ public class NetworkHandlerThread extends Thread {
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             this.result = in.readObject();
 
-            in.close();
+            /*in.close();
             out.close();
-            socket.close();
+            socket.close();*/
 
         } catch (ClassNotFoundException | IOException e) {
             throw new RuntimeException(e);
