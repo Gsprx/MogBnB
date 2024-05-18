@@ -27,13 +27,17 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 
 public class SearchResultsFragment extends Fragment {
     LocalDate checkIn;
     LocalDate checkOut;
-    public SearchResultsFragment() {
-        // Required empty public constructor
+    int userID;
+    ArrayList<Room> rooms;
+    public SearchResultsFragment(int userID) {
+        this.userID = userID;
+        rooms = new ArrayList<>();
     }
 
 
@@ -52,9 +56,6 @@ public class SearchResultsFragment extends Fragment {
         checkIn = filter.getCheckIn();
         checkOut = filter.getCheckOut();
 
-
-        //create array list of shown rooms
-        ArrayList<Room> rooms = new ArrayList<>();
         //get RV reference
         RecyclerView recyclerView = view.findViewById(R.id.rvSearchResults);
         //create RV adapter
@@ -73,10 +74,9 @@ public class SearchResultsFragment extends Fragment {
         //TODO: Check if this code works (green fn implementation).
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        //run background thread to acquire filtered rooms and update rv adapter
+        // run background thread to acquire filtered rooms and update rv adapter
         new Thread(() -> {
-            //connect to master and send filter request
-            ArrayList<Room> result;
+            // connect to master and send filter request
             try {
                 Socket socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
@@ -85,31 +85,26 @@ public class SearchResultsFragment extends Fragment {
                 out.writeObject(filter);
                 out.flush();
 
-                //wait for master to return rooms
+                // wait for master to return rooms
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-                result =  (ArrayList<Room>) in.readObject();
-
-
+                rooms = (ArrayList<Room>) in.readObject();
             } catch (ClassNotFoundException | IOException e) {
                 throw new RuntimeException(e);
             }
 
-            //update adapter with the rooms returned
+            // update adapter with the rooms returned
             requireActivity().runOnUiThread(() -> {
-                adapter.setRooms(result);
+                adapter.setRooms(rooms);
                 adapter.notifyDataSetChanged();
             });
         }).start();
-
-
-
     }
 
     //method is called when a room is clicked in the list
     private void showRoomDetails(Room room) {
         int containerViewId = R.id.main_frameLayout;
 
-        Fragment roomDetails = new RoomDetailsFragment();
+        Fragment roomDetails = new RoomDetailsFragment(this.userID);
 
         Bundle args = new Bundle();
         args.putSerializable("room", room);

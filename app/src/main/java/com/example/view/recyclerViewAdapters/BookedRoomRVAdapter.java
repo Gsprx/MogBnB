@@ -34,6 +34,10 @@ public class BookedRoomRVAdapter extends RecyclerView.Adapter<BookedRoomRVAdapte
         }
     }
 
+    public void setBookings(HashMap<Room, ArrayList<LocalDate>> bookings) {
+        this.bookings = bookings;
+    }
+
     @NonNull
     @Override
     public BookedRoomsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

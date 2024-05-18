@@ -6,33 +6,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.misc.Config;
 import com.example.mogbnb.MasterFunction;
 import com.example.mogbnb.R;
 import com.example.mogbnb.Room;
 import com.example.view.ImageSliderAdapter;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import com.example.view.NetworkHandlerThread;
 
 public class RoomDetailsFragment extends Fragment {
     Room room;
     LocalDate checkIn;
     LocalDate checkOut;
-    public RoomDetailsFragment() {
-        // Required empty public constructor
+    int userID;
+    public RoomDetailsFragment(int userID) {
+        this.userID = userID;
     }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,20 +76,34 @@ public class RoomDetailsFragment extends Fragment {
     private void executeBooking() {
         ArrayList<Object> bookingData = new ArrayList<>();
         bookingData.add(room.getRoomName());
-        bookingData.add(/* user ID */ 1); // TODO Replace with actual user ID
+        bookingData.add(this.userID);
         bookingData.add(checkIn);
         bookingData.add(checkOut);
 
-        NetworkHandlerThread bookingThread = new NetworkHandlerThread(MasterFunction.BOOK_ROOM.getEncoded(), bookingData);
-        bookingThread.start();
-        while (true) {
-            if (bookingThread.result != null) break;
-        }
-        int result = (int) bookingThread.result;
-        if (result == 1) {
-            Toast.makeText(getContext(), "Booking successful.", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(getContext(), "Booking was unsuccessful, days requested were already booked!", Toast.LENGTH_LONG).show();
-        }
+        new Thread(() -> {
+            int result;
+            try {
+                Socket socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
+                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+
+                out.writeInt(MasterFunction.BOOK_ROOM.getEncoded());
+                out.writeObject(bookingData);
+                out.flush();
+
+                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+                result = (int) in.readObject();
+
+                // update adapter with the rooms returned
+                requireActivity().runOnUiThread(() -> {
+                    if (result == 1) {
+                        Toast.makeText(getContext(), "Booking successful!", Toast.LENGTH_LONG).show();
+                    } else if (result == 0) {
+                        Toast.makeText(getContext(), "Booking was unsuccessful, days requested were already booked!", Toast.LENGTH_LONG).show();
+                    }
+                });
+            } catch (ClassNotFoundException | IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 }
