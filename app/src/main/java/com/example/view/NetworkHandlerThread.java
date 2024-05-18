@@ -32,6 +32,10 @@ public class NetworkHandlerThread extends Thread {
                 break;
             case 7:
                 showBookings();
+                break;
+            case 9:
+                bookRoom();
+                break;
             default:
                 break;
         }
@@ -71,5 +75,24 @@ public class NetworkHandlerThread extends Thread {
             throw new RuntimeException(e);
         }
     }
+    private void bookRoom() {
+        try {
+            Socket socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 
+            out.writeInt(MasterFunction.BOOK_ROOM.getEncoded());
+            out.writeObject(data);
+            out.flush();
+
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            this.result = in.readObject();
+
+            in.close();
+            out.close();
+            socket.close();
+
+        } catch (ClassNotFoundException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

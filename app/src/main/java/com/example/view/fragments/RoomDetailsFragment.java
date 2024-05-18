@@ -1,6 +1,7 @@
 package com.example.view.fragments;
 
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,24 +10,38 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
+
+import com.example.mogbnb.MasterFunction;
 import com.example.mogbnb.R;
 import com.example.mogbnb.Room;
+import com.example.view.ImageSliderAdapter;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import com.example.view.NetworkHandlerThread;
 
 public class RoomDetailsFragment extends Fragment {
-
-    // TODO TEST OBJECT TO SEE IF THIS WORKS
-    private Room room = new Room("SKIBIDDI", 2, 365, "GYATTLAND", 4.5, 150, "url_to_image", 299.99);
-
+    Room room;
+    LocalDate checkIn;
+    LocalDate checkOut;
     public RoomDetailsFragment() {
         // Required empty public constructor
     }
-
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            room = (Room) getArguments().getSerializable("room");
+            LocalDate checkIn = (LocalDate) getArguments().getSerializable("cIn");
+            LocalDate checkOut = (LocalDate) getArguments().getSerializable("cOut");
+        }
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_roomdetails, container, false);
@@ -34,13 +49,15 @@ public class RoomDetailsFragment extends Fragment {
         ViewPager2 viewPagerImages = view.findViewById(R.id.viewPagerImages);
         TextView tvRoomName = view.findViewById(R.id.tvRoomName);
         TextView tvRoomDetails = view.findViewById(R.id.tvRoomDetails);
+        tvRoomDetails.setMovementMethod(new ScrollingMovementMethod());
+
+
         Button btnBookRoom = view.findViewById(R.id.btnBookRoom);
 
-        // TODO replace with actual images and do the bitmap image converter
-        //List<Integer> imageList = Arrays.asList(R.drawable.image1, R.drawable.image2, R.drawable.image3);
-      //  ImageSliderAdapter adapter = new ImageSliderAdapter(imageList);
-      //  viewPagerImages.setAdapter(adapter);
-
+        // Set up image slider
+        List<String> imagePaths = room.getdirRoomImages();
+        ImageSliderAdapter adapter = new ImageSliderAdapter(imagePaths);
+        viewPagerImages.setAdapter(adapter);
         // Set the room details in the TextViews
         tvRoomName.setText(room.getRoomName());
         String details = "Capacity: " + room.getNoOfPersons() +
@@ -50,47 +67,30 @@ public class RoomDetailsFragment extends Fragment {
                 "\nPrice per day: " + room.getPricePerDay()+" Euros";
         tvRoomDetails.setText(details);
 
-        btnBookRoom.setOnClickListener(v -> {
-            // TODO implement the booking procedure
-            Toast.makeText(getContext(), "Booking initiated!", Toast.LENGTH_SHORT).show();
-        });
+        btnBookRoom.setOnClickListener(v ->executeBooking() );
 
         return view;
     }
-/*
-    public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.SliderViewHolder> {
-        private List<Integer> images;
+    private void executeBooking() {
+        ArrayList<Object> bookingData = new ArrayList<>();
+        bookingData.add(room.getRoomName());
+        bookingData.add(/* user ID */ 1); // TODO Replace with actual user ID
+        bookingData.add(checkIn);
+        bookingData.add(checkOut);
 
-        public ImageSliderAdapter(List<Integer> images) {
-            this.images = images;
-        }
-
-        @NonNull
-       // @Override
-        //public SliderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            //View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.slider_item, parent, false);
-           // return new SliderViewHolder(view);
-       // }
-
-        @Override
-        public void onBindViewHolder(@NonNull SliderViewHolder holder, int position) {
-            holder.imageView.setImageResource(images.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return images.size();
-        }
-
-        class SliderViewHolder extends RecyclerView.ViewHolder {
-            ImageView imageView;
-
-            public SliderViewHolder(@NonNull View itemView) {
-                super(itemView);
-              //  imageView = itemView.findViewById(R.id.imageViewItem);
+        NetworkHandlerThread bookingThread = new NetworkHandlerThread(MasterFunction.BOOK_ROOM.getEncoded(), bookingData);
+        bookingThread.start();
+        try {
+            bookingThread.join();
+            int result = (int) bookingThread.result;
+            if (result == 1) {
+                Toast.makeText(getContext(), "Booking successful.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getContext(), "Booking was unsuccessful, days requested were already booked!", Toast.LENGTH_LONG).show();
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "An error occurred during booking.", Toast.LENGTH_LONG).show();
         }
     }
-    */
-
 }

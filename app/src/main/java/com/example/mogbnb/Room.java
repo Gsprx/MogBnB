@@ -2,9 +2,12 @@ package com.example.mogbnb;
 
 import androidx.annotation.NonNull;
 
+import java.io.File;
 import java.io.Serializable;
 import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Room implements Serializable {
@@ -203,7 +206,21 @@ public class Room implements Serializable {
         Room room = (Room) o;
         return Objects.equals(roomName, room.roomName);
     }
-
+    public List<String> getdirRoomImages() {
+        List<String> imagePaths = new ArrayList<>();
+        File dir = new File(roomImage);
+        if (dir.exists() && dir.isDirectory()) {
+            File[] files = dir.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile() && (file.getName().endsWith(".jpg") || file.getName().endsWith(".png"))) {
+                        imagePaths.add(file.getAbsolutePath());
+                    }
+                }
+            }
+        }
+        return imagePaths;
+    }
     @Override
     public int hashCode() {
         return Objects.hash(roomName);
