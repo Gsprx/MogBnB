@@ -30,6 +30,9 @@ public class NetworkHandlerThread extends Thread {
             case 5:
                 searchRoom();
                 break;
+            case 6:
+                rateRoom();
+                break;
             case 7:
                 showBookings();
                 break;
@@ -38,6 +41,40 @@ public class NetworkHandlerThread extends Thread {
                 break;
             default:
                 break;
+        }
+    }
+
+
+    private void rateRoom() {
+        try {
+            Socket socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            //data includes the room name and rating
+            ArrayList<Object> roomRating = (ArrayList<Object>) data;
+            String roomName = (String) roomRating.get(0);
+            double rating = (Double) roomRating.get(1);
+
+            // Reconnect to the server for rating
+            socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
+            out = new ObjectOutputStream(socket.getOutputStream());
+
+            // Send the command to rate the room
+            out.writeInt(MasterFunction.RATE_ROOM.getEncoded());
+            out.writeObject(roomRating);
+            out.flush();
+
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            // Await confirmation from the server
+            int result = (int) in.readObject();
+            this.result = (result == 1) ? "Rating updated successfully." : "An error occurred while rating this room.";
+
+            // Close the final connections
+            in.close();
+            out.close();
+            socket.close();
+
+        } catch (ClassNotFoundException | IOException e) {
+            throw new RuntimeException("An error occurred while communicating with the server: " + e.getMessage(), e);
         }
     }
 
@@ -88,12 +125,10 @@ public class NetworkHandlerThread extends Thread {
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             this.result = in.readObject();
 
-            /*in.close();
-            out.close();
-            socket.close();*/
-
         } catch (ClassNotFoundException | IOException e) {
             throw new RuntimeException(e);
         }
     }
+    
+    
 }
