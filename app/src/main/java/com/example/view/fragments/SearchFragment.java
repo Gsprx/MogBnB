@@ -17,22 +17,13 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.misc.Config;
 import com.example.misc.Misc;
 import com.example.mogbnb.Filter;
-import com.example.mogbnb.MasterFunction;
 import com.example.mogbnb.R;
-import com.example.mogbnb.Room;
-import com.example.view.NetworkHandlerThread;
 import com.google.android.material.slider.Slider;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -67,7 +58,7 @@ public class SearchFragment extends Fragment implements DatePickerDialog.OnDateS
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_searach, container, false);
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         // get the components of the view
         area = view.findViewById(R.id.search_area_entry);
