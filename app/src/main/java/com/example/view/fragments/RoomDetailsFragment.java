@@ -10,9 +10,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.misc.Config;
+import com.example.mogbnb.Filter;
 import com.example.mogbnb.MasterFunction;
 import com.example.mogbnb.R;
 import com.example.mogbnb.Room;
@@ -28,6 +31,7 @@ import java.util.List;
 
 public class RoomDetailsFragment extends Fragment {
     Room room;
+    Filter filter;
     LocalDate checkIn;
     LocalDate checkOut;
     int userID;
@@ -40,8 +44,9 @@ public class RoomDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             room = (Room) getArguments().getSerializable("room");
-            checkIn = (LocalDate) getArguments().getSerializable("cIn");
-            checkOut = (LocalDate) getArguments().getSerializable("cOut");
+            filter = (Filter) getArguments().getSerializable("filter") ;
+            checkIn = filter.getCheckIn();
+            checkOut = filter.getCheckOut();
         }
     }
     @Override
@@ -55,6 +60,15 @@ public class RoomDetailsFragment extends Fragment {
 
 
         Button btnBookRoom = view.findViewById(R.id.btnBookRoom);
+        Button btnReturnToSearchResults = view.findViewById(R.id.btnRoomDetailsReturn);
+        btnReturnToSearchResults.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //return to search page using the same filters pre applied
+                returnToSearchResults(filter);
+            }
+        });
+
 
         // Set up image slider
         List<String> imagePaths = room.getdirRoomImages();
@@ -78,6 +92,27 @@ public class RoomDetailsFragment extends Fragment {
 
         return view;
     }
+
+    private void returnToSearchResults(Filter filter) {
+        int containerViewId = R.id.main_frameLayout;
+
+        Fragment searchResults = new SearchResultsFragment(this.userID);
+
+        Bundle args = new Bundle();
+        args.putSerializable("filter", filter);
+
+        searchResults.setArguments(args);
+
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(containerViewId, searchResults);
+
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
     private void executeBooking() {
         ArrayList<Object> bookingData = new ArrayList<>();
         bookingData.add(room.getRoomName());
@@ -88,6 +123,7 @@ public class RoomDetailsFragment extends Fragment {
         new Thread(() -> {
             int result;
             try {
+                //connect to master
                 Socket socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 
@@ -98,7 +134,7 @@ public class RoomDetailsFragment extends Fragment {
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
                 result = (int) in.readObject();
 
-                // update adapter with the rooms returned
+                //show toast message depending on the result from the server
                 requireActivity().runOnUiThread(() -> {
                     if (result == 1) {
                         Toast.makeText(getContext(), "Booking successful!", Toast.LENGTH_LONG).show();

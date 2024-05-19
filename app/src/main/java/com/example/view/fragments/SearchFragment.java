@@ -60,6 +60,7 @@ public class SearchFragment extends Fragment implements DatePickerDialog.OnDateS
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
+
         // get the components of the view
         area = view.findViewById(R.id.search_area_entry);
         noOfPeople = view.findViewById(R.id.search_numOfPeople_entry);
@@ -70,6 +71,20 @@ public class SearchFragment extends Fragment implements DatePickerDialog.OnDateS
         checkInBtn = view.findViewById(R.id.search_add_checkIn);
         checkOutBtn = view.findViewById(R.id.search_add_checkOut);
         confirmBtn = view.findViewById(R.id.search_confirm_btn);
+
+
+        // get previous filter if returned from search results
+        Filter filter = (Filter) getArguments().getSerializable("filter");
+        if(filter != null){
+            area.setText(filter.getArea());
+            noOfPeople.setText(filter.getNoOfPersons());
+            maxPrice.setValue((float) filter.getPrice());
+            minRating.setRating((float) filter.getStars());
+            checkInShow.setText(filter.getCheckIn().toString());
+            checkOutShow.setText(filter.getCheckOut().toString());
+            checkIn = Date.from(filter.getCheckIn().atStartOfDay().atZone(defaultZoneId.systemDefault()).toInstant());
+            checkOut = Date.from(filter.getCheckOut().atStartOfDay().atZone(defaultZoneId.systemDefault()).toInstant());
+        }
 
         // when checkIn button is pressed
         checkInBtn.setOnClickListener(new View.OnClickListener() {
