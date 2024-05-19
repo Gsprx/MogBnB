@@ -321,8 +321,11 @@ public class Room implements Serializable {
                 ", noOfReviews=" + noOfReviews +
                 ", pricePerDay=" + pricePerDay +
                 ", roomImage='" + roomImage + '\'' +
+                ", description='" + description + '\'' +
+                ", amenities=" + amenities +
                 '}';
     }
+
 
 }
 
