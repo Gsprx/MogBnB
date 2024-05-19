@@ -74,16 +74,18 @@ public class SearchFragment extends Fragment implements DatePickerDialog.OnDateS
 
 
         // get previous filter if returned from search results
-        Filter filter = (Filter) getArguments().getSerializable("filter");
-        if(filter != null){
-            area.setText(filter.getArea());
-            noOfPeople.setText(filter.getNoOfPersons());
-            maxPrice.setValue((float) filter.getPrice());
-            minRating.setRating((float) filter.getStars());
-            checkInShow.setText(filter.getCheckIn().toString());
-            checkOutShow.setText(filter.getCheckOut().toString());
-            checkIn = Date.from(filter.getCheckIn().atStartOfDay().atZone(defaultZoneId.systemDefault()).toInstant());
-            checkOut = Date.from(filter.getCheckOut().atStartOfDay().atZone(defaultZoneId.systemDefault()).toInstant());
+        if(getArguments()!=null) {
+            Filter filter = (Filter) getArguments().getSerializable("filter");
+            if (filter != null) {
+                area.setText(filter.getArea());
+                noOfPeople.setText(filter.getNoOfPersons());
+                maxPrice.setValue((float) filter.getPrice());
+                minRating.setRating((float) filter.getStars());
+                checkInShow.setText(filter.getCheckIn().toString());
+                checkOutShow.setText(filter.getCheckOut().toString());
+                checkIn = Date.from(filter.getCheckIn().atStartOfDay().atZone(defaultZoneId.systemDefault()).toInstant());
+                checkOut = Date.from(filter.getCheckOut().atStartOfDay().atZone(defaultZoneId.systemDefault()).toInstant());
+            }
         }
 
         // when checkIn button is pressed
