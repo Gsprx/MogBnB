@@ -72,6 +72,7 @@ public class RoomDetailsFragment extends Fragment {
 
         // Set up image slider
         List<String> imagePaths = room.getdirRoomImages();
+        System.out.println(imagePaths);
         ImageSliderAdapter adapter = new ImageSliderAdapter(imagePaths);
         viewPagerImages.setAdapter(adapter);
         // Set the room details in the TextViews

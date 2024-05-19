@@ -6,7 +6,7 @@
     "area": "Downtown",
     "stars": 4.5,
     "noOfReviews": 100,
-    "roomImage": "app/src/main/res/drawable/Sithonia",
+    "roomImage": "app/src/main/res/Assets/Sithonia",
     "pricePerDay": 100.0,
     "amenities": ["Wi-Fi", "Air Conditioning", "Television", "Mini Bar"],
     "description": "Comfortable room with a city view, ideal for couples."
