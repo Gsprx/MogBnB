@@ -8,90 +8,124 @@
     android:outlineAmbientShadowColor="#FBFBFB"
     tools:context="com.example.view.fragments.RoomDetailsFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" >
 
-        <!-- Image Slider -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <!-- Room Information TextView -->
+            <!-- Image Slider -->
 
-        <!-- Booking Button -->
+            <!-- Room Information TextView -->
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPagerImages"
-            android:layout_width="315dp"
-            android:layout_height="209dp"
-            android:layout_marginTop="44dp"
-            android:background="@color/design_default_color_primary"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <!-- Booking Button -->
 
-        <TextView
-            android:id="@+id/tvRoomName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="#FFFFFF"
-            android:backgroundTint="#FFFFFF"
-            android:fontFamily="cursive"
-            android:padding="16dp"
-            android:text="Room Name"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/viewPagerImages" />
+            <FrameLayout
+                android:id="@+id/frameLayout31"
+                android:layout_width="match_parent"
+                android:layout_height="128dp"
+                android:layout_marginBottom="603dp"
+                android:background="@color/material_dynamic_tertiary40"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0">
 
-        <TextView
-            android:id="@+id/tvRoomDetails"
-            android:layout_width="328dp"
-            android:layout_height="237dp"
-            android:layout_marginTop="84dp"
-            android:fontFamily="sans-serif-medium"
-            android:padding="16dp"
-            android:text="Room Details"
-            android:textSize="16sp"
-            android:scrollbars = "vertical"
-            app:layout_constraintHorizontal_bias="0.487"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/viewPagerImages" />
+            </FrameLayout>
 
-        <Button
-            android:id="@+id/btnBookRoom"
-            style="@style/Widget.AppCompat.Button"
-            android:layout_width="253dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="44dp"
-            android:layout_marginEnd="76dp"
-            android:text="Book Now!"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvRoomDetails"
-            app:strokeColor="#9F2DAC" />
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPagerImages"
+                android:layout_width="315dp"
+                android:layout_height="209dp"
+                android:layout_marginTop="164dp"
+                android:background="@color/design_default_color_primary"
+                app:layout_constraintHorizontal_bias="0.562"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textView25"
-            android:layout_width="146dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="124dp"
-            android:layout_marginBottom="4dp"
-            android:background="#FFFFFF"
-            android:backgroundTint="#FEF7FF"
-            android:lineSpacingExtra="8sp"
-            android:text="Room Details"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textColor="#9C27B0"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:typeface="serif"
-            app:layout_constraintBottom_toTopOf="@+id/viewPagerImages"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <TextView
+                android:id="@+id/tvRoomName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="#FFFFFF"
+                android:backgroundTint="#FFFFFF"
+                android:fontFamily="cursive"
+                android:padding="16dp"
+                android:text="Room Name"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/viewPagerImages" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/tvRoomDetails"
+                android:layout_width="328dp"
+                android:layout_height="237dp"
+                android:layout_marginTop="84dp"
+                android:fontFamily="sans-serif-medium"
+                android:padding="16dp"
+                android:scrollbars="vertical"
+                android:text="Room Details"
+                android:textSize="16sp"
+                app:layout_constraintHorizontal_bias="0.487"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/viewPagerImages" />
+
+            <Button
+                android:id="@+id/btnBookRoom"
+                style="@style/Widget.AppCompat.Button"
+                android:layout_width="253dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="44dp"
+                android:layout_marginEnd="76dp"
+                android:text="Book Now!"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvRoomDetails"
+                app:strokeColor="#9F2DAC" />
+
+            <Button
+                android:id="@+id/btnRoomDetailsReturn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="32dp"
+                android:backgroundTint="#331A60"
+                android:text="Back"
+                app:icon="@android:drawable/ic_menu_revert"
+                app:iconTint="#FF0000"
+                app:layout_constraintBottom_toBottomOf="@+id/frameLayout31"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView26"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="48dp"
+                android:layout_marginBottom="8dp"
+                android:text="Room Details"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="#FFFFFF"
+                android:textSize="34sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/frameLayout31"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/frameLayout31"
+                app:layout_constraintVertical_bias="0.32999998" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
 </FrameLayout>
