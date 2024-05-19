@@ -1,74 +1,74 @@
 [
   {
-    "roomName": "Αίθουσα Σιθωνίας",
+    "roomName": "Sithonia Hall",
     "noOfPersons": 2,
     "availableDays": 7,
-    "area": "Κέντρο",
+    "area": "Downtown",
     "stars": 4.5,
     "noOfReviews": 100,
     "roomImage": "app/src/main/res/drawable/sithonia_room.jpg",
     "pricePerDay": 100.0,
-    "amenities": ["Wi-Fi", "Κλιματισμός", "Τηλεόραση", "Μίνι Μπαρ"],
-    "description": "Άνετη αίθουσα με θέα στην πόλη, ιδανική για ζευγάρια."
+    "amenities": ["Wi-Fi", "Air Conditioning", "Television", "Mini Bar"],
+    "description": "Comfortable room with a city view, ideal for couples."
   },
   {
-    "roomName": "Σουίτα Παραλίας",
-    "noOfPersons": 3,
-    "availableDays": 5,
-    "area": "Παραθαλάσσια",
-    "stars": 4.8,
-    "noOfReviews": 120,
-    "roomImage": "app/src/main/res/drawable/beach_suite.jpg",
-    "pricePerDay": 150.0,
-    "amenities": ["Wi-Fi", "Κλιματισμός", "Τηλεόραση", "Θέα στη Θάλασσα"],
-    "description": "Πολυτελής σουίτα με απίστευτη θέα στη θάλασσα και άμεση πρόσβαση στην παραλία."
-  },
-  {
-    "roomName": "Διαμέρισμα Λιμνών",
+    "roomName": "Lake Apartment",
     "noOfPersons": 4,
     "availableDays": 6,
-    "area": "Λίμνη",
+    "area": "Lake",
     "stars": 4.2,
     "noOfReviews": 110,
     "roomImage": "app/src/main/res/drawable/lake_apartment.jpg",
     "pricePerDay": 80.0,
-    "amenities": ["Wi-Fi", "Τζάκι", "Κουζίνα", "Θέα στη Λίμνη"],
-    "description": "Όμορφο διαμέρισμα με θέα στη λίμνη, ιδανικό για οικογένειες."
+    "amenities": ["Wi-Fi", "Fireplace", "Kitchen", "Lake View"],
+    "description": "Beautiful apartment with a lake view, ideal for families."
   },
   {
-    "roomName": "Πανδοχείο Βουνού",
+    "roomName": "Beachfront Suite",
+    "noOfPersons": 3,
+    "availableDays": 5,
+    "area": "Seaside",
+    "stars": 4.8,
+    "noOfReviews": 120,
+    "roomImage": "app/src/main/res/drawable/beach_suite.jpg",
+    "pricePerDay": 150.0,
+    "amenities": ["Wi-Fi", "Air Conditioning", "Television", "Sea View"],
+    "description": "Luxury suite with stunning sea views and direct beach access."
+  },
+  {
+    "roomName": "Mountain Inn",
     "noOfPersons": 2,
     "availableDays": 10,
-    "area": "Ορεινή Περιοχή",
+    "area": "Mountain Area",
     "stars": 3.5,
     "noOfReviews": 75,
     "roomImage": "app/src/main/res/drawable/mountain_inn.jpg",
     "pricePerDay": 90.0,
-    "amenities": ["Wi-Fi", "Θέρμανση", "Καφέ-Μπαρ", "Πεζοπορία"],
-    "description": "Ζεστό πανδοχείο στο βουνό, ιδανικό για περιπετειώδεις επισκέπτες."
+    "amenities": ["Wi-Fi", "Heating", "Café-Bar", "Hiking"],
+    "description": "Cozy mountain inn, ideal for adventurous visitors."
   },
   {
-    "roomName": "Δωμάτιο Ολυμπίας",
+    "roomName": "Olympia Room",
     "noOfPersons": 1,
     "availableDays": 8,
-    "area": "Ιστορικό Κέντρο",
+    "area": "Historic Center",
     "stars": 4.6,
     "noOfReviews": 160,
     "roomImage": "app/src/main/res/drawable/olympia_room.jpg",
     "pricePerDay": 70.0,
-    "amenities": ["Wi-Fi", "Κλιματισμός", "Αρχαιολογικοί Χώροι", "Ξεναγήσεις"],
-    "description": "Άνετο δωμάτιο κοντά στα αρχαιολογικά αξιοθέατα της Ολυμπίας."
+    "amenities": ["Wi-Fi", "Air Conditioning", "Archaeological Sites", "Guided Tours"],
+    "description": "Comfortable room close to the archaeological attractions of Olympia."
   },
   {
-    "roomName": "Βίλα Θεσσαλονίκης",
+    "roomName": "Thessaloniki Villa",
     "noOfPersons": 5,
     "availableDays": 9,
-    "area": "Προάστιο",
+    "area": "Suburb",
     "stars": 5.0,
     "noOfReviews": 200,
     "roomImage": "app/src/main/res/drawable/thessaloniki_villa.jpg",
     "pricePerDay": 200.0,
-    "amenities": ["Wi-Fi", "Ιδιωτική Πισίνα", "Κήπος", "Γκαράζ"],
-    "description": "Πολυτελής βίλα με ιδιωτική πισίνα και κήπο, ιδανική για μεγάλες οικογένειες."
+    "amenities": ["Wi-Fi", "Private Pool", "Garden", "Garage"],
+    "description": "Luxury villa with a private pool and garden, ideal for large families."
   }
 ]
