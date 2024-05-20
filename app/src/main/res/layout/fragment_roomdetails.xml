@@ -37,17 +37,6 @@
 
             </FrameLayout>
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewPagerImages"
-                android:layout_width="315dp"
-                android:layout_height="209dp"
-                android:layout_marginTop="164dp"
-                android:background="@color/design_default_color_primary"
-                app:layout_constraintHorizontal_bias="0.562"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <TextView
                 android:id="@+id/tvRoomName"
                 android:layout_width="0dp"
@@ -71,6 +60,7 @@
                 android:layout_width="328dp"
                 android:layout_height="237dp"
                 android:layout_marginTop="84dp"
+                android:background="#D5A3DD"
                 android:fontFamily="sans-serif-medium"
                 android:padding="16dp"
                 android:scrollbars="vertical"
@@ -124,6 +114,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/frameLayout31"
                 app:layout_constraintVertical_bias="0.32999998" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPagerImages"
+                android:layout_width="315dp"
+                android:layout_height="209dp"
+                android:layout_marginTop="156dp"
+                android:background="@color/design_default_color_primary"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

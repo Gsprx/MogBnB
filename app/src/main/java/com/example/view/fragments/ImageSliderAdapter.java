@@ -1,6 +1,5 @@
 package com.example.view.fragments;
 
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,9 @@ public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.
     @Override
     public void onBindViewHolder(@NonNull SliderViewHolder holder, int position) {
         String imagePath = imagePaths.get(position);
-        holder.imageView.setImageURI(Uri.parse(imagePath));
+
+        int imageResId = holder.imageView.getContext().getResources().getIdentifier(imagePath, "drawable", holder.imageView.getContext().getPackageName());
+        holder.imageView.setImageResource(imageResId);
     }
 
     @Override

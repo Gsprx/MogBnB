@@ -6,6 +6,7 @@ import com.example.misc.TypeChecking;
 import com.example.mogbnb.MasterFunction;
 import com.example.mogbnb.Room;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -183,9 +184,24 @@ public class Manager {
                 amenities.add(amenity);
             }
         }
+        inp = new Scanner(System.in);
+        System.out.print("[Image directory name]: ");
+        roomImg = inp.nextLine();
+        // Create directory if it doesn't exist
+        String dirPath = Config.ASSETSPATH + roomImg;
+        File dir = new File(dirPath);
+        if (!dir.exists()) {
+            if (dir.mkdirs()) {
+                System.out.println("Directory created: " + dirPath);
+            } else {
+                System.out.println("Failed to create directory: " + dirPath);
+                return;
+            }
+        }
+        if (roomImg.equals("exit")) { System.out.println("Canceling...\n"); return; }
 
         System.out.println("\nProceeding to add room: \nname: " + rName + "\nmax-people: " + noOfPeople + "\n" +
-                "calendar-days: " + availDays + "\narea: " + area + "\nprice: " + price + "\nimg-path: " + roomImg +
+                "calendar-days: " + availDays + "\narea: " + area + "\nprice: " + price + "\nimg-path: " + dirPath +
                 "\ndescription: " + description + "\nAmenities: " + String.join(", ", amenities));
         System.out.println("\nAre you sure?[Y/n]");
         String ans;

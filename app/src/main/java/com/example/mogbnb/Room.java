@@ -210,6 +210,7 @@ public class Room implements Serializable {
         Room room = (Room) o;
         return Objects.equals(roomName, room.roomName);
     }
+
     public List<String> getdirRoomImages() {
         List<String> imagePaths = new ArrayList<>();
         File dir = new File(roomImage);
@@ -225,6 +226,7 @@ public class Room implements Serializable {
         }
         return imagePaths;
     }
+
     @Override
     public int hashCode() {
         return Objects.hash(roomName);

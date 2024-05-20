@@ -6,7 +6,7 @@
     "area": "Downtown",
     "stars": 4.5,
     "noOfReviews": 100,
-    "roomImage": "app/src/main/res/drawable/sithonia_room.jpg",
+    "roomImage": "app/src/main/res/Assets/Sithonia",
     "pricePerDay": 100.0,
     "amenities": ["Wi-Fi", "Air Conditioning", "Television", "Mini Bar"],
     "description": "Comfortable room with a city view, ideal for couples."
@@ -18,7 +18,7 @@
     "area": "Lake",
     "stars": 4.2,
     "noOfReviews": 110,
-    "roomImage": "app/src/main/res/drawable/lake_apartment.jpg",
+    "roomImage": "app/src/main/res/Assets/Lake",
     "pricePerDay": 80.0,
     "amenities": ["Wi-Fi", "Fireplace", "Kitchen", "Lake View"],
     "description": "Beautiful apartment with a lake view, ideal for families."
@@ -30,7 +30,7 @@
     "area": "Seaside",
     "stars": 4.8,
     "noOfReviews": 120,
-    "roomImage": "app/src/main/res/drawable/beach_suite.jpg",
+    "roomImage": "app/src/main/res/Assets/Beachfront",
     "pricePerDay": 150.0,
     "amenities": ["Wi-Fi", "Air Conditioning", "Television", "Sea View"],
     "description": "Luxury suite with stunning sea views and direct beach access."
@@ -42,7 +42,7 @@
     "area": "Mountain Area",
     "stars": 3.5,
     "noOfReviews": 75,
-    "roomImage": "app/src/main/res/drawable/mountain_inn.jpg",
+    "roomImage": "app/src/main/res/Assets/mountain",
     "pricePerDay": 90.0,
     "amenities": ["Wi-Fi", "Heating", "Café-Bar", "Hiking"],
     "description": "Cozy mountain inn, ideal for adventurous visitors."
@@ -54,7 +54,7 @@
     "area": "Historic Center",
     "stars": 4.6,
     "noOfReviews": 160,
-    "roomImage": "app/src/main/res/drawable/olympia_room.jpg",
+    "roomImage": "app/src/main/res/Assets/Olympia",
     "pricePerDay": 70.0,
     "amenities": ["Wi-Fi", "Air Conditioning", "Archaeological Sites", "Guided Tours"],
     "description": "Comfortable room close to the archaeological attractions of Olympia."
@@ -66,7 +66,7 @@
     "area": "Suburb",
     "stars": 5.0,
     "noOfReviews": 200,
-    "roomImage": "app/src/main/res/drawable/thessaloniki_villa.jpg",
+    "roomImage": "app/src/main/res/Assets/thessaloniki",
     "pricePerDay": 200.0,
     "amenities": ["Wi-Fi", "Private Pool", "Garden", "Garage"],
     "description": "Luxury villa with a private pool and garden, ideal for large families."
