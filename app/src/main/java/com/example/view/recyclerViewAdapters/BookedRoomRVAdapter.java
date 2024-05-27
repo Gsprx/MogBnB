@@ -28,11 +28,14 @@ import java.util.List;
 import java.util.Set;
 
 public class BookedRoomRVAdapter extends RecyclerView.Adapter<BookedRoomRVAdapter.BookedRoomsViewHolder> {
-    private HashMap<Room, ArrayList<LocalDate>> bookings;
+    private ArrayList<Room> rooms;
+    private ArrayList<LocalDate[]> dates;
     private Context context;
+    private ItemClickListener clickListener;
 
-    public BookedRoomRVAdapter(Fragment fragment, HashMap<Room, ArrayList<LocalDate>> bookings) {
-        this.bookings = bookings;
+    public BookedRoomRVAdapter(Fragment fragment, ArrayList<Room> rooms, ArrayList<LocalDate[]> dates) {
+        this.rooms = rooms;
+        this.dates = dates;
         if (fragment.getContext() != null) {
             this.context = fragment.getContext();
         } else {
@@ -40,9 +43,19 @@ public class BookedRoomRVAdapter extends RecyclerView.Adapter<BookedRoomRVAdapte
         }
     }
 
-    public void setBookings(HashMap<Room, ArrayList<LocalDate>> bookings) {
-        this.bookings = bookings;
+    public void setRooms(ArrayList<Room> rooms) {
+        this.rooms = rooms;
     }
+
+    public void setDates(ArrayList<LocalDate[]> dates) {
+        this.dates = dates;
+    }
+
+    //catch click events with a click listener that we set
+    public void setClickListener(ItemClickListener listener){
+        this.clickListener = listener;
+    }
+
 
     @NonNull
     @Override
@@ -56,26 +69,31 @@ public class BookedRoomRVAdapter extends RecyclerView.Adapter<BookedRoomRVAdapte
     //Assign(bind) the data to use for each row
     //changes the data on the recycler view based on the position of the recycler
     public void onBindViewHolder(@NonNull BookedRoomsViewHolder holder, int position) {
-        // get the set of rooms the tenant has made a booking for
-        Set<Room> roomsSet = bookings.keySet();
-        // convert this set to a List
-        List<Room> rooms = new ArrayList<>(roomsSet.size());
-        rooms.addAll(roomsSet);
 
         // set the roomName textView
         holder.roomNameTV.setText(rooms.get(position).getRoomName());
         // set the imageview
         holder.imageView.setImageResource(R.drawable.child_po);
+        for (int i=0; i<60; i++){
+            System.out.println(dates);
+            System.out.println(dates);
+        }
+
         // set check in textView
-        holder.checkInTV.setText(bookings.get(rooms.get(position)).get(0).toString());
+        holder.checkInTV.setText(dates.get(position)[0].toString());
         // set check out textView
-        int daysBooked = bookings.get(rooms.get(position)).size() - 1;
-        holder.checkOutTV.setText(bookings.get(rooms.get(position)).get(daysBooked).toString());
+        holder.checkOutTV.setText(dates.get(position)[1].toString());
     }
 
     @Override
     public int getItemCount() {
-        return bookings != null ? bookings.size() : 0;
+        return rooms.size();
+    }
+
+    //method of this interface must be implemented by parent activity
+    //parent activity is responsible for what to do when a room is clicked
+    public interface ItemClickListener{
+        void onItemClick(View view,int position);
     }
 
     public class BookedRoomsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -93,50 +111,49 @@ public class BookedRoomRVAdapter extends RecyclerView.Adapter<BookedRoomRVAdapte
         }
 
         @Override
-        public void onClick(View v) {
-            Room room = getRoomAtPosition(getAdapterPosition());
-            if (room != null) {
-                showRatingDialog(room);
+        public void onClick(View view) {
+            if (clickListener != null) {
+                clickListener.onItemClick(view, getAdapterPosition());
             }
         }
     }
-    private Room getRoomAtPosition(int position) {
-        Set<Room> roomsSet = bookings.keySet();
-        List<Room> rooms = new ArrayList<>(roomsSet.size());
-        rooms.addAll(roomsSet);
-        return rooms.get(position);
-    }
-    private void showRatingDialog(Room room) {
-        Dialog dialog = new Dialog(context);
-        dialog.setContentView(R.layout.dialog_rate_room);
-        dialog.setTitle("Rate this room");
-
-        RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
-        Button submitButton = dialog.findViewById(R.id.btnSubmitRating);
-
-        submitButton.setOnClickListener(v -> {
-            double rating = ratingBar.getRating();
-            rateRoom(room.getRoomName(), rating);
-            dialog.dismiss();
-        });
-
-        dialog.show();
-    }
-
-    private void rateRoom(String roomName, double rating) {
-        ArrayList<Object> roomRatingData = new ArrayList<>();
-        roomRatingData.add(roomName);
-        roomRatingData.add(rating);
-
-        NetworkHandlerThread rateRoomThread = new NetworkHandlerThread(MasterFunction.RATE_ROOM.getEncoded(), roomRatingData);
-        rateRoomThread.start();
-        try {
-            rateRoomThread.join();
-            String result = (String) rateRoomThread.result;
-            Toast.makeText(context, result, Toast.LENGTH_LONG).show();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            Toast.makeText(context, "An error occurred during rating.", Toast.LENGTH_LONG).show();
-        }
-    }
+//    private Room getRoomAtPosition(int position) {
+//        Set<Room> roomsSet = bookings.keySet();
+//        List<Room> rooms = new ArrayList<>(roomsSet.size());
+//        rooms.addAll(roomsSet);
+//        return rooms.get(position);
+//    }
+//    private void showRatingDialog(Room room) {
+//        Dialog dialog = new Dialog(context);
+//        dialog.setContentView(R.layout.dialog_rate_room);
+//        dialog.setTitle("Rate this room");
+//
+//        RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
+//        Button submitButton = dialog.findViewById(R.id.btnSubmitRating);
+//
+//        submitButton.setOnClickListener(v -> {
+//            double rating = ratingBar.getRating();
+//            rateRoom(room.getRoomName(), rating);
+//            dialog.dismiss();
+//        });
+//
+//        dialog.show();
+//    }
+//
+//    private void rateRoom(String roomName, double rating) {
+//        ArrayList<Object> roomRatingData = new ArrayList<>();
+//        roomRatingData.add(roomName);
+//        roomRatingData.add(rating);
+//
+//        NetworkHandlerThread rateRoomThread = new NetworkHandlerThread(MasterFunction.RATE_ROOM.getEncoded(), roomRatingData);
+//        rateRoomThread.start();
+//        try {
+//            rateRoomThread.join();
+//            String result = (String) rateRoomThread.result;
+//            Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//            Toast.makeText(context, "An error occurred during rating.", Toast.LENGTH_LONG).show();
+//        }
+//    }
 }

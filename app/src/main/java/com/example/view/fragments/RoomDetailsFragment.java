@@ -19,7 +19,7 @@ import com.example.mogbnb.Filter;
 import com.example.mogbnb.MasterFunction;
 import com.example.mogbnb.R;
 import com.example.mogbnb.Room;
-import com.example.view.fragments.ImageSliderAdapter;
+import com.example.view.recyclerViewAdapters.ImageSliderAdapter;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
