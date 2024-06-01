@@ -1,31 +1,21 @@
 package com.example.view.recyclerViewAdapters;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mogbnb.MasterFunction;
 import com.example.mogbnb.R;
 import com.example.mogbnb.Room;
-import com.example.view.NetworkHandlerThread;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
 
 public class BookedRoomRVAdapter extends RecyclerView.Adapter<BookedRoomRVAdapter.BookedRoomsViewHolder> {
     private ArrayList<Room> rooms;
@@ -74,10 +64,8 @@ public class BookedRoomRVAdapter extends RecyclerView.Adapter<BookedRoomRVAdapte
         holder.roomNameTV.setText(rooms.get(position).getRoomName());
         // set the imageview
         holder.imageView.setImageResource(R.drawable.child_po);
-        for (int i=0; i<60; i++){
-            System.out.println(dates);
-            System.out.println(dates);
-        }
+        System.out.println(rooms.get(position).getRoomName());
+        System.out.println(dates.get(position)[0] + " - "  + dates.get(position)[1]);
 
         // set check in textView
         holder.checkInTV.setText(dates.get(position)[0].toString());
@@ -124,21 +112,21 @@ public class BookedRoomRVAdapter extends RecyclerView.Adapter<BookedRoomRVAdapte
 //        return rooms.get(position);
 //    }
 //    private void showRatingDialog(Room room) {
-//        Dialog dialog = new Dialog(context);
-//        dialog.setContentView(R.layout.dialog_rate_room);
-//        dialog.setTitle("Rate this room");
-//
-//        RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
-//        Button submitButton = dialog.findViewById(R.id.btnSubmitRating);
-//
-//        submitButton.setOnClickListener(v -> {
-//            double rating = ratingBar.getRating();
-//            rateRoom(room.getRoomName(), rating);
-//            dialog.dismiss();
-//        });
-//
-//        dialog.show();
-//    }
+////        Dialog dialog = new Dialog(context);
+////        dialog.setContentView(R.layout.dialog_rate_room);
+////        dialog.setTitle("Rate this room");
+////
+////        RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
+////        Button submitButton = dialog.findViewById(R.id.btnSubmitRating);
+////
+////        submitButton.setOnClickListener(v -> {
+////            double rating = ratingBar.getRating();
+////            rateRoom(room.getRoomName(), rating);
+////            dialog.dismiss();
+////        });
+////
+////        dialog.show();
+////    }
 //
 //    private void rateRoom(String roomName, double rating) {
 //        ArrayList<Object> roomRatingData = new ArrayList<>();

@@ -115,6 +115,15 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageRoomItem" />
 
+            <TextView
+                android:id="@+id/textView25"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="/ day"
+                app:layout_constraintStart_toEndOf="@+id/textRoomItemPrice"
+                app:layout_constraintTop_toTopOf="@+id/textRoomItemPrice" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
