@@ -1,6 +1,6 @@
 [
   {
-    "roomName": "Sithonia Hall",
+    "roomName": "Sithonia",
     "noOfPersons": 2,
     "availableDays": 7,
     "area": "Downtown",
@@ -12,7 +12,7 @@
     "description": "Comfortable room with a city view, ideal for couples."
   },
   {
-    "roomName": "Lake Apartment",
+    "roomName": "Lake",
     "noOfPersons": 4,
     "availableDays": 6,
     "area": "Lake",
@@ -24,7 +24,7 @@
     "description": "Beautiful apartment with a lake view, ideal for families."
   },
   {
-    "roomName": "Beachfront Suite",
+    "roomName": "Beachfront",
     "noOfPersons": 3,
     "availableDays": 5,
     "area": "Seaside",
@@ -36,7 +36,7 @@
     "description": "Luxury suite with stunning sea views and direct beach access."
   },
   {
-    "roomName": "Mountain Inn",
+    "roomName": "Mountain",
     "noOfPersons": 2,
     "availableDays": 10,
     "area": "Mountain Area",
@@ -48,7 +48,7 @@
     "description": "Cozy mountain inn, ideal for adventurous visitors."
   },
   {
-    "roomName": "Olympia Room",
+    "roomName": "Olympia",
     "noOfPersons": 1,
     "availableDays": 8,
     "area": "Historic Center",
@@ -60,7 +60,7 @@
     "description": "Comfortable room close to the archaeological attractions of Olympia."
   },
   {
-    "roomName": "Thessaloniki Villa",
+    "roomName": "Thessaloniki",
     "noOfPersons": 5,
     "availableDays": 9,
     "area": "Suburb",
