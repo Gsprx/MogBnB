@@ -57,12 +57,9 @@ public class SearchResultsFragment extends Fragment {
 
         //setup the click listener for the back button
         Button returnBtn = view.findViewById(R.id.btnSearchResultsReturn);
-        returnBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //return to search page using the same filters pre applied
-                returnToSearch(filter);
-            }
+        returnBtn.setOnClickListener(view12 -> {
+            //return to search page using the same filters pre applied
+            returnToSearch(filter);
         });
 
         //get RV reference

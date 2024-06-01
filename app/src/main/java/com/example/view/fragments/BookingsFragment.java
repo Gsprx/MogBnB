@@ -47,7 +47,7 @@ public class BookingsFragment extends Fragment {
         // build the recycler view
         recyclerView = view.findViewById(R.id.rvBookings);
         BookedRoomRVAdapter adapter = new BookedRoomRVAdapter(this, onlyRoomsList, onlyDatesList);
-        adapter.setClickListener((view1, position) -> {
+        adapter.setClickListener((View view1, int position) -> {
             //set code to run when a room is clicked
             rateRoom(onlyRoomsList.get(position).getRoomName());
         });
@@ -69,7 +69,7 @@ public class BookingsFragment extends Fragment {
                 out.writeObject(userID);
                 out.flush();
 
-                //reinitialize lists used for adapter
+                //clear lists used for adapter
                 onlyRoomsList.clear();
                 onlyDatesList.clear();
 
