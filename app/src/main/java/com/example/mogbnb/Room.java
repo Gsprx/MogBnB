@@ -1,12 +1,19 @@
 package com.example.mogbnb;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 
+import com.example.misc.Config;
+import com.example.view.MainActivity;
+
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -211,20 +218,20 @@ public class Room implements Serializable {
         return Objects.equals(roomName, room.roomName);
     }
 
-    public List<String> getdirRoomImages() {
-        List<String> imagePaths = new ArrayList<>();
-        File dir = new File(roomImage);
-        if (dir.exists() && dir.isDirectory()) {
-            File[] files = dir.listFiles();
+    public List<String> getdirRoomImages(Context context) {
+        try {
+            List<String> imagePaths = new ArrayList<>();
+            String[] files = context.getAssets().list(roomImage);
+            System.out.println("Files: " + Arrays.toString(files));
             if (files != null) {
-                for (File file : files) {
-                    if (file.isFile() && (file.getName().endsWith(".jpg") || file.getName().endsWith(".png"))) {
-                        imagePaths.add(file.getAbsolutePath());
-                    }
+                for (String file : files) {
+                    imagePaths.add(Config.ASSETSPATH + file);
                 }
             }
+            return imagePaths;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return imagePaths;
     }
 
     @Override

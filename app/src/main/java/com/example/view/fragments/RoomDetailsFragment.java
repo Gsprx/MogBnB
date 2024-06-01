@@ -44,7 +44,7 @@ public class RoomDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             room = (Room) getArguments().getSerializable("room");
-            filter = (Filter) getArguments().getSerializable("filter") ;
+            filter = (Filter) getArguments().getSerializable("filter");
             checkIn = filter.getCheckIn();
             checkOut = filter.getCheckOut();
         }
@@ -71,7 +71,7 @@ public class RoomDetailsFragment extends Fragment {
 
 
         // Set up image slider
-        List<String> imagePaths = room.getdirRoomImages();
+        List<String> imagePaths = room.getdirRoomImages(getContext());
         System.out.println(imagePaths);
         ImageSliderAdapter adapter = new ImageSliderAdapter(imagePaths);
         viewPagerImages.setAdapter(adapter);
