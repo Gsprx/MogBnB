@@ -1,6 +1,7 @@
 package com.example.view.recyclerViewAdapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mogbnb.R;
 import com.example.mogbnb.Room;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -59,8 +62,15 @@ public class SelectRoomRVAdapter extends RecyclerView.Adapter<SelectRoomRVAdapte
 
         holder.roomNumOfReviews.setText(String.valueOf(rooms.get(position).getNoOfReviews()));
 
-        //TODO: set image later
-        holder.roomImage.setImageResource(R.drawable.child_po);
+        try {
+            String imagePath = rooms.get(position).getRoomImage();
+            InputStream inputStream = context.getAssets().open(imagePath + "/" + context.getAssets().list(imagePath)[0]);
+            Drawable drawable = Drawable.createFromStream(inputStream, null);
+            holder.roomImage.setImageDrawable(drawable);
+            inputStream.close();
+        } catch (IOException e) {
+            holder.roomImage.setImageResource(R.drawable.child_po);
+        }
     }
 
 
