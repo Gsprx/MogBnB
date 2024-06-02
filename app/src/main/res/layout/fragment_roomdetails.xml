@@ -44,13 +44,14 @@
                 android:layout_marginTop="16dp"
                 android:background="#FFFFFF"
                 android:backgroundTint="#FFFFFF"
-                android:fontFamily="sans-serif"
+                android:fontFamily="sans-serif-black"
                 android:padding="16dp"
                 android:text="Room Name"
                 android:textAlignment="center"
+                android:textAllCaps="true"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                android:textStyle="bold"
+                android:textStyle="bold|italic"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/frameLayout31" />
@@ -73,9 +74,12 @@
                     android:fontFamily="sans-serif-medium"
                     android:padding="16dp"
                     android:scrollbars="vertical"
+                    android:shadowColor="#FFFFFF"
                     android:text="Room Details"
+                    android:textAlignment="viewStart"
                     android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
             </FrameLayout>
 
             <Button
