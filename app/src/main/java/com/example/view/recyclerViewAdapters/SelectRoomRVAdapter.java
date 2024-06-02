@@ -62,7 +62,7 @@ public class SelectRoomRVAdapter extends RecyclerView.Adapter<SelectRoomRVAdapte
 
         holder.roomArea.setText(rooms.get(position).getArea());
 
-        holder.roomNoOfPeople.setText(rooms.get(position).getNoOfPersons());
+        holder.roomNoOfPeople.setText(String.valueOf(rooms.get(position).getNoOfPersons()));
 
         try {
             String imagePath = rooms.get(position).getRoomImage();
