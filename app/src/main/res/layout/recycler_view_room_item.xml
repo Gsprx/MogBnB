@@ -43,35 +43,27 @@
                 android:layout_marginTop="8dp"
                 android:text="Room's Name"
                 android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/imageRoomItem"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="156dp"
-                android:layout_marginBottom="40dp"
-                android:text="Rating:"
-                android:textColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageRoomItem" />
 
             <TextView
                 android:id="@+id/textRoomItemRating"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="48dp"
                 android:text="rating"
                 android:textColor="@color/black"
-                app:layout_constraintStart_toEndOf="@+id/textView6"
-                app:layout_constraintTop_toTopOf="@+id/textView6" />
+                app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+                app:layout_constraintStart_toEndOf="@+id/imageView3"
+                app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
             <TextView
                 android:id="@+id/textView18"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="36dp"
+                android:layout_marginTop="8dp"
                 android:text="Price:"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="@+id/textRoomItemName"
@@ -92,27 +84,14 @@
                 android:id="@+id/textRoomItemNumReviews"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="200dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="4dp"
                 android:text="noReviews"
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 android:textStyle="italic"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageRoomItem" />
-
-            <TextView
-                android:id="@+id/textView23"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="156dp"
-                android:layout_marginBottom="16dp"
-                android:text="Reviews:"
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                android:textStyle="italic"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageRoomItem" />
+                app:layout_constraintStart_toStartOf="@+id/textRoomItemRating"
+                app:layout_constraintTop_toBottomOf="@+id/textRoomItemRating" />
 
             <TextView
                 android:id="@+id/textView25"
@@ -122,6 +101,69 @@
                 android:textColor="@color/black"
                 app:layout_constraintStart_toEndOf="@+id/textRoomItemPrice"
                 app:layout_constraintTop_toTopOf="@+id/textRoomItemPrice" />
+
+            <TextView
+                android:id="@+id/textRoomItemArea"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="TextView"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="@+id/textView18"
+                app:layout_constraintTop_toBottomOf="@+id/textView18" />
+
+            <TextView
+                android:id="@+id/textRoomItemNoOfPeople"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="TextView"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="@+id/textRoomItemArea"
+                app:layout_constraintStart_toStartOf="@+id/textRoomItemArea"
+                app:layout_constraintTop_toBottomOf="@+id/textRoomItemArea" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                app:layout_constraintBottom_toBottomOf="@+id/textRoomItemArea"
+                app:layout_constraintStart_toEndOf="@+id/textRoomItemArea"
+                app:layout_constraintTop_toTopOf="@+id/textRoomItemArea"
+                app:srcCompat="@drawable/baseline_home_24" />
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                app:layout_constraintBottom_toBottomOf="@+id/textRoomItemNoOfPeople"
+                app:layout_constraintStart_toEndOf="@+id/textRoomItemNoOfPeople"
+                app:layout_constraintTop_toTopOf="@+id/textRoomItemNoOfPeople"
+                app:srcCompat="@drawable/baseline_people_alt_24" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                app:layout_constraintBottom_toBottomOf="@+id/textRoomItemRating"
+                app:layout_constraintStart_toEndOf="@+id/textRoomItemRating"
+                app:layout_constraintTop_toTopOf="@+id/textRoomItemRating"
+                app:srcCompat="@drawable/baseline_star_rate_24" />
+
+            <TextView
+                android:id="@+id/textView23"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="reviews"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/textRoomItemNumReviews"
+                app:layout_constraintStart_toEndOf="@+id/textRoomItemNumReviews"
+                app:layout_constraintTop_toTopOf="@+id/textRoomItemNumReviews" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

@@ -52,15 +52,17 @@ public class SelectRoomRVAdapter extends RecyclerView.Adapter<SelectRoomRVAdapte
         holder.roomName.setText(rooms.get(position).getRoomName());
 
         //we use a decimal formatter to clean up the result of the doubles in the room class such as price (if needed) and rating.
-        DecimalFormat df = new DecimalFormat("#.##");
-
-        String formattedPrice = df.format(rooms.get(position).getPricePerDay());
+        String formattedPrice = String.format("%.2f", rooms.get(position).getPricePerDay());
         holder.roomPrice.setText(formattedPrice);
 
-        String formattedRating = df.format(rooms.get(position).getStars());
+        String formattedRating = String.format("%.2f", rooms.get(position).getStars());
         holder.roomRating.setText(formattedRating);
 
         holder.roomNumOfReviews.setText(String.valueOf(rooms.get(position).getNoOfReviews()));
+
+        holder.roomArea.setText(rooms.get(position).getArea());
+
+        holder.roomNoOfPeople.setText(rooms.get(position).getNoOfPersons());
 
         try {
             String imagePath = rooms.get(position).getRoomImage();
@@ -104,6 +106,8 @@ public class SelectRoomRVAdapter extends RecyclerView.Adapter<SelectRoomRVAdapte
         TextView roomRating;
         TextView roomNumOfReviews;
         ImageView roomImage;
+        TextView roomArea;
+        TextView roomNoOfPeople;
 
         public SelectRoomViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -114,6 +118,8 @@ public class SelectRoomRVAdapter extends RecyclerView.Adapter<SelectRoomRVAdapte
             roomRating = itemView.findViewById(R.id.textRoomItemRating);
             roomNumOfReviews = itemView.findViewById(R.id.textRoomItemNumReviews);
             roomImage = itemView.findViewById(R.id.imageRoomItem);
+            roomArea = itemView.findViewById(R.id.textRoomItemArea);
+            roomNoOfPeople = itemView.findViewById(R.id.textRoomItemNoOfPeople);
         }
 
         @Override
