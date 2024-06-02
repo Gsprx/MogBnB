@@ -77,14 +77,18 @@ public class SearchFragment extends Fragment implements DatePickerDialog.OnDateS
         if(getArguments()!=null) {
             Filter filter = (Filter) getArguments().getSerializable("filter");
             if (filter != null) {
-                area.setText(filter.getArea());
-                noOfPeople.setText(filter.getNoOfPersons());
-                maxPrice.setValue((float) filter.getPrice());
-                minRating.setRating((float) filter.getStars());
-                checkInShow.setText(filter.getCheckIn().toString());
-                checkOutShow.setText(filter.getCheckOut().toString());
-                checkIn = Date.from(filter.getCheckIn().atStartOfDay().atZone(defaultZoneId.systemDefault()).toInstant());
-                checkOut = Date.from(filter.getCheckOut().atStartOfDay().atZone(defaultZoneId.systemDefault()).toInstant());
+                if (filter.getArea()!=null) area.setText(filter.getArea());
+                if (filter.getNoOfPersons()<=0) noOfPeople.setText(filter.getNoOfPersons());
+                if (filter.getPrice()>=1000) maxPrice.setValue((float) filter.getPrice());
+                if (filter.getStars()<=0) minRating.setRating((float) filter.getStars());
+                if (filter.getCheckIn()!=null) {
+                    checkInShow.setText(filter.getCheckIn().toString());
+                    checkIn = Date.from(filter.getCheckIn().atStartOfDay().atZone(defaultZoneId.systemDefault()).toInstant());
+                }
+                if (filter.getCheckOut()!=null){
+                    checkOut = Date.from(filter.getCheckOut().atStartOfDay().atZone(defaultZoneId.systemDefault()).toInstant());
+                    checkOutShow.setText(filter.getCheckOut().toString());
+                }
             }
         }
 

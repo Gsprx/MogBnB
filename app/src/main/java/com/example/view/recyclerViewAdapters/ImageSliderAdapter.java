@@ -21,7 +21,7 @@ public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.
     @NonNull
     @Override
     public SliderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.slider_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_image_item, parent, false);
         return new SliderViewHolder(view);
     }
 

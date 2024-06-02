@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.misc.Config;
@@ -53,7 +55,7 @@ public class RoomDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_roomdetails, container, false);
 
-        ViewPager2 viewPagerImages = view.findViewById(R.id.viewPagerImages);
+        RecyclerView rvImages = view.findViewById(R.id.rvImagesRoomDetails);
         TextView tvRoomName = view.findViewById(R.id.tvRoomName);
         TextView tvRoomDetails = view.findViewById(R.id.tvRoomDetails);
         tvRoomDetails.setMovementMethod(new ScrollingMovementMethod());
@@ -74,7 +76,8 @@ public class RoomDetailsFragment extends Fragment {
         List<String> imagePaths = room.getdirRoomImages(getContext());
         System.out.println(imagePaths);
         ImageSliderAdapter adapter = new ImageSliderAdapter(imagePaths);
-        viewPagerImages.setAdapter(adapter);
+        rvImages.setAdapter(adapter);
+        rvImages.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL, false));
         // Set the room details in the TextViews
         tvRoomName.setText(room.getRoomName());
         String details = "Description: " + room.getDescription() + "\n\n" +
