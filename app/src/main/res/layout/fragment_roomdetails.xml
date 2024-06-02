@@ -119,6 +119,7 @@
                 android:id="@+id/rvImagesRoomDetails"
                 android:layout_width="338dp"
                 android:layout_height="242dp"
+                android:layout_marginStart="18dp"
                 android:layout_marginTop="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.493"
