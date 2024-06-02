@@ -137,7 +137,7 @@ public class BookingsFragment extends Fragment {
     }
 
     private void rateRoom(String roomName) {
-         Dialog dialog = new Dialog(this.getContext());
+         Dialog dialog = new Dialog(getContext());
          dialog.setContentView(R.layout.dialog_rate_room);
          dialog.setTitle("Rate this room");
          RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
@@ -150,19 +150,22 @@ public class BookingsFragment extends Fragment {
              new Thread(() -> {
                  try {
                      Socket socket = new Socket(Config.MASTER_IP, Config.USER_MASTER_PORT);
-                     ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-                     out.writeInt(MasterFunction.RATE_ROOM.getEncoded());
                      ArrayList<Object> roomRating = new ArrayList<>();
                      roomRating.add(roomName);
                      roomRating.add(rating);
+                     ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+                     out.writeInt(MasterFunction.RATE_ROOM.getEncoded());
                      out.writeObject(roomRating);
                      out.flush();
 
                      ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
                      int result = (int) in.readObject();
-                     if (result == 1) Toast.makeText(getContext(),"This room was rated successfully!", Toast.LENGTH_SHORT).show();
-                     else Toast.makeText(getContext(),"An error occurred while rating this room.", Toast.LENGTH_SHORT).show();
 
+                     // make Toast in UI
+                     requireActivity().runOnUiThread(() -> {
+                         if (result == 1) Toast.makeText(getContext(),"This room was rated successfully!", Toast.LENGTH_SHORT).show();
+                         else Toast.makeText(getContext(),"An error occurred while rating this room.", Toast.LENGTH_SHORT).show();
+                     });
                  } catch (IOException | ClassNotFoundException e) {
                      throw new RuntimeException(e);
                  }

@@ -9,9 +9,9 @@ public class Config {
     public static int WORKER_REDUCER_PORT = 6000;
     public static int REDUCER_MASTER_PORT = 7000; //used by reducers to send refined results of workers to master
 
-    public static String MASTER_IP = "192.168.1.7";
-    public static String[] WORKER_IP = {"192.168.1.7", "192.168.1.7", "192.168.1.7"};
-    public static String REDUCER_IP = "192.168.1.7";
+    public static String MASTER_IP = "192.168.68.103";
+    public static String[] WORKER_IP = {"192.168.68.103", "192.168.68.103", "192.168.68.103"};
+    public static String REDUCER_IP = "192.168.68.103";
 
     public static ZoneId defaultZoneId = ZoneId.systemDefault();
     // Create directory if it doesn't exist
