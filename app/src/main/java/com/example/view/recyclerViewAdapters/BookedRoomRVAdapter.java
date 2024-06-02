@@ -80,8 +80,8 @@ public class BookedRoomRVAdapter extends RecyclerView.Adapter<BookedRoomRVAdapte
 
     //method of this interface must be implemented by parent activity
     //parent activity is responsible for what to do when a room is clicked
-    public interface ItemClickListener{
-        void onItemClick(View view,int position);
+    public interface ItemClickListener {
+        void onItemClick(View view, int position);
     }
 
     public class BookedRoomsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -92,6 +92,8 @@ public class BookedRoomRVAdapter extends RecyclerView.Adapter<BookedRoomRVAdapte
 
         public BookedRoomsViewHolder(@NonNull View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
+
             roomNameTV = itemView.findViewById(R.id.bookedRoomName);
             checkInTV = itemView.findViewById(R.id.bookedRoomCheckIn);
             checkOutTV = itemView.findViewById(R.id.bookedRoomCheckOut);
