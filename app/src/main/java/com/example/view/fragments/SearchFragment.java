@@ -78,9 +78,9 @@ public class SearchFragment extends Fragment implements DatePickerDialog.OnDateS
             Filter filter = (Filter) getArguments().getSerializable("filter");
             if (filter != null) {
                 if (filter.getArea()!=null) area.setText(filter.getArea());
-                if (filter.getNoOfPersons()<=0) noOfPeople.setText(filter.getNoOfPersons());
-                if (filter.getPrice()>=1000) maxPrice.setValue((float) filter.getPrice());
-                if (filter.getStars()<=0) minRating.setRating((float) filter.getStars());
+                if (filter.getNoOfPersons()>0) noOfPeople.setText(filter.getNoOfPersons());
+                if (filter.getPrice()<=1000) maxPrice.setValue((float) filter.getPrice());
+                if (filter.getStars()>0) minRating.setRating((float) filter.getStars());
                 if (filter.getCheckIn()!=null) {
                     checkInShow.setText(filter.getCheckIn().toString());
                     checkIn = Date.from(filter.getCheckIn().atStartOfDay().atZone(defaultZoneId.systemDefault()).toInstant());

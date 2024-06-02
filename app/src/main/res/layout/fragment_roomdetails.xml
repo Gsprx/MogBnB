@@ -10,7 +10,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -41,47 +41,54 @@
                 android:id="@+id/tvRoomName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:background="#FFFFFF"
                 android:backgroundTint="#FFFFFF"
-                android:fontFamily="cursive"
+                android:fontFamily="sans-serif"
                 android:padding="16dp"
                 android:text="Room Name"
                 android:textAlignment="center"
+                android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rvImagesRoomDetails" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/frameLayout31" />
 
-            <TextView
-                android:id="@+id/tvRoomDetails"
-                android:layout_width="328dp"
-                android:layout_height="237dp"
-                android:layout_marginTop="16dp"
-                android:background="#D5A3DD"
-                android:fontFamily="sans-serif-medium"
-                android:padding="16dp"
-                android:scrollbars="vertical"
-                android:text="Room Details"
-                android:textSize="16sp"
-                app:layout_constraintHorizontal_bias="0.493"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvRoomName" />
+            <FrameLayout
+                android:id="@+id/frameLayout5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="32dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rvImagesRoomDetails">
+
+                <TextView
+                    android:id="@+id/tvRoomDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-medium"
+                    android:padding="16dp"
+                    android:scrollbars="vertical"
+                    android:text="Room Details"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+            </FrameLayout>
 
             <Button
                 android:id="@+id/btnBookRoom"
                 style="@style/Widget.AppCompat.Button"
                 android:layout_width="253dp"
                 android:layout_height="56dp"
-                android:layout_marginTop="44dp"
-                android:layout_marginEnd="76dp"
+                android:layout_marginTop="32dp"
                 android:text="Book Now!"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvRoomDetails"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/frameLayout5"
                 app:strokeColor="#9F2DAC" />
 
             <Button
@@ -92,8 +99,9 @@
                 android:layout_marginBottom="32dp"
                 android:backgroundTint="#331A60"
                 android:text="Back"
+                android:textColor="@color/white"
                 app:icon="@android:drawable/ic_menu_revert"
-                app:iconTint="#FF0000"
+                app:iconTint="@color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/frameLayout31"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -119,11 +127,11 @@
                 android:id="@+id/rvImagesRoomDetails"
                 android:layout_width="338dp"
                 android:layout_height="242dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="32dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.493"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/frameLayout31" />
+                app:layout_constraintTop_toBottomOf="@+id/tvRoomName" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

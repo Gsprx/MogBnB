@@ -63,8 +63,9 @@
                 android:layout_marginBottom="32dp"
                 android:backgroundTint="#331A60"
                 android:text="Back"
+                android:textColor="@color/white"
                 app:icon="@android:drawable/ic_menu_revert"
-                app:iconTint="#FF0000"
+                app:iconTint="@color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/frameLayout31"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
