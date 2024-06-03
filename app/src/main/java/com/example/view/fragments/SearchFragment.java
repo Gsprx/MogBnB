@@ -48,9 +48,9 @@ public class SearchFragment extends Fragment implements DatePickerDialog.OnDateS
     int userID;
 
     public SearchFragment(int userID) {
-        checkIn = null;
-        checkOut = null;
-        checkInPressed = false;
+        this.checkIn = null;
+        this.checkOut = null;
+        this.checkInPressed = false;
         this.userID = userID;
     }
 
@@ -59,7 +59,6 @@ public class SearchFragment extends Fragment implements DatePickerDialog.OnDateS
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search, container, false);
-
 
         // get the components of the view
         area = view.findViewById(R.id.search_area_entry);
@@ -74,7 +73,7 @@ public class SearchFragment extends Fragment implements DatePickerDialog.OnDateS
 
 
         // get previous filter if returned from search results
-        if(getArguments()!=null) {
+        if (getArguments() != null) {
             Filter filter = (Filter) getArguments().getSerializable("filter");
             if (filter != null) {
                 if (filter.getArea()!=null) area.setText(filter.getArea());
@@ -85,7 +84,7 @@ public class SearchFragment extends Fragment implements DatePickerDialog.OnDateS
                     checkInShow.setText(filter.getCheckIn().toString());
                     checkIn = Date.from(filter.getCheckIn().atStartOfDay().atZone(defaultZoneId.systemDefault()).toInstant());
                 }
-                if (filter.getCheckOut()!=null){
+                if (filter.getCheckOut()!=null) {
                     checkOut = Date.from(filter.getCheckOut().atStartOfDay().atZone(defaultZoneId.systemDefault()).toInstant());
                     checkOutShow.setText(filter.getCheckOut().toString());
                 }
@@ -160,7 +159,7 @@ public class SearchFragment extends Fragment implements DatePickerDialog.OnDateS
     public DatePickerDialog createDPD() {
         Calendar c = Calendar.getInstance();
         return DatePickerDialog.newInstance(
-                (DatePickerDialog.OnDateSetListener)this,
+                (DatePickerDialog.OnDateSetListener) this,
                 c.get(Calendar.YEAR),
                 c.get(Calendar.MONTH),
                 c.get(Calendar.DAY_OF_MONTH)

@@ -42,6 +42,7 @@ public class TenantEnterActivity extends AppCompatActivity {
                 intent.putExtra("USERNAME", username);
                 intent.putExtra("ID", id);
                 startActivity(intent);
+                finish();
             }
         });
 

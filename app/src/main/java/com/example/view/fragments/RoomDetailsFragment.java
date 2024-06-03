@@ -83,9 +83,9 @@ public class RoomDetailsFragment extends Fragment {
         String details = "Description: " + room.getDescription() + "\n\n" +
                 "Capacity: " + room.getNoOfPersons() +
                 "\nArea: " + room.getArea() +
-                "\nStars: " + room.getStars() +
+                "\nStars: " + String.format("%.2f", room.getStars()) +
                 "\nReviews: " + room.getNoOfReviews() +
-                "\nPrice per day: " + room.getPricePerDay() + " Euros" +
+                "\nPrice per day: " + String.format("%.2f", room.getPricePerDay()) + " Euros" +
                 "\nAmenities:\n" + String.join("\n", room.getAmenities());
 
 

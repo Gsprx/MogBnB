@@ -16,6 +16,8 @@ import com.example.view.fragments.ProfileFragment;
 import com.example.view.fragments.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView navbar;
     SearchFragment search;

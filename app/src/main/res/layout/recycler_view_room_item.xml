@@ -75,7 +75,7 @@
                 android:id="@+id/textRoomItemNumReviews"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="4dp"
                 android:text="noReviews"
                 android:textColor="@color/black"
                 android:textSize="12sp"
