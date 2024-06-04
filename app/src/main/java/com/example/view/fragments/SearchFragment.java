@@ -71,6 +71,9 @@ public class SearchFragment extends Fragment implements DatePickerDialog.OnDateS
         checkOutBtn = view.findViewById(R.id.search_add_checkOut);
         confirmBtn = view.findViewById(R.id.search_confirm_btn);
 
+        this.checkIn = null;
+        this.checkOut = null;
+        this.checkInPressed = false;
 
         // get previous filter if returned from search results
         if (getArguments() != null) {

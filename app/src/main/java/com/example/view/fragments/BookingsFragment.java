@@ -75,7 +75,7 @@ public class BookingsFragment extends Fragment {
 
                 // wait for master to return rooms
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-                bookings = (HashMap<Room,ArrayList<LocalDate>>) in.readObject();
+                bookings = (HashMap<Room, ArrayList<LocalDate>>) in.readObject();
                 for (Room room : bookings.keySet()) {
                     ArrayList<LocalDate> allBookedDates = bookings.get(room);
 
@@ -83,11 +83,11 @@ public class BookingsFragment extends Fragment {
                     System.out.println("All booked dates sorted result: " + allBookedDates);
 
 
-                    //list that includes min date (check in) and max date (check out)
+                    // list that includes min date (check in) and max date (check out)
                     LocalDate[] checkInOutDates = new LocalDate[2]; // 0 - CheckIn, 1 - CheckOut
                     boolean startedBooking = true;
                     for (int i = 0; i < allBookedDates.size(); i++) {
-                        if(startedBooking){
+                        if (startedBooking) {
                             checkInOutDates = new LocalDate[2];
                             startedBooking = false;
                         }
