@@ -19,6 +19,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <TextView
+                android:id="@+id/textView27"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="186dp"
+                android:layout_marginTop="108dp"
+                android:alpha="0.5"
+                android:text="Click on a booking to rate the room..."
+                android:textColor="#FDFAFA"
+                android:textStyle="italic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </FrameLayout>
 
         <TextView
