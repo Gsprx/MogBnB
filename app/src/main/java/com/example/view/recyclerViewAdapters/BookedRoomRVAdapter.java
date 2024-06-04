@@ -120,43 +120,4 @@ public class BookedRoomRVAdapter extends RecyclerView.Adapter<BookedRoomRVAdapte
             }
         }
     }
-//    private Room getRoomAtPosition(int position) {
-//        Set<Room> roomsSet = bookings.keySet();
-//        List<Room> rooms = new ArrayList<>(roomsSet.size());
-//        rooms.addAll(roomsSet);
-//        return rooms.get(position);
-//    }
-//    private void showRatingDialog(Room room) {
-////        Dialog dialog = new Dialog(context);
-////        dialog.setContentView(R.layout.dialog_rate_room);
-////        dialog.setTitle("Rate this room");
-////
-////        RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
-////        Button submitButton = dialog.findViewById(R.id.btnSubmitRating);
-////
-////        submitButton.setOnClickListener(v -> {
-////            double rating = ratingBar.getRating();
-////            rateRoom(room.getRoomName(), rating);
-////            dialog.dismiss();
-////        });
-////
-////        dialog.show();
-////    }
-//
-//    private void rateRoom(String roomName, double rating) {
-//        ArrayList<Object> roomRatingData = new ArrayList<>();
-//        roomRatingData.add(roomName);
-//        roomRatingData.add(rating);
-//
-//        NetworkHandlerThread rateRoomThread = new NetworkHandlerThread(MasterFunction.RATE_ROOM.getEncoded(), roomRatingData);
-//        rateRoomThread.start();
-//        try {
-//            rateRoomThread.join();
-//            String result = (String) rateRoomThread.result;
-//            Toast.makeText(context, result, Toast.LENGTH_LONG).show();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//            Toast.makeText(context, "An error occurred during rating.", Toast.LENGTH_LONG).show();
-//        }
-//    }
 }
