@@ -150,7 +150,7 @@ public class Room implements Serializable {
 
         //filtered days are all available from this point onward
 
-        return ((filter.getArea() == null || filter.getArea().equalsIgnoreCase(this.area))&&(filter.getPrice()==-1 || filter.getPrice()>=this.pricePerDay)&&(filter.getStars()==-1 || filter.getStars()<=this.stars)
+        return ((filter.getArea() == null || this.area.toLowerCase().contains(filter.getArea().toLowerCase()))&&(filter.getPrice()==-1 || filter.getPrice()>=this.pricePerDay)&&(filter.getStars()==-1 || filter.getStars()<=this.stars)
                 &&(filter.getNoOfPersons()==-1 || filter.getNoOfPersons()<=this.noOfPersons)
                 &&(bookingDaysTotal<= availableDays));
     }
