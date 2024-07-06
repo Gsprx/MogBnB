@@ -76,6 +76,7 @@ public class BookingsFragment extends Fragment {
                 // wait for master to return rooms
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
                 bookings = (HashMap<Room, ArrayList<LocalDate>>) in.readObject();
+
                 for (Room room : bookings.keySet()) {
                     ArrayList<LocalDate> allBookedDates = bookings.get(room);
 
@@ -123,7 +124,7 @@ public class BookingsFragment extends Fragment {
 
             //update adapter with the rooms returned
             requireActivity().runOnUiThread(() -> {
-                if(onlyRoomsList.size()==0){
+                if(onlyRoomsList.isEmpty() || onlyDatesList.isEmpty()){
                     Toast.makeText(getContext(),"No bookings found!", Toast.LENGTH_SHORT).show();
                     return;
                 }
