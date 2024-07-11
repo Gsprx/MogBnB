@@ -19,6 +19,7 @@ import com.example.view.recyclerViewAdapters.BookedRoomRVAdapter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -69,9 +70,12 @@ public class BookingsFragment extends Fragment {
                 out.writeObject(userID);
                 out.flush();
 
-                //clear lists used for adapter
-                onlyRoomsList.clear();
-                onlyDatesList.clear();
+//                //clear lists used for adapter
+//                onlyRoomsList.clear();
+//                onlyDatesList.clear();
+
+                ArrayList<Room> onlyRoomsTemp = new ArrayList<>();
+                ArrayList<LocalDate[]> onlyDatesTemp = new ArrayList<>();
 
                 // wait for master to return rooms
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
@@ -109,15 +113,19 @@ public class BookingsFragment extends Fragment {
 
                             //add room to room only arraylist
                             //this allows us to have the same room with multiple bookings
-                            onlyRoomsList.add(room);
+                            onlyRoomsTemp.add(room);
 
                             //add check in and out dates
-                            onlyDatesList.add(checkInOutDates);
+                            onlyDatesTemp.add(checkInOutDates);
                             System.out.println("Added a booking record for room: " + room.getRoomName() + " for dates: " + Arrays.toString(checkInOutDates));
                             startedBooking = true;
                         }
                     }
                 }
+                //change main lists to the temp ones to avoid the app crashing for out of bounds index (when clearing lists while they are applied to adapter)
+                onlyDatesList = onlyDatesTemp;
+                onlyRoomsList = onlyRoomsTemp;
+
             } catch (ClassNotFoundException | IOException e) {
                 throw new RuntimeException(e);
             }

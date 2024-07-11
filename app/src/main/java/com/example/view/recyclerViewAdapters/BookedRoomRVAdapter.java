@@ -64,6 +64,7 @@ public class BookedRoomRVAdapter extends RecyclerView.Adapter<BookedRoomRVAdapte
     public void onBindViewHolder(@NonNull BookedRoomsViewHolder holder, int position) {
 
         // set the roomName textView
+        System.out.println("RV ADAPTER ROOM LIST:" + this.rooms);
         holder.roomNameTV.setText(rooms.get(position).getRoomName());
         // set the imageview
         holder.imageView.setImageResource(R.drawable.child_po);
